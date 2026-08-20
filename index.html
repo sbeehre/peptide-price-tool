@@ -1,175 +1,213 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Peptide Vendor Price Comparison & Order Planner</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif;
+            touch-action: manipulation;
+        }
+
+        /* Custom scrollbar for desktop & modern touch browsers */
+        ::-webkit-scrollbar { 
+            width: 6px; 
+            height: 6px; 
+        }
+        ::-webkit-scrollbar-track { 
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb { 
+            background: #334155; 
+            border-radius: 4px; 
+        }
+        ::-webkit-scrollbar-thumb:hover { 
+            background: #475569; 
+        }
+
+        /* Smooth momentum scrolling on mobile devices */
+        .touch-scroll {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+        }
+
+        /* Prevent auto-zoom on iOS inputs */
+        @media screen and (max-width: 640px) {
+            input, select, textarea {
+                font-size: 16px !important;
+            }
+        }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen pb-16">
+<body class="bg-slate-900 text-slate-100 min-h-screen pb-16 overflow-x-hidden antialiased selection:bg-indigo-500 selection:text-white">
 
     <!-- Navigation / Header -->
-    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <div class="p-2.5 bg-indigo-600/20 text-indigo-400 rounded-xl border border-indigo-500/30">
-                    <i class="fa-solid fa-flask-vial text-2xl"></i>
+    <header class="border-b border-slate-800 bg-slate-950/90 backdrop-blur sticky top-0 z-50 transition-all">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-4">
+            <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                <div class="p-2 sm:p-2.5 bg-indigo-600/20 text-indigo-400 rounded-xl border border-indigo-500/30 shrink-0">
+                    <i class="fa-solid fa-flask-vial text-xl sm:text-2xl"></i>
                 </div>
-                <div>
-                    <h1 class="text-xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                        Peptide Price Comparison Tool
+                <div class="min-w-0">
+                    <h1 class="text-base sm:text-xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent truncate">
+                        Peptide Price Tool
                     </h1>
-                    <p class="text-xs text-slate-400">Live Rate Comparison: Marvel Chloe, Tong Shi Po & Tina Bio</p>
+                    <p class="text-[11px] sm:text-xs text-slate-400 truncate">Marvel Chloe • Tong Shi Po • Tina Bio</p>
                 </div>
             </div>
             
-            <div class="flex items-center gap-3">
-                <a href="#cart-section" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 rounded-xl text-xs sm:text-sm transition shadow-lg shadow-indigo-600/20 border border-indigo-500/50">
-                    <i class="fa-solid fa-shopping-basket"></i>
+            <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                <a href="#cart-section" class="flex items-center gap-1.5 sm:gap-2 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm transition shadow-lg shadow-indigo-600/20 border border-indigo-500/50 cursor-pointer">
+                    <i class="fa-solid fa-shopping-basket text-xs sm:text-sm"></i>
                     <span>Order List</span>
-                    <span id="cart-badge-count" class="bg-indigo-950 text-indigo-200 border border-indigo-400/40 text-xs px-2 py-0.5 rounded-full font-bold">0</span>
+                    <span id="cart-badge-count" class="bg-indigo-950 text-indigo-200 border border-indigo-400/40 text-[11px] sm:text-xs px-1.5 py-0.5 sm:px-2 rounded-full font-bold min-w-[20px] text-center">0</span>
                 </a>
             </div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+    <main class="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6 sm:space-y-8">
 
         <!-- Search Section -->
-        <section class="bg-slate-950/80 border border-slate-800/80 rounded-2xl p-6 shadow-xl backdrop-blur relative z-50">
-            <div class="max-w-3xl mx-auto space-y-4">
-                <label for="peptide-search" class="block text-sm font-semibold text-slate-300">
-                    <i class="fa-solid fa-magnifying-glass text-indigo-400 mr-2"></i>
+        <section class="bg-slate-950/90 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl backdrop-blur relative z-40">
+            <div class="max-w-3xl mx-auto space-y-3.5 sm:space-y-4">
+                <label for="peptide-search" class="block text-xs sm:text-sm font-semibold text-slate-300">
+                    <i class="fa-solid fa-magnifying-glass text-indigo-400 mr-1.5 sm:mr-2"></i>
                     Search Peptide or Select Specification
                 </label>
 
                 <div class="relative z-[100]">
-                    <input 
-                        type="text" 
-                        id="peptide-search" 
-                        placeholder="Type to search (e.g. retatrutide, semaglutide, cagrilintide, tb500, glow)..." 
-                        class="w-full bg-slate-900 border border-slate-700/80 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 text-white rounded-xl py-3.5 pl-11 pr-10 text-sm transition placeholder-slate-500 shadow-inner"
-                        autocomplete="off"
-                    >
-                    <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                    <button id="clear-search" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 p-1 cursor-pointer">
-                        <i class="fa-solid fa-times-circle"></i>
-                    </button>
+                    <div class="relative flex items-center">
+                        <i class="fa-solid fa-search absolute left-3.5 sm:left-4 text-slate-500 pointer-events-none text-sm"></i>
+                        <input 
+                            type="text" 
+                            id="peptide-search" 
+                            placeholder="Type to search (e.g. retatrutide, semaglutide, cagrilintide)..." 
+                            class="w-full bg-slate-900 border border-slate-700/80 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 text-white rounded-xl py-3 sm:py-3.5 pl-10 sm:pl-11 pr-10 text-sm sm:text-base transition placeholder-slate-500 shadow-inner min-h-[46px] sm:min-h-[48px]"
+                            autocomplete="off"
+                        >
+                        <button id="clear-search" aria-label="Clear search" class="hidden absolute right-1.5 sm:right-2 text-slate-400 hover:text-slate-200 active:text-white p-2 min-w-[36px] min-h-[36px] flex items-center justify-center cursor-pointer transition">
+                            <i class="fa-solid fa-times-circle text-base"></i>
+                        </button>
+                    </div>
 
                     <!-- Instant Search Results Dropdown -->
-                    <div id="dropdown-results" class="hidden absolute left-0 right-0 top-full mt-2 bg-slate-900 border border-slate-600 rounded-xl shadow-[0_30px_60px_-15px_rgba(0,0,0,0.9)] max-h-72 overflow-y-auto z-[100] isolate">
+                    <div id="dropdown-results" class="hidden absolute left-0 right-0 top-full mt-2 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl max-h-72 sm:max-h-80 overflow-y-auto z-[100] touch-scroll divide-y divide-slate-800/80">
                         <!-- Options injected dynamically -->
                     </div>
                 </div>
 
-                <div class="flex flex-wrap items-center gap-2 pt-1">
-                    <span class="text-xs text-slate-400 font-medium mr-1">Popular searches:</span>
-                    <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-2.5 py-1 rounded-lg transition">Retatrutide</button>
-                    <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-2.5 py-1 rounded-lg transition">Semaglutide</button>
-                    <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-2.5 py-1 rounded-lg transition">Tirzepatide</button>
-                    <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-2.5 py-1 rounded-lg transition">GLOW</button>
-                    <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-2.5 py-1 rounded-lg transition">Cagrilintide</button>
-                    <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-2.5 py-1 rounded-lg transition">BPC-157</button>
-                    <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-2.5 py-1 rounded-lg transition">TB500</button>
+                <!-- Popular Search Quick Chips -->
+                <div class="pt-1">
+                    <div class="text-[11px] sm:text-xs text-slate-400 font-medium mb-2">Popular searches:</div>
+                    <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                        <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 active:bg-indigo-900 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-3 py-1.5 rounded-lg transition min-h-[36px] flex items-center justify-center cursor-pointer">Retatrutide</button>
+                        <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 active:bg-indigo-900 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-3 py-1.5 rounded-lg transition min-h-[36px] flex items-center justify-center cursor-pointer">Semaglutide</button>
+                        <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 active:bg-indigo-900 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-3 py-1.5 rounded-lg transition min-h-[36px] flex items-center justify-center cursor-pointer">Tirzepatide</button>
+                        <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 active:bg-indigo-900 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-3 py-1.5 rounded-lg transition min-h-[36px] flex items-center justify-center cursor-pointer">GLOW</button>
+                        <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 active:bg-indigo-900 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-3 py-1.5 rounded-lg transition min-h-[36px] flex items-center justify-center cursor-pointer">Cagrilintide</button>
+                        <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 active:bg-indigo-900 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-3 py-1.5 rounded-lg transition min-h-[36px] flex items-center justify-center cursor-pointer">BPC-157</button>
+                        <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 active:bg-indigo-900 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-3 py-1.5 rounded-lg transition min-h-[36px] flex items-center justify-center cursor-pointer">TB500</button>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Selected Item Comparison Spotlight -->
         <section id="spotlight-section" class="space-y-4 relative z-0">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                    <span class="text-xs font-semibold tracking-wider uppercase text-indigo-400">Featured Product Spotlight</span>
-                    <h2 id="selected-title" class="text-2xl font-bold text-white">Semaglutide (10mg*10)</h2>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-950/50 border border-slate-800/60 rounded-xl sm:rounded-2xl p-4 sm:p-5">
+                <div class="min-w-0">
+                    <span class="text-[11px] sm:text-xs font-bold tracking-wider uppercase text-indigo-400 block mb-0.5">Featured Product Spotlight</span>
+                    <h2 id="selected-title" class="text-xl sm:text-2xl font-extrabold text-white break-words">Semaglutide (10mg*10)</h2>
                 </div>
                 
-                <div class="flex items-center gap-3">
-                    <button id="add-spotlight-to-cart" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-4 py-2.5 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20 border border-emerald-500/50 cursor-pointer">
-                        <i class="fa-solid fa-plus-circle"></i>
+                <div class="flex flex-col xs:flex-row items-stretch sm:items-center gap-2 sm:gap-3 shrink-0">
+                    <button id="add-spotlight-to-cart" class="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold px-4 py-3 sm:py-2.5 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20 border border-emerald-500/50 cursor-pointer min-h-[44px]">
+                        <i class="fa-solid fa-plus-circle text-base"></i>
                         <span>Add to Order List</span>
                     </button>
-                    <div id="recommended-banner" class="hidden sm:flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs px-3.5 py-2.5 rounded-xl">
+                    <div id="recommended-banner" class="hidden flex items-center justify-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs px-3.5 py-2.5 rounded-xl min-h-[44px]">
                         <i class="fa-solid fa-trophy text-amber-400"></i>
-                        <span>Best Unit: <strong id="rec-vendor-name" class="font-semibold text-white">—</strong></span>
+                        <span>Best: <strong id="rec-vendor-name" class="font-semibold text-white">—</strong></span>
                     </div>
                 </div>
             </div>
 
-            <!-- Vendor Price Cards Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <!-- Vendor Price Cards Grid (Stacks to 1 col on mobile, 3 cols on tablet/desktop) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-5">
                 <!-- Marvel Chloe Card -->
-                <div id="card-marvel" class="bg-slate-950/60 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700">
+                <div id="card-marvel" class="bg-slate-950/60 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700">
                     <div>
-                        <div class="flex justify-between items-start mb-3">
+                        <div class="flex justify-between items-start mb-2 sm:mb-3">
                             <div>
-                                <h3 class="font-semibold text-slate-200">Marvel Chloe</h3>
-                                <p class="text-xs text-slate-500">US Warehouse + China Direct</p>
+                                <h3 class="font-bold text-slate-200 text-base">Marvel Chloe</h3>
+                                <p class="text-[11px] sm:text-xs text-slate-500">US Warehouse + China Direct</p>
                             </div>
-                            <span id="badge-marvel" class="hidden text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                            <span id="badge-marvel" class="hidden text-[11px] sm:text-xs font-bold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 shrink-0">
                                 🏆 LOWEST
                             </span>
                         </div>
-                        <div class="my-4">
-                            <span id="price-marvel" class="text-3xl font-extrabold text-white">$70.00</span>
+                        <div class="my-3 sm:my-4">
+                            <span id="price-marvel" class="text-2xl sm:text-3xl font-extrabold text-white">$70.00</span>
                             <span id="diff-marvel" class="block text-xs font-medium text-slate-400 mt-1">Best Deal</span>
                         </div>
                     </div>
-                    <div class="pt-3 border-t border-slate-800/60 text-xs text-slate-400 space-y-1">
+                    <div class="pt-3 border-t border-slate-800/60 text-[11px] sm:text-xs text-slate-400 space-y-1">
                         <div>• MOQ: 1 Kit (10 vials)</div>
                         <div>• Direct Express Courier</div>
                     </div>
                 </div>
 
                 <!-- Tong Shi Po Card -->
-                <div id="card-tong" class="bg-slate-950/60 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700">
+                <div id="card-tong" class="bg-slate-950/60 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700">
                     <div>
-                        <div class="flex justify-between items-start mb-3">
+                        <div class="flex justify-between items-start mb-2 sm:mb-3">
                             <div>
-                                <h3 class="font-semibold text-slate-200">Tong Shi Po</h3>
-                                <p class="text-xs text-slate-500">Wholesale Specialty Exporter</p>
+                                <h3 class="font-bold text-slate-200 text-base">Tong Shi Po</h3>
+                                <p class="text-[11px] sm:text-xs text-slate-500">Wholesale Specialty Exporter</p>
                             </div>
-                            <span id="badge-tong" class="hidden text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                            <span id="badge-tong" class="hidden text-[11px] sm:text-xs font-bold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 shrink-0">
                                 🏆 LOWEST
                             </span>
                         </div>
-                        <div class="my-4">
-                            <span id="price-tong" class="text-3xl font-extrabold text-white">$59.00</span>
+                        <div class="my-3 sm:my-4">
+                            <span id="price-tong" class="text-2xl sm:text-3xl font-extrabold text-white">$59.00</span>
                             <span id="diff-tong" class="block text-xs font-medium text-slate-400 mt-1">Best Deal</span>
                         </div>
                     </div>
-                    <div class="pt-3 border-t border-slate-800/60 text-xs text-slate-400 space-y-1">
+                    <div class="pt-3 border-t border-slate-800/60 text-[11px] sm:text-xs text-slate-400 space-y-1">
                         <div>• MOQ: 1 Kit (10 vials)</div>
                         <div>• Direct Wholesale Export</div>
                     </div>
                 </div>
 
                 <!-- Tina Tianjin Bio Card -->
-                <div id="card-tina" class="bg-slate-950/60 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700">
+                <div id="card-tina" class="bg-slate-950/60 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700">
                     <div>
-                        <div class="flex justify-between items-start mb-3">
+                        <div class="flex justify-between items-start mb-2 sm:mb-3">
                             <div>
-                                <h3 class="font-semibold text-slate-200">Tina Tianjin Bio</h3>
-                                <p class="text-xs text-slate-500">Official Updated Rate Card</p>
+                                <h3 class="font-bold text-slate-200 text-base">Tina Tianjin Bio</h3>
+                                <p class="text-[11px] sm:text-xs text-slate-500">Official Updated Rate Card</p>
                             </div>
-                            <span id="badge-tina" class="hidden text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                            <span id="badge-tina" class="hidden text-[11px] sm:text-xs font-bold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 shrink-0">
                                 🏆 LOWEST
                             </span>
                         </div>
-                        <div class="my-4">
-                            <span id="price-tina" class="text-3xl font-extrabold text-white">$47.00</span>
+                        <div class="my-3 sm:my-4">
+                            <span id="price-tina" class="text-2xl sm:text-3xl font-extrabold text-white">$47.00</span>
                             <span id="diff-tina" class="block text-xs font-medium text-slate-400 mt-1">Best Deal</span>
                         </div>
                     </div>
-                    <div class="pt-3 border-t border-slate-800/60 text-xs text-slate-400 space-y-1">
+                    <div class="pt-3 border-t border-slate-800/60 text-[11px] sm:text-xs text-slate-400 space-y-1">
                         <div>• MOQ: 1 Kit (10 vials)</div>
                         <div>• Free Shipping on orders > $700</div>
                     </div>
@@ -178,49 +216,49 @@
         </section>
 
         <!-- Cart & Overall Vendor Recommendation Section -->
-        <section id="cart-section" class="bg-slate-950/80 border-2 border-indigo-500/30 rounded-2xl overflow-hidden shadow-2xl relative">
-            <div class="p-6 border-b border-slate-800/80 bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <section id="cart-section" class="bg-slate-950/90 border-2 border-indigo-500/30 rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl relative">
+            <div class="p-4 sm:p-6 border-b border-slate-800/80 bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 flex flex-col md:flex-row md:items-center justify-between gap-3.5 sm:gap-4">
                 <div>
-                    <div class="flex items-center gap-2 text-indigo-400 text-xs font-bold uppercase tracking-wider mb-1">
+                    <div class="flex items-center gap-2 text-indigo-400 text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-1">
                         <i class="fa-solid fa-basket-shopping"></i>
                         Order List & Multi-Item Optimizer
                     </div>
-                    <h3 class="text-2xl font-bold text-white">Your Selection List</h3>
-                    <p class="text-xs text-slate-400 mt-1">Add items to calculate total basket costs, pinpoint cheapest vendors, and contact reps via WhatsApp.</p>
+                    <h3 class="text-xl sm:text-2xl font-bold text-white">Your Selection List</h3>
+                    <p class="text-[11px] sm:text-xs text-slate-400 mt-1">Add items to calculate total basket costs, pinpoint cheapest vendors, and contact reps via WhatsApp.</p>
                 </div>
                 
-                <div class="flex items-center gap-2">
-                    <button id="copy-summary-btn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3.5 py-2 rounded-xl text-xs font-medium flex items-center gap-2 transition cursor-pointer">
+                <div class="flex items-center gap-2 shrink-0">
+                    <button id="copy-summary-btn" class="flex-1 sm:flex-none bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200 border border-slate-700 px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer min-h-[40px]">
                         <i class="fa-solid fa-copy"></i>
-                        <span>Copy Order Text</span>
+                        <span>Copy Order</span>
                     </button>
-                    <button id="clear-cart-btn" class="bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800/50 px-3.5 py-2 rounded-xl text-xs font-medium flex items-center gap-2 transition cursor-pointer">
+                    <button id="clear-cart-btn" class="bg-rose-950/40 hover:bg-rose-900/60 active:bg-rose-900 text-rose-300 border border-rose-800/50 px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer min-h-[40px]">
                         <i class="fa-solid fa-trash-can"></i>
                         <span>Clear All</span>
                     </button>
                 </div>
             </div>
 
-            <div class="p-6 space-y-6">
+            <div class="p-3.5 sm:p-6 space-y-4 sm:space-y-6">
                 <!-- Empty Cart State -->
-                <div id="cart-empty-state" class="text-center py-12 px-4 border-2 border-dashed border-slate-800 rounded-xl">
-                    <i class="fa-solid fa-layer-group text-4xl text-slate-600 mb-3"></i>
-                    <h4 class="text-slate-300 font-semibold text-base">Your order list is currently empty</h4>
+                <div id="cart-empty-state" class="text-center py-10 sm:py-12 px-4 border-2 border-dashed border-slate-800 rounded-xl">
+                    <i class="fa-solid fa-layer-group text-3xl sm:text-4xl text-slate-600 mb-3"></i>
+                    <h4 class="text-slate-300 font-semibold text-sm sm:text-base">Your order list is currently empty</h4>
                     <p class="text-xs text-slate-500 max-w-md mx-auto mt-1">Search for peptides or click the "+" button in the catalog table below to compare total basket pricing and send vendor orders.</p>
                 </div>
 
                 <!-- Cart Table & Analysis (Hidden when empty) -->
-                <div id="cart-content" class="hidden space-y-6">
-                    <div class="overflow-x-auto rounded-xl border border-slate-800">
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-slate-900/90 text-xs text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                <div id="cart-content" class="hidden space-y-4 sm:space-y-6">
+                    <div class="overflow-x-auto rounded-xl border border-slate-800 touch-scroll">
+                        <table class="w-full text-left text-xs sm:text-sm min-w-[620px]">
+                            <thead class="bg-slate-900/90 text-[11px] sm:text-xs text-slate-400 uppercase tracking-wider border-b border-slate-800">
                                 <tr>
-                                    <th class="py-3.5 px-4 font-semibold">Peptide / Spec</th>
-                                    <th class="py-3.5 px-4 font-semibold text-center">Kits (Qty)</th>
-                                    <th class="py-3.5 px-4 font-semibold text-right">Marvel Chloe</th>
-                                    <th class="py-3.5 px-4 font-semibold text-right">Tong Shi Po</th>
-                                    <th class="py-3.5 px-4 font-semibold text-right">Tina Bio</th>
-                                    <th class="py-3.5 px-4 font-semibold text-center">Action</th>
+                                    <th class="py-3 px-3.5 sm:py-3.5 sm:px-4 font-semibold">Peptide / Spec</th>
+                                    <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-center">Kits (Qty)</th>
+                                    <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right">Marvel Chloe</th>
+                                    <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right">Tong Shi Po</th>
+                                    <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right">Tina Bio</th>
+                                    <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="cart-tbody" class="divide-y divide-slate-800/60 text-slate-300">
@@ -229,53 +267,64 @@
                         </table>
                     </div>
 
+                    <div class="block sm:hidden text-[11px] text-slate-500 text-center italic">
+                        <i class="fa-solid fa-arrows-left-right text-xs mr-1"></i> Swipe horizontally to view full table
+                    </div>
+
                     <!-- Overall Vendor Recommendation Card -->
-                    <div id="overall-recommendation-box" class="bg-slate-900/90 border-2 rounded-2xl p-6 transition-all shadow-xl">
+                    <div id="overall-recommendation-box" class="bg-slate-900/90 border-2 rounded-xl sm:rounded-2xl p-4 sm:p-6 transition-all shadow-xl">
                         <!-- Dynamic Recommendation Header & Totals -->
                     </div>
 
                     <!-- WhatsApp Contact Rep Action Bar -->
-                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-3">
-                        <div class="flex items-center justify-between">
-                            <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                                <i class="fa-brands fa-whatsapp text-emerald-400 text-sm"></i>
+                    <div class="bg-slate-900/90 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 space-y-3.5">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-4">
+                            <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-brands fa-whatsapp text-emerald-400 text-base"></i>
                                 Send Order Directly to Vendor Rep via WhatsApp
                             </h4>
-                            <span class="text-[11px] text-slate-500">Opens WhatsApp with pre-filled items & Cat. Numbers for review</span>
+                            <span class="text-[11px] text-slate-400">Pre-fills quantities & Cat. Numbers for instant quote</span>
                         </div>
                         
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <button onclick="sendWhatsApp('marvel')" class="bg-emerald-950/40 hover:bg-emerald-900/70 border border-emerald-500/40 text-emerald-200 p-3.5 rounded-xl flex items-center justify-between transition cursor-pointer group">
-                                <div class="text-left">
-                                    <div class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-                                        <i class="fa-brands fa-whatsapp text-sm"></i>
-                                        <span>Chloe</span>
+                        <!-- Vendor WhatsApp Buttons (Stacks vertically full-width on mobile, 3 cols on tablet+) -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
+                            <button onclick="sendWhatsApp('marvel')" class="w-full bg-emerald-950/40 hover:bg-emerald-900/70 active:bg-emerald-900 border border-emerald-500/40 text-emerald-200 p-3.5 sm:p-4 rounded-xl flex items-center justify-between transition cursor-pointer group min-h-[52px]">
+                                <div class="text-left flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm shrink-0">
+                                        <i class="fa-brands fa-whatsapp"></i>
                                     </div>
-                                    <div class="text-[11px] text-slate-400">Marvel Chloe Rep</div>
+                                    <div>
+                                        <div class="text-xs font-bold text-emerald-300">Chloe</div>
+                                        <div class="text-[11px] text-slate-400">Marvel Chloe Rep</div>
+                                    </div>
                                 </div>
-                                <i class="fa-solid fa-paper-plane text-xs text-emerald-400 group-hover:translate-x-1 transition-transform"></i>
+                                <i class="fa-solid fa-paper-plane text-xs text-emerald-400 group-hover:translate-x-1 transition-transform ml-2"></i>
                             </button>
 
-                            <button onclick="sendWhatsApp('tong')" class="bg-emerald-950/40 hover:bg-emerald-900/70 border border-emerald-500/40 text-emerald-200 p-3.5 rounded-xl flex items-center justify-between transition cursor-pointer group">
-                                <div class="text-left">
-                                    <div class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-                                        <i class="fa-brands fa-whatsapp text-sm"></i>
-                                        <span>Tong</span>
+                            <button onclick="sendWhatsApp('tong')" class="w-full bg-emerald-950/40 hover:bg-emerald-900/70 active:bg-emerald-900 border border-emerald-500/40 text-emerald-200 p-3.5 sm:p-4 rounded-xl flex items-center justify-between transition cursor-pointer group min-h-[52px]">
+                                <div class="text-left flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm shrink-0">
+                                        <i class="fa-brands fa-whatsapp"></i>
                                     </div>
-                                    <div class="text-[11px] text-slate-400">Tong Shi Po Rep</div>
+                                    <div>
+                                        <div class="text-xs font-bold text-emerald-300">Tong</div>
+                                        <div class="text-[11px] text-slate-400">Tong Shi Po Rep</div>
+                                    </div>
                                 </div>
-                                <i class="fa-solid fa-paper-plane text-xs text-emerald-400 group-hover:translate-x-1 transition-transform"></i>
+                                <i class="fa-solid fa-paper-plane text-xs text-emerald-400 group-hover:translate-x-1 transition-transform ml-2"></i>
                             </button>
 
-                            <button onclick="sendWhatsApp('tina')" class="bg-emerald-950/40 hover:bg-emerald-900/70 border border-emerald-500/40 text-emerald-200 p-3.5 rounded-xl flex items-center justify-between transition cursor-pointer group">
-                                <div class="text-left">
-                                    <div class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
-                                        <i class="fa-brands fa-whatsapp text-sm"></i>
-                                        <span>Tina</span>
+                            <button onclick="sendWhatsApp('tina')" class="w-full bg-emerald-950/40 hover:bg-emerald-900/70 active:bg-emerald-900 border border-emerald-500/40 text-emerald-200 p-3.5 sm:p-4 rounded-xl flex items-center justify-between transition cursor-pointer group min-h-[52px]">
+                                <div class="text-left flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm shrink-0">
+                                        <i class="fa-brands fa-whatsapp"></i>
                                     </div>
-                                    <div class="text-[11px] text-slate-400">Tina Tianjin Bio Rep</div>
+                                    <div>
+                                        <div class="text-xs font-bold text-emerald-300">Tina</div>
+                                        <div class="text-[11px] text-slate-400">Tina Tianjin Bio Rep</div>
+                                    </div>
                                 </div>
-                                <i class="fa-solid fa-paper-plane text-xs text-emerald-400 group-hover:translate-x-1 transition-transform"></i>
+                                <i class="fa-solid fa-paper-plane text-xs text-emerald-400 group-hover:translate-x-1 transition-transform ml-2"></i>
                             </button>
                         </div>
                     </div>
@@ -284,29 +333,30 @@
         </section>
 
         <!-- Catalog Results Table -->
-        <section class="bg-slate-950/60 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
-            <div class="p-5 border-b border-slate-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <section class="bg-slate-950/70 border border-slate-800 rounded-xl sm:rounded-2xl overflow-hidden shadow-xl">
+            <div class="p-4 sm:p-5 border-b border-slate-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
                 <div>
-                    <h3 class="font-bold text-slate-200 text-lg">Full Price Catalog Table</h3>
-                    <p class="text-xs text-slate-400">Click any row to feature it above, or click "+" to add to your order planner</p>
+                    <h3 class="font-bold text-slate-200 text-base sm:text-lg">Full Price Catalog Table</h3>
+                    <p class="text-[11px] sm:text-xs text-slate-400">Tap any row to feature it above, or tap "+" to add to your order planner</p>
                 </div>
-                <div id="catalog-count" class="text-xs text-indigo-400 bg-indigo-950/60 border border-indigo-800/50 px-3 py-1.5 rounded-lg">
+                <div id="catalog-count" class="text-xs text-indigo-400 bg-indigo-950/60 border border-indigo-800/50 px-3 py-1.5 rounded-lg shrink-0">
                     Loading entries...
                 </div>
             </div>
 
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm">
-                    <thead class="bg-slate-900/80 text-xs text-slate-400 uppercase tracking-wider border-b border-slate-800">
+            <!-- Table Container with Smooth Touch Horizontal Scroll -->
+            <div class="overflow-x-auto touch-scroll">
+                <table class="w-full text-left text-xs sm:text-sm min-w-[640px]">
+                    <thead class="bg-slate-900/80 text-[11px] sm:text-xs text-slate-400 uppercase tracking-wider border-b border-slate-800">
                         <tr>
-                            <th class="py-3.5 px-4 font-semibold">Peptide / Product</th>
-                            <th class="py-3.5 px-4 font-semibold">Specification</th>
-                            <th class="py-3.5 px-4 font-semibold text-right">Marvel Chloe</th>
-                            <th class="py-3.5 px-4 font-semibold text-right">Tong Shi Po</th>
-                            <th class="py-3.5 px-4 font-semibold text-right">Tina Bio</th>
-                            <th class="py-3.5 px-4 font-semibold text-right">Lowest Price</th>
-                            <th class="py-3.5 px-4 font-semibold text-center">Best Vendor</th>
-                            <th class="py-3.5 px-4 font-semibold text-center">Add</th>
+                            <th class="py-3 px-3.5 sm:py-3.5 sm:px-4 font-semibold">Peptide / Product</th>
+                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold">Specification</th>
+                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right">Marvel Chloe</th>
+                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right">Tong Shi Po</th>
+                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right">Tina Bio</th>
+                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right">Lowest Price</th>
+                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-center">Best Vendor</th>
+                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-center">Add</th>
                         </tr>
                     </thead>
                     <tbody id="catalog-tbody" class="divide-y divide-slate-800/60 text-slate-300">
@@ -314,14 +364,18 @@
                     </tbody>
                 </table>
             </div>
+
+            <div class="block sm:hidden text-[11px] text-slate-500 text-center italic py-2.5 border-t border-slate-800/60 bg-slate-950/40">
+                <i class="fa-solid fa-arrows-left-right text-xs mr-1"></i> Swipe horizontally to view full rate card
+            </div>
         </section>
 
     </main>
 
     <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-emerald-400/30">
-        <i id="toast-icon" class="fa-solid fa-check-circle text-lg"></i>
-        <span id="toast-msg" class="text-sm font-medium">Notification</span>
+    <div id="toast" class="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-emerald-600 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-emerald-400/30 max-w-[90vw] sm:max-w-md pointer-events-none">
+        <i id="toast-icon" class="fa-solid fa-check-circle text-lg shrink-0"></i>
+        <span id="toast-msg" class="text-xs sm:text-sm font-medium break-words">Notification</span>
     </div>
 
     <script>
@@ -489,7 +543,7 @@
             const toastIcon = document.getElementById('toast-icon');
 
             toastMsg.innerText = message;
-            toastIcon.className = `fa-solid ${iconClass} text-lg`;
+            toastIcon.className = `fa-solid ${iconClass} text-lg shrink-0`;
             
             toast.classList.remove('translate-y-20', 'opacity-0');
             toast.classList.add('translate-y-0', 'opacity-100');
@@ -577,13 +631,13 @@
                         badgeEl.classList.remove('hidden');
                         diffEl.innerText = "🏆 Best Unit Price";
                         diffEl.className = "block text-xs font-semibold text-amber-400 mt-1";
-                        cardEl.className = "bg-slate-950/90 border-2 border-amber-500/50 rounded-2xl p-5 flex flex-col justify-between shadow-lg shadow-amber-500/5";
+                        cardEl.className = "bg-slate-950/90 border-2 border-amber-500/50 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-lg shadow-amber-500/5";
                     } else {
                         badgeEl.classList.add('hidden');
                         const diff = v.price - min;
                         diffEl.innerText = `+$${diff.toFixed(2)} vs lowest`;
                         diffEl.className = "block text-xs font-medium text-slate-400 mt-1";
-                        cardEl.className = "bg-slate-950/60 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700";
+                        cardEl.className = "bg-slate-950/60 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700";
                     }
                 } else {
                     priceEl.innerText = "N/A";
@@ -591,7 +645,7 @@
                     diffEl.innerText = "Not listed";
                     diffEl.className = "block text-xs text-slate-600 mt-1";
                     badgeEl.classList.add('hidden');
-                    cardEl.className = "bg-slate-950/40 border border-slate-800/50 opacity-60 rounded-2xl p-5 flex flex-col justify-between";
+                    cardEl.className = "bg-slate-950/40 border border-slate-800/50 opacity-60 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col justify-between";
                 }
             });
 
@@ -618,7 +672,7 @@
             );
 
             if (matches.length === 0) {
-                dropdown.innerHTML = `<div class="p-4 text-xs text-slate-500 text-center bg-slate-900 rounded-xl">No peptide found matching "${term}"</div>`;
+                dropdown.innerHTML = `<div class="p-4 text-xs text-slate-400 text-center bg-slate-900 rounded-xl">No peptide found matching "${term}"</div>`;
                 dropdown.classList.remove('hidden');
                 return;
             }
@@ -627,14 +681,14 @@
                 const info = getLowestInfo(item);
                 const lowestTxt = info.min ? `$${info.min.toFixed(2)}` : 'N/A';
                 return `
-                    <div class="dropdown-item p-3 hover:bg-slate-800 cursor-pointer flex justify-between items-center transition bg-slate-900 border-b border-slate-800 last:border-0" data-key="${item.key}">
-                        <div>
-                            <div class="font-medium text-sm text-slate-100">${item.key}</div>
-                            <div class="text-xs text-slate-400">Spec: ${item.spec}</div>
+                    <div class="dropdown-item p-3 sm:p-3.5 hover:bg-slate-800/90 active:bg-slate-800 cursor-pointer flex justify-between items-center transition bg-slate-900 gap-2 min-h-[48px]" data-key="${item.key}">
+                        <div class="min-w-0 flex-1">
+                            <div class="font-medium text-xs sm:text-sm text-slate-100 truncate">${item.key}</div>
+                            <div class="text-[11px] text-slate-400">Spec: ${item.spec}</div>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <span class="text-xs font-bold text-emerald-400">Best: ${lowestTxt}</span>
-                            <button class="add-btn-dropdown bg-emerald-600 hover:bg-emerald-500 text-white shadow-md border border-emerald-500/40 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer" data-key="${item.key}">
+                        <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                            <span class="text-xs font-bold text-emerald-400">${lowestTxt}</span>
+                            <button class="add-btn-dropdown bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white shadow-md border border-emerald-500/40 px-3 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-xs font-bold transition min-h-[38px] flex items-center justify-center cursor-pointer" data-key="${item.key}">
                                 <i class="fa-solid fa-plus mr-1"></i> Add
                             </button>
                         </div>
@@ -646,7 +700,7 @@
 
             document.querySelectorAll('.dropdown-item').forEach(el => {
                 el.addEventListener('click', (e) => {
-                    if (e.target.classList.contains('add-btn-dropdown')) return;
+                    if (e.target.closest('.add-btn-dropdown')) return;
                     const key = el.getAttribute('data-key');
                     const item = peptideData.find(i => i.key === key);
                     if (item) {
@@ -688,20 +742,20 @@
                 const isSelected = selectedItem && selectedItem.key === item.key;
 
                 return `
-                    <tr class="catalog-row border-b border-slate-800/50 hover:bg-slate-800/40 cursor-pointer transition ${isSelected ? 'bg-indigo-950/30' : ''}" data-key="${item.key}">
-                        <td class="py-3 px-4 font-medium text-white">${item.name}</td>
-                        <td class="py-3 px-4 text-slate-400 font-mono text-xs">${item.spec}</td>
-                        <td class="py-3 px-4 text-right ${item.marvel === info.min && info.min ? 'text-amber-300 font-bold' : 'text-slate-300'}">${item.marvel !== null ? '$' + item.marvel.toFixed(2) : '—'}</td>
-                        <td class="py-3 px-4 text-right ${item.tong === info.min && info.min ? 'text-amber-300 font-bold' : 'text-slate-300'}">${item.tong !== null ? '$' + item.tong.toFixed(2) : '—'}</td>
-                        <td class="py-3 px-4 text-right ${item.tina === info.min && info.min ? 'text-amber-300 font-bold' : 'text-slate-300'}">${item.tina !== null ? '$' + item.tina.toFixed(2) : '—'}</td>
-                        <td class="py-3 px-4 text-right font-semibold text-emerald-400">${info.min ? '$' + info.min.toFixed(2) : '—'}</td>
-                        <td class="py-3 px-4 text-center">
-                            <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-slate-300">
+                    <tr class="catalog-row border-b border-slate-800/50 hover:bg-slate-800/40 active:bg-slate-800/60 cursor-pointer transition ${isSelected ? 'bg-indigo-950/30' : ''}" data-key="${item.key}">
+                        <td class="py-3 px-3.5 sm:py-3.5 sm:px-4 font-medium text-white whitespace-nowrap">${item.name}</td>
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-slate-400 font-mono text-xs whitespace-nowrap">${item.spec}</td>
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right whitespace-nowrap ${item.marvel === info.min && info.min ? 'text-amber-300 font-bold' : 'text-slate-300'}">${item.marvel !== null ? '$' + item.marvel.toFixed(2) : '—'}</td>
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right whitespace-nowrap ${item.tong === info.min && info.min ? 'text-amber-300 font-bold' : 'text-slate-300'}">${item.tong !== null ? '$' + item.tong.toFixed(2) : '—'}</td>
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right whitespace-nowrap ${item.tina === info.min && info.min ? 'text-amber-300 font-bold' : 'text-slate-300'}">${item.tina !== null ? '$' + item.tina.toFixed(2) : '—'}</td>
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right font-semibold text-emerald-400 whitespace-nowrap">${info.min ? '$' + info.min.toFixed(2) : '—'}</td>
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-center whitespace-nowrap">
+                            <span class="text-[11px] sm:text-xs px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-slate-300 inline-block">
                                 ${info.winners.join(', ') || 'N/A'}
                             </span>
                         </td>
-                        <td class="py-3 px-4 text-center">
-                            <button class="add-to-cart-table-btn bg-indigo-600/30 hover:bg-indigo-600 text-indigo-300 hover:text-white border border-indigo-500/40 px-2.5 py-1 rounded-lg text-xs font-semibold transition cursor-pointer" data-key="${item.key}">
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-center whitespace-nowrap">
+                            <button class="add-to-cart-table-btn bg-indigo-600/30 hover:bg-indigo-600 active:bg-indigo-700 text-indigo-300 hover:text-white border border-indigo-500/40 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer min-h-[36px] flex items-center justify-center mx-auto" data-key="${item.key}">
                                 <i class="fa-solid fa-plus mr-1"></i> Add
                             </button>
                         </td>
@@ -849,29 +903,29 @@
 
                 return `
                     <tr class="border-b border-slate-800/50 hover:bg-slate-900/50 transition">
-                        <td class="py-3 px-4 font-medium text-white">
-                            <div>${itemData.name}</div>
-                            <div class="text-xs text-slate-500 font-mono">${itemData.spec}</div>
+                        <td class="py-3 px-3.5 sm:py-3.5 sm:px-4 font-medium text-white whitespace-nowrap">
+                            <div class="text-xs sm:text-sm">${itemData.name}</div>
+                            <div class="text-[11px] text-slate-500 font-mono">${itemData.spec}</div>
                         </td>
-                        <td class="py-3 px-4 text-center">
-                            <div class="inline-flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded-lg p-1">
-                                <button class="qty-btn text-slate-400 hover:text-white w-6 h-6 flex items-center justify-center rounded hover:bg-slate-800 cursor-pointer" onclick="updateCartQty('${cartItem.key}', -1)">-</button>
-                                <span class="text-xs font-bold w-6 text-center text-indigo-300">${cartItem.qty}</span>
-                                <button class="qty-btn text-slate-400 hover:text-white w-6 h-6 flex items-center justify-center rounded hover:bg-slate-800 cursor-pointer" onclick="updateCartQty('${cartItem.key}', 1)">+</button>
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-center whitespace-nowrap">
+                            <div class="inline-flex items-center gap-1 bg-slate-900 border border-slate-700/80 rounded-lg p-1">
+                                <button class="qty-btn text-slate-300 hover:text-white w-8 h-8 sm:w-7 sm:h-7 min-w-[32px] min-h-[32px] flex items-center justify-center rounded-md hover:bg-slate-800 active:bg-slate-700 font-bold text-sm cursor-pointer transition" onclick="updateCartQty('${cartItem.key}', -1)">-</button>
+                                <span class="text-xs sm:text-sm font-bold w-6 sm:w-7 text-center text-indigo-300 select-none">${cartItem.qty}</span>
+                                <button class="qty-btn text-slate-300 hover:text-white w-8 h-8 sm:w-7 sm:h-7 min-w-[32px] min-h-[32px] flex items-center justify-center rounded-md hover:bg-slate-800 active:bg-slate-700 font-bold text-sm cursor-pointer transition" onclick="updateCartQty('${cartItem.key}', 1)">+</button>
                             </div>
                         </td>
-                        <td class="py-3 px-4 text-right font-medium ${marvelSub !== null ? 'text-slate-200' : 'text-slate-600'}">
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right font-medium whitespace-nowrap ${marvelSub !== null ? 'text-slate-200' : 'text-slate-600'}">
                             ${marvelSub !== null ? '$' + marvelSub.toFixed(2) : 'N/A'}
                         </td>
-                        <td class="py-3 px-4 text-right font-medium ${tongSub !== null ? 'text-slate-200' : 'text-slate-600'}">
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right font-medium whitespace-nowrap ${tongSub !== null ? 'text-slate-200' : 'text-slate-600'}">
                             ${tongSub !== null ? '$' + tongSub.toFixed(2) : 'N/A'}
                         </td>
-                        <td class="py-3 px-4 text-right font-medium ${tinaSub !== null ? 'text-slate-200' : 'text-slate-600'}">
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right font-medium whitespace-nowrap ${tinaSub !== null ? 'text-slate-200' : 'text-slate-600'}">
                             ${tinaSub !== null ? '$' + tinaSub.toFixed(2) : 'N/A'}
                         </td>
-                        <td class="py-3 px-4 text-center">
-                            <button class="text-slate-500 hover:text-rose-400 p-1.5 transition cursor-pointer" onclick="removeFromCart('${cartItem.key}')">
-                                <i class="fa-solid fa-trash-can"></i>
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-center whitespace-nowrap">
+                            <button class="w-9 h-9 min-w-[36px] min-h-[36px] inline-flex items-center justify-center rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-950/40 active:bg-rose-900/50 transition cursor-pointer" onclick="removeFromCart('${cartItem.key}')" aria-label="Delete item">
+                                <i class="fa-solid fa-trash-can text-sm"></i>
                             </button>
                         </td>
                     </tr>
@@ -898,7 +952,7 @@
             }
 
             if (bestVendor) {
-                overallRecBox.className = "bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-900 border-2 border-emerald-500/50 rounded-2xl p-6 shadow-xl";
+                overallRecBox.className = "bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-900 border-2 border-emerald-500/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl";
                 
                 let missingNotice = '';
                 const unstocked = [];
@@ -908,7 +962,7 @@
 
                 if (unstocked.length > 0) {
                     missingNotice = `
-                        <div class="text-xs text-amber-400/90 bg-amber-950/30 border border-amber-800/40 px-3 py-2 rounded-lg mt-3">
+                        <div class="text-[11px] sm:text-xs text-amber-400/90 bg-amber-950/30 border border-amber-800/40 px-3 py-2 rounded-lg mt-3">
                             <i class="fa-solid fa-triangle-exclamation mr-1"></i>
                             <strong>Note:</strong> ${unstocked.join(', ')} does not stock all items in your cart. Calculations exclude incomplete vendors.
                         </div>
@@ -916,35 +970,35 @@
                 }
 
                 overallRecBox.innerHTML = `
-                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 sm:gap-6">
                         <div class="space-y-2">
-                            <div class="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-3 py-1 rounded-full text-xs font-bold">
+                            <div class="inline-flex items-center gap-1.5 sm:gap-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold">
                                 <i class="fa-solid fa-trophy"></i> OVERALL CHEAPEST VENDOR RECOMMENDATION
                             </div>
-                            <h4 class="text-2xl font-extrabold text-white">
+                            <h4 class="text-xl sm:text-2xl font-extrabold text-white">
                                 ${bestVendor.name} <span class="text-emerald-400">($${bestVendor.total.toFixed(2)})</span>
                             </h4>
-                            <p class="text-xs text-slate-300">
+                            <p class="text-xs text-slate-300 leading-relaxed">
                                 Ordering all ${totalItemsCount} kit(s) from <strong>${bestVendor.name}</strong> provides the lowest combined price for your custom order. ${bestVendor.note}.
                             </p>
                             ${missingNotice}
                         </div>
 
-                        <!-- Side-by-Side Cart Totals -->
-                        <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 min-w-[280px] space-y-2">
-                            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 border-b border-slate-800 pb-1">Vendor Total Comparison</div>
+                        <!-- Side-by-Side Cart Totals (Full width on small mobile, compact on tablet+) -->
+                        <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 sm:p-4 w-full lg:w-auto min-w-full lg:min-w-[280px] space-y-2 shrink-0">
+                            <div class="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 border-b border-slate-800 pb-1.5">Vendor Total Comparison</div>
                             
-                            <div class="flex justify-between items-center text-xs">
+                            <div class="flex justify-between items-center text-xs sm:text-sm">
                                 <span class="${!marvelMissing && bestVendor.name === 'Marvel Chloe' ? 'text-emerald-400 font-bold' : 'text-slate-300'}">Marvel Chloe:</span>
                                 <span class="font-bold ${!marvelMissing ? 'text-white' : 'text-slate-600'}">${!marvelMissing ? '$' + marvelGrandTotal.toFixed(2) : 'Incomplete'}</span>
                             </div>
 
-                            <div class="flex justify-between items-center text-xs">
+                            <div class="flex justify-between items-center text-xs sm:text-sm">
                                 <span class="${!tongMissing && bestVendor.name === 'Tong Shi Po' ? 'text-emerald-400 font-bold' : 'text-slate-300'}">Tong Shi Po:</span>
                                 <span class="font-bold ${!tongMissing ? 'text-white' : 'text-slate-600'}">${!tongMissing ? '$' + tongGrandTotal.toFixed(2) : 'Incomplete'}</span>
                             </div>
 
-                            <div class="flex justify-between items-center text-xs">
+                            <div class="flex justify-between items-center text-xs sm:text-sm">
                                 <span class="${!tinaMissing && bestVendor.name === 'Tina Tianjin Bio' ? 'text-emerald-400 font-bold' : 'text-slate-300'}">Tina Tianjin Bio:</span>
                                 <span class="font-bold ${!tinaMissing ? 'text-white' : 'text-slate-600'}">${!tinaMissing ? '$' + tinaGrandTotal.toFixed(2) : 'Incomplete'}</span>
                             </div>
@@ -952,10 +1006,10 @@
                     </div>
                 `;
             } else {
-                overallRecBox.className = "bg-slate-900 border border-slate-800 rounded-2xl p-6 text-slate-400 text-sm";
+                overallRecBox.className = "bg-slate-900 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 text-slate-400 text-xs sm:text-sm";
                 overallRecBox.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <i class="fa-solid fa-circle-info text-amber-400 text-xl"></i>
+                    <div class="flex items-start sm:items-center gap-3">
+                        <i class="fa-solid fa-circle-info text-amber-400 text-lg sm:text-xl shrink-0 mt-0.5 sm:mt-0"></i>
                         <div>
                             <strong>No single vendor stocks every item in your current selection list.</strong>
                             <p class="text-xs text-slate-500 mt-0.5">Try splitting your order or adjusting items to see overall vendor recommendations.</p>
@@ -979,6 +1033,7 @@
             clearBtn.classList.add('hidden');
             dropdown.classList.add('hidden');
             renderCatalog('');
+            searchInput.focus();
         });
 
         // Quick search chips
@@ -1042,6 +1097,7 @@
             }
         });
 
+        // Initialize state on page load
         updateSpotlight(selectedItem);
         renderCatalog();
         renderCart();

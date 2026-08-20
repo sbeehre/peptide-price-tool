@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peptide Vendor Price Comparison & Order Planner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen pb-16">
+
+    <!-- Navigation / Header -->
+    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2.5 bg-indigo-600/20 text-indigo-400 rounded-xl border border-indigo-500/30">
+                    <i class="fa-solid fa-flask-vial text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        Peptide Price Comparison Tool
+                    </h1>
+                    <p class="text-xs text-slate-400">Live Rate Comparison: Marvel Chloe, Tong Shi Po & Tina Bio</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <a href="#cart-section" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-4 py-2 rounded-xl text-xs sm:text-sm transition shadow-lg shadow-indigo-600/20 border border-indigo-500/50">
+                    <i class="fa-solid fa-shopping-basket"></i>
+                    <span>Order List</span>
+                    <span id="cart-badge-count" class="bg-indigo-950 text-indigo-200 border border-indigo-400/40 text-xs px-2 py-0.5 rounded-full font-bold">0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 space-y-8">
+
+        <!-- Search Section -->
+        <section class="bg-slate-950/80 border border-slate-800/80 rounded-2xl p-6 shadow-xl backdrop-blur relative z-50">
+            <div class="max-w-3xl mx-auto space-y-4">
+                <label for="peptide-search" class="block text-sm font-semibold text-slate-300">
+                    <i class="fa-solid fa-magnifying-glass text-indigo-400 mr-2"></i>
+                    Search Peptide or Select Specification
+                </label>
+
+                <div class="relative z-[100]">
+                    <input 
+                        type="text" 
+                        id="peptide-search" 
+                        placeholder="Type to search (e.g. retatrutide, semaglutide, cagrilintide, tb500, glow)..." 
+                        class="w-full bg-slate-900 border border-slate-700/80 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 text-white rounded-xl py-3.5 pl-11 pr-10 text-sm transition placeholder-slate-500 shadow-inner"
+                        autocomplete="off"
+                    >
+                    <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                    <button id="clear-search" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 p-1 cursor-pointer">
+                        <i class="fa-solid fa-times-circle"></i>
+                    </button>
+
+                    <!-- Instant Search Results Dropdown -->
+                    <div id="dropdown-results" class="hidden absolute left-0 right-0 top-full mt-2 bg-slate-900 border border-slate-600 rounded-xl shadow-[0_30px_60px_-15px_rgba(0,0,0,0.9)] max-h-72 overflow-y-auto z-[100] isolate">
+                        <!-- Options injected dynamically -->
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2 pt-1">
+                    <span class="text-xs text-slate-400 font-medium mr-1">Popular searches:</span>
+                    <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-2.5 py-1 rounded-lg transition">Retatrutide</button>
+                    <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-2.5 py-1 rounded-lg transition">Semaglutide</button>
+                    <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-2.5 py-1 rounded-lg transition">Tirzepatide</button>
+                    <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-2.5 py-1 rounded-lg transition">GLOW</button>
+                    <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-2.5 py-1 rounded-lg transition">Cagrilintide</button>
+                    <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-2.5 py-1 rounded-lg transition">BPC-157</button>
+                    <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-2.5 py-1 rounded-lg transition">TB500</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Selected Item Comparison Spotlight -->
+        <section id="spotlight-section" class="space-y-4 relative z-0">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <span class="text-xs font-semibold tracking-wider uppercase text-indigo-400">Featured Product Spotlight</span>
+                    <h2 id="selected-title" class="text-2xl font-bold text-white">Semaglutide (10mg*10)</h2>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <button id="add-spotlight-to-cart" class="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-4 py-2.5 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20 border border-emerald-500/50 cursor-pointer">
+                        <i class="fa-solid fa-plus-circle"></i>
+                        <span>Add to Order List</span>
+                    </button>
+                    <div id="recommended-banner" class="hidden sm:flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs px-3.5 py-2.5 rounded-xl">
+                        <i class="fa-solid fa-trophy text-amber-400"></i>
+                        <span>Best Unit: <strong id="rec-vendor-name" class="font-semibold text-white">—</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vendor Price Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <!-- Marvel Chloe Card -->
+                <div id="card-marvel" class="bg-slate-950/60 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h3 class="font-semibold text-slate-200">Marvel Chloe</h3>
+                                <p class="text-xs text-slate-500">US Warehouse + China Direct</p>
+                            </div>
+                            <span id="badge-marvel" class="hidden text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                                🏆 LOWEST
+                            </span>
+                        </div>
+                        <div class="my-4">
+                            <span id="price-marvel" class="text-3xl font-extrabold text-white">$70.00</span>
+                            <span id="diff-marvel" class="block text-xs font-medium text-slate-400 mt-1">Best Deal</span>
+                        </div>
+                    </div>
+                    <div class="pt-3 border-t border-slate-800/60 text-xs text-slate-400 space-y-1">
+                        <div>• MOQ: 1 Kit (10 vials)</div>
+                        <div>• Direct Express Courier</div>
+                    </div>
+                </div>
+
+                <!-- Tong Shi Po Card -->
+                <div id="card-tong" class="bg-slate-950/60 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h3 class="font-semibold text-slate-200">Tong Shi Po</h3>
+                                <p class="text-xs text-slate-500">Wholesale Specialty Exporter</p>
+                            </div>
+                            <span id="badge-tong" class="hidden text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                                🏆 LOWEST
+                            </span>
+                        </div>
+                        <div class="my-4">
+                            <span id="price-tong" class="text-3xl font-extrabold text-white">$59.00</span>
+                            <span id="diff-tong" class="block text-xs font-medium text-slate-400 mt-1">Best Deal</span>
+                        </div>
+                    </div>
+                    <div class="pt-3 border-t border-slate-800/60 text-xs text-slate-400 space-y-1">
+                        <div>• MOQ: 1 Kit (10 vials)</div>
+                        <div>• Direct Wholesale Export</div>
+                    </div>
+                </div>
+
+                <!-- Tina Tianjin Bio Card -->
+                <div id="card-tina" class="bg-slate-950/60 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700">
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <h3 class="font-semibold text-slate-200">Tina Tianjin Bio</h3>
+                                <p class="text-xs text-slate-500">Official Updated Rate Card</p>
+                            </div>
+                            <span id="badge-tina" class="hidden text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                                🏆 LOWEST
+                            </span>
+                        </div>
+                        <div class="my-4">
+                            <span id="price-tina" class="text-3xl font-extrabold text-white">$47.00</span>
+                            <span id="diff-tina" class="block text-xs font-medium text-slate-400 mt-1">Best Deal</span>
+                        </div>
+                    </div>
+                    <div class="pt-3 border-t border-slate-800/60 text-xs text-slate-400 space-y-1">
+                        <div>• MOQ: 1 Kit (10 vials)</div>
+                        <div>• Free Shipping on orders > $700</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cart & Overall Vendor Recommendation Section -->
+        <section id="cart-section" class="bg-slate-950/80 border-2 border-indigo-500/30 rounded-2xl overflow-hidden shadow-2xl relative">
+            <div class="p-6 border-b border-slate-800/80 bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <div class="flex items-center gap-2 text-indigo-400 text-xs font-bold uppercase tracking-wider mb-1">
+                        <i class="fa-solid fa-basket-shopping"></i>
+                        Order List & Multi-Item Optimizer
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">Your Selection List</h3>
+                    <p class="text-xs text-slate-400 mt-1">Add items to calculate total basket costs, pinpoint cheapest vendors, and contact reps via WhatsApp.</p>
+                </div>
+                
+                <div class="flex items-center gap-2">
+                    <button id="copy-summary-btn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3.5 py-2 rounded-xl text-xs font-medium flex items-center gap-2 transition cursor-pointer">
+                        <i class="fa-solid fa-copy"></i>
+                        <span>Copy Order Text</span>
+                    </button>
+                    <button id="clear-cart-btn" class="bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800/50 px-3.5 py-2 rounded-xl text-xs font-medium flex items-center gap-2 transition cursor-pointer">
+                        <i class="fa-solid fa-trash-can"></i>
+                        <span>Clear All</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-6 space-y-6">
+                <!-- Empty Cart State -->
+                <div id="cart-empty-state" class="text-center py-12 px-4 border-2 border-dashed border-slate-800 rounded-xl">
+                    <i class="fa-solid fa-layer-group text-4xl text-slate-600 mb-3"></i>
+                    <h4 class="text-slate-300 font-semibold text-base">Your order list is currently empty</h4>
+                    <p class="text-xs text-slate-500 max-w-md mx-auto mt-1">Search for peptides or click the "+" button in the catalog table below to compare total basket pricing and send vendor orders.</p>
+                </div>
+
+                <!-- Cart Table & Analysis (Hidden when empty) -->
+                <div id="cart-content" class="hidden space-y-6">
+                    <div class="overflow-x-auto rounded-xl border border-slate-800">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-900/90 text-xs text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                                <tr>
+                                    <th class="py-3.5 px-4 font-semibold">Peptide / Spec</th>
+                                    <th class="py-3.5 px-4 font-semibold text-center">Kits (Qty)</th>
+                                    <th class="py-3.5 px-4 font-semibold text-right">Marvel Chloe</th>
+                                    <th class="py-3.5 px-4 font-semibold text-right">Tong Shi Po</th>
+                                    <th class="py-3.5 px-4 font-semibold text-right">Tina Bio</th>
+                                    <th class="py-3.5 px-4 font-semibold text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cart-tbody" class="divide-y divide-slate-800/60 text-slate-300">
+                                <!-- Cart Items Injected Dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Overall Vendor Recommendation Card -->
+                    <div id="overall-recommendation-box" class="bg-slate-900/90 border-2 rounded-2xl p-6 transition-all shadow-xl">
+                        <!-- Dynamic Recommendation Header & Totals -->
+                    </div>
+
+                    <!-- WhatsApp Contact Rep Action Bar -->
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-brands fa-whatsapp text-emerald-400 text-sm"></i>
+                                Send Order Directly to Vendor Rep via WhatsApp
+                            </h4>
+                            <span class="text-[11px] text-slate-500">Opens WhatsApp with pre-filled items & Cat. Numbers for review</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <button onclick="sendWhatsApp('marvel')" class="bg-emerald-950/40 hover:bg-emerald-900/70 border border-emerald-500/40 text-emerald-200 p-3.5 rounded-xl flex items-center justify-between transition cursor-pointer group">
+                                <div class="text-left">
+                                    <div class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                                        <i class="fa-brands fa-whatsapp text-sm"></i>
+                                        <span>Chloe</span>
+                                    </div>
+                                    <div class="text-[11px] text-slate-400">Marvel Chloe Rep</div>
+                                </div>
+                                <i class="fa-solid fa-paper-plane text-xs text-emerald-400 group-hover:translate-x-1 transition-transform"></i>
+                            </button>
+
+                            <button onclick="sendWhatsApp('tong')" class="bg-emerald-950/40 hover:bg-emerald-900/70 border border-emerald-500/40 text-emerald-200 p-3.5 rounded-xl flex items-center justify-between transition cursor-pointer group">
+                                <div class="text-left">
+                                    <div class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                                        <i class="fa-brands fa-whatsapp text-sm"></i>
+                                        <span>Tong</span>
+                                    </div>
+                                    <div class="text-[11px] text-slate-400">Tong Shi Po Rep</div>
+                                </div>
+                                <i class="fa-solid fa-paper-plane text-xs text-emerald-400 group-hover:translate-x-1 transition-transform"></i>
+                            </button>
+
+                            <button onclick="sendWhatsApp('tina')" class="bg-emerald-950/40 hover:bg-emerald-900/70 border border-emerald-500/40 text-emerald-200 p-3.5 rounded-xl flex items-center justify-between transition cursor-pointer group">
+                                <div class="text-left">
+                                    <div class="text-xs font-bold text-emerald-400 flex items-center gap-1.5">
+                                        <i class="fa-brands fa-whatsapp text-sm"></i>
+                                        <span>Tina</span>
+                                    </div>
+                                    <div class="text-[11px] text-slate-400">Tina Tianjin Bio Rep</div>
+                                </div>
+                                <i class="fa-solid fa-paper-plane text-xs text-emerald-400 group-hover:translate-x-1 transition-transform"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Catalog Results Table -->
+        <section class="bg-slate-950/60 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+            <div class="p-5 border-b border-slate-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <h3 class="font-bold text-slate-200 text-lg">Full Price Catalog Table</h3>
+                    <p class="text-xs text-slate-400">Click any row to feature it above, or click "+" to add to your order planner</p>
+                </div>
+                <div id="catalog-count" class="text-xs text-indigo-400 bg-indigo-950/60 border border-indigo-800/50 px-3 py-1.5 rounded-lg">
+                    Loading entries...
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-slate-900/80 text-xs text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                        <tr>
+                            <th class="py-3.5 px-4 font-semibold">Peptide / Product</th>
+                            <th class="py-3.5 px-4 font-semibold">Specification</th>
+                            <th class="py-3.5 px-4 font-semibold text-right">Marvel Chloe</th>
+                            <th class="py-3.5 px-4 font-semibold text-right">Tong Shi Po</th>
+                            <th class="py-3.5 px-4 font-semibold text-right">Tina Bio</th>
+                            <th class="py-3.5 px-4 font-semibold text-right">Lowest Price</th>
+                            <th class="py-3.5 px-4 font-semibold text-center">Best Vendor</th>
+                            <th class="py-3.5 px-4 font-semibold text-center">Add</th>
+                        </tr>
+                    </thead>
+                    <tbody id="catalog-tbody" class="divide-y divide-slate-800/60 text-slate-300">
+                        <!-- Table rows injected dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-emerald-400/30">
+        <i id="toast-icon" class="fa-solid fa-check-circle text-lg"></i>
+        <span id="toast-msg" class="text-sm font-medium">Notification</span>
+    </div>
+
+    <script>
+        // Complete verified dataset matching official PDF price lists across all 3 vendors
+        const peptideData = [
+            { key: "5-amino-1mq (5mg*10)", name: "5-amino-1mq", spec: "5mg*10", marvel: 65, tong: 66, tina: 59 },
+            { key: "5-amino-1mq (10mg*10)", name: "5-amino-1mq", spec: "10mg*10", marvel: 85, tong: null, tina: 80 },
+            { key: "5-amino-1mq (50mg*10)", name: "5-amino-1mq", spec: "50mg*10", marvel: 110, tong: 151, tina: 132 },
+            { key: "ACE-031 (1mg*10)", name: "ACE-031", spec: "1mg*10", marvel: 180, tong: null, tina: null },
+            { key: "Acetic Acid water 0.6% (3ml*10)", name: "Acetic Acid water 0.6%", spec: "3ml*10", marvel: null, tong: 8, tina: null },
+            { key: "Acetic Acid water 0.6% (10ml*10)", name: "Acetic Acid water 0.6%", spec: "10ml*10", marvel: null, tong: 10, tina: 7 },
+            { key: "Adamax (5mg*10)", name: "Adamax", spec: "5mg*10", marvel: null, tong: 113, tina: null },
+            { key: "Adamax (10mg*10)", name: "Adamax", spec: "10mg*10", marvel: null, tong: 159, tina: null },
+            { key: "Adipotide (5mg*10)", name: "Adipotide", spec: "5mg*10", marvel: null, tong: 211, tina: 191 },
+            { key: "AHK-Cu (50mg*10)", name: "AHK-Cu", spec: "50mg*10", marvel: null, tong: 78, tina: null },
+            { key: "AHK-Cu (100mg*10)", name: "AHK-Cu", spec: "100mg*10", marvel: null, tong: 95, tina: 84 },
+            { key: "AOD 9604 (5mg*10)", name: "AOD 9604", spec: "5mg*10", marvel: 145, tong: 140, tina: 112 },
+            { key: "AOD 9604 (10mg*10)", name: "AOD 9604", spec: "10mg*10", marvel: null, tong: 200, tina: null },
+            { key: "Ara-290 (10mg*10)", name: "Ara-290", spec: "10mg*10", marvel: null, tong: 82, tina: 74 },
+            { key: "BAC Water / Benzyl Alcohol 0.9% (3ml*10)", name: "BAC Water / Benzyl Alcohol 0.9%", spec: "3ml*10", marvel: 10, tong: 8, tina: 6 },
+            { key: "BAC Water / Benzyl Alcohol 0.9% (10ml*10)", name: "BAC Water / Benzyl Alcohol 0.9%", spec: "10ml*10", marvel: 12, tong: 10, tina: 7 },
+            { key: "B12 Vitamin (10ml*10)", name: "B12 Vitamin", spec: "10ml*10", marvel: 65, tong: 33, tina: 29 },
+            { key: "BPC-157 (5mg*10)", name: "BPC-157", spec: "5mg*10", marvel: 70, tong: 49, tina: 44 },
+            { key: "BPC-157 (10mg*10)", name: "BPC-157", spec: "10mg*10", marvel: 85, tong: 70, tina: 65 },
+            { key: "BPC-157 (20mg*10)", name: "BPC-157", spec: "20mg*10", marvel: 150, tong: null, tina: null },
+            { key: "BPC-157 5mg + TB500 5mg (10mg*10)", name: "BPC-157 + TB500", spec: "10mg*10", marvel: 110, tong: 123, tina: 109 },
+            { key: "BPC-157 10mg + TB500 10mg (20mg*10)", name: "BPC-157 + TB500", spec: "20mg*10", marvel: 180, tong: 244, tina: 220 },
+            { key: "GLOW / BBG70 (BPC 10mg+GHK-Cu 50mg+TB500 10mg)", name: "GLOW Blend", spec: "70mg*10", marvel: 210, tong: 244, tina: 212 },
+            { key: "KLOW80 (CU50+TB10+BC10+KPV10)", name: "KLOW Blend", spec: "80mg*10", marvel: 245, tong: 293, tina: 250 },
+            { key: "Cagrilintide (5mg*10)", name: "Cagrilintide", spec: "5mg*10", marvel: 130, tong: 136, tina: 121 },
+            { key: "Cagrilintide (10mg*10)", name: "Cagrilintide", spec: "10mg*10", marvel: 210, tong: 215, tina: 191 },
+            { key: "Cagrilintide 2.5mg + Semaglutide 2.5mg (5mg*10)", name: "Cagrilintide + Semaglutide", spec: "5mg*10", marvel: null, tong: 134, tina: null },
+            { key: "Cagrilintide 5mg + Semaglutide 5mg (10mg*10)", name: "Cagrilintide + Semaglutide", spec: "10mg*10", marvel: null, tong: 179, tina: 162 },
+            { key: "Cardiogen (20mg*10)", name: "Cardiogen", spec: "20mg*10", marvel: 130, tong: null, tina: 137.5 },
+            { key: "Cartlax (20mg*10)", name: "Cartlax", spec: "20mg*10", marvel: 130, tong: null, tina: 130 },
+            { key: "CJC-1295 no DAC (5mg*10)", name: "CJC-1295 no dac", spec: "5mg*10", marvel: 105, tong: 104, tina: 94 },
+            { key: "CJC-1295 no DAC (10mg*10)", name: "CJC-1295 no dac", spec: "10mg*10", marvel: 160, tong: 195, tina: 171 },
+            { key: "CJC-1295 no DAC 5mg + Ipamorelin 5mg (10mg*10)", name: "CJC-1295 no DAC + Ipamorelin", spec: "10mg*10", marvel: 110, tong: 130, tina: 115 },
+            { key: "CJC-1295 with DAC (5mg*10)", name: "CJC-1295 with dac", spec: "5mg*10", marvel: 185, tong: 195, tina: 176 },
+            { key: "CJC-1295 with DAC (10mg*10)", name: "CJC-1295 with dac", spec: "10mg*10", marvel: null, tong: null, tina: 287 },
+            { key: "Dermorphin (5mg*10)", name: "Dermorphin", spec: "5mg*10", marvel: 75, tong: null, tina: null },
+            { key: "Dermorphin (10mg*10)", name: "Dermorphin", spec: "10mg*10", marvel: 80, tong: null, tina: null },
+            { key: "Dihexa (10mg*10)", name: "Dihexa", spec: "10mg*10", marvel: null, tong: 74, tina: null },
+            { key: "DSIP (5mg*10)", name: "DSIP", spec: "5mg*10", marvel: 70, tong: 49, tina: 44 },
+            { key: "DSIP (10mg*10)", name: "DSIP", spec: "10mg*10", marvel: null, tong: null, tina: 75 },
+            { key: "DSIP (15mg*10)", name: "DSIP", spec: "15mg*10", marvel: 110, tong: 113, tina: 103 },
+            { key: "Eloralintide (10mg*10)", name: "Eloralintide", spec: "10mg*10", marvel: null, tong: null, tina: 477 },
+            { key: "Epithalon (10mg*10)", name: "Epithalon", spec: "10mg*10", marvel: 65, tong: 78, tina: 71 },
+            { key: "Epithalon (50mg*10)", name: "Epithalon", spec: "50mg*10", marvel: 165, tong: 227, tina: 200 },
+            { key: "FOXO4-DRI (10mg*10)", name: "FOXO4-DRI", spec: "10mg*10", marvel: null, tong: 409, tina: 430 },
+            { key: "GHK-Cu (50mg*10)", name: "GHK-Cu", spec: "50mg*10", marvel: 50, tong: 40, tina: 32 },
+            { key: "GHK-Cu (100mg*10)", name: "GHK-Cu", spec: "100mg*10", marvel: 70, tong: 49, tina: 41 },
+            { key: "GHRP-2 (5mg*10)", name: "GHRP-2", spec: "5mg*10", marvel: null, tong: 53, tina: 47 },
+            { key: "GHRP-2 (10mg*10)", name: "GHRP-2", spec: "10mg*10", marvel: 60, tong: null, tina: null },
+            { key: "GHRP-6 (5mg*10)", name: "GHRP-6", spec: "5mg*10", marvel: 45, tong: 53, tina: 47 },
+            { key: "HCG (5000iu*10)", name: "HCG", spec: "5000iu*10", marvel: 100, tong: 96, tina: 88 },
+            { key: "HCG (10000iu*10)", name: "HCG", spec: "10000iu*10", marvel: 190, tong: 195, tina: 176 },
+            { key: "HGH Somatropin (10iu*10)", name: "HGH Somatropin", spec: "10iu*10", marvel: null, tong: null, tina: 137.5 },
+            { key: "HGH Somatropin (15iu*10)", name: "HGH Somatropin", spec: "15iu*10", marvel: 90, tong: null, tina: 154.8 },
+            { key: "HGH Somatropin (24iu*10)", name: "HGH Somatropin", spec: "24iu*10", marvel: 160, tong: null, tina: 198.4 },
+            { key: "HGH Somatropin (36iu*10)", name: "HGH Somatropin", spec: "36iu*10", marvel: 190, tong: null, tina: 234.9 },
+            { key: "IGF-1LR3 (0.1mg*10)", name: "IGF-1LR3", spec: "0.1mg*10", marvel: 60, tong: 49, tina: 47 },
+            { key: "IGF-1LR3 (1mg*10)", name: "IGF-1LR3", spec: "1mg*10", marvel: 240, tong: 227, tina: 206 },
+            { key: "Ipamorelin (5mg*10)", name: "Ipamorelin", spec: "5mg*10", marvel: 65, tong: 49, tina: 44 },
+            { key: "Ipamorelin (10mg*10)", name: "Ipamorelin", spec: "10mg*10", marvel: 75, tong: 90, tina: 82 },
+            { key: "KissPeptin-10 (5mg*10)", name: "KissPeptin-10", spec: "5mg*10", marvel: 65, tong: 75, tina: 68 },
+            { key: "KissPeptin-10 (10mg*10)", name: "KissPeptin-10", spec: "10mg*10", marvel: 110, tong: 150, tina: 118 },
+            { key: "KPV (5mg*10)", name: "KPV", spec: "5mg*10", marvel: 70, tong: 56, tina: 50 },
+            { key: "KPV (10mg*10)", name: "KPV", spec: "10mg*10", marvel: 75, tong: 72, tina: 65 },
+            { key: "LC120 / Lipo-C (10ml*10)", name: "LC120 / Lipo-C", spec: "10ml*10", marvel: 90, tong: 82, tina: null },
+            { key: "LC216 (10ml*10)", name: "LC216", spec: "10ml*10", marvel: 105, tong: 82, tina: 68 },
+            { key: "LC526 / Fat Blaster (10ml*10)", name: "LC526 / Fat Blaster", spec: "10ml*10", marvel: 195, tong: 136, tina: null },
+            { key: "LC553 / Super Shred (10ml*10)", name: "LC553 / Super Shred", spec: "10ml*10", marvel: 190, tong: 132, tina: null },
+            { key: "Lemon Bottle (10ml*10)", name: "Lemon Bottle", spec: "10ml*10", marvel: 80, tong: 82, tina: 68 },
+            { key: "LL-37 (5mg*10)", name: "LL-37", spec: "5mg*10", marvel: 115, tong: 113, tina: 103 },
+            { key: "Melanotan I / MT-1 (5mg*10)", name: "Melanotan I / MT-1", spec: "5mg*10", marvel: 70, tong: null, tina: null },
+            { key: "Melanotan I / MT-1 (10mg*10)", name: "Melanotan I / MT-1", spec: "10mg*10", marvel: null, tong: 59, tina: 53 },
+            { key: "Melanotan II (5mg*10)", name: "Melanotan II", spec: "5mg*10", marvel: null, tong: null, tina: 45.8 },
+            { key: "Melanotan II (10mg*10)", name: "Melanotan II", spec: "10mg*10", marvel: 65, tong: 52, tina: 53 },
+            { key: "MOTS-c (10mg*10)", name: "MOTS-c", spec: "10mg*10", marvel: 85, tong: 78, tina: 71 },
+            { key: "MOTS-c (20mg*10)", name: "MOTS-c", spec: "20mg*10", marvel: null, tong: 130, tina: null },
+            { key: "MOTS-c (40mg*10)", name: "MOTS-c", spec: "40mg*10", marvel: 210, tong: 227, tina: 200 },
+            { key: "NAD+ (250mg*10)", name: "NAD+", spec: "250mg*10", marvel: null, tong: null, tina: 41 },
+            { key: "NAD+ (500mg*10)", name: "NAD+", spec: "500mg*10", marvel: 85, tong: 98, tina: 88 },
+            { key: "NAD+ (1000mg*10)", name: "NAD+", spec: "1000mg*10", marvel: 120, tong: 195, tina: 153 },
+            { key: "Oxytocin (2mg*10)", name: "Oxytocin", spec: "2mg*10", marvel: 40, tong: 49, tina: 38 },
+            { key: "PEGMGF (2mg*10)", name: "PEGMGF", spec: "2mg*10", marvel: 135, tong: null, tina: null },
+            { key: "Pinealon (5mg*10)", name: "Pinealon", spec: "5mg*10", marvel: 65, tong: 49, tina: null },
+            { key: "Pinealon (10mg*10)", name: "Pinealon", spec: "10mg*10", marvel: 85, tong: 82, tina: 71.6 },
+            { key: "Pinealon (20mg*10)", name: "Pinealon", spec: "20mg*10", marvel: 130, tong: 113, tina: 93.6 },
+            { key: "PNC-27 (5mg*10)", name: "PNC-27", spec: "5mg*10", marvel: 90, tong: 94, tina: null },
+            { key: "PNC-27 (10mg*10)", name: "PNC-27", spec: "10mg*10", marvel: 150, tong: 151, tina: null },
+            { key: "PT-141 (10mg*10)", name: "PT-141", spec: "10mg*10", marvel: 80, tong: 72, tina: 65 },
+            { key: "Retatrutide (5mg*10)", name: "Retatrutide", spec: "5mg*10", marvel: 80, tong: 66, tina: 59 },
+            { key: "Retatrutide (10mg*10)", name: "Retatrutide", spec: "10mg*10", marvel: 100, tong: 104, tina: 85 },
+            { key: "Retatrutide (15mg*10)", name: "Retatrutide", spec: "15mg*10", marvel: 155, tong: 130, tina: 109 },
+            { key: "Retatrutide (20mg*10)", name: "Retatrutide", spec: "20mg*10", marvel: 175, tong: 162, tina: 135 },
+            { key: "Retatrutide (30mg*10)", name: "Retatrutide", spec: "30mg*10", marvel: 240, tong: 227, tina: 188 },
+            { key: "Retatrutide (40mg*10)", name: "Retatrutide", spec: "40mg*10", marvel: 320, tong: 293, tina: 253 },
+            { key: "Retatrutide (50mg*10)", name: "Retatrutide", spec: "50mg*10", marvel: 400, tong: 325, tina: 282 },
+            { key: "Retatrutide (60mg*10)", name: "Retatrutide", spec: "60mg*10", marvel: 440, tong: 352, tina: 285 },
+            { key: "Retatrutide (100mg*10)", name: "Retatrutide", spec: "100mg*10", marvel: 800, tong: 316, tina: null },
+            { key: "Selank (5mg*10)", name: "Selank", spec: "5mg*10", marvel: 65, tong: 49, tina: 44 },
+            { key: "Selank (10mg*10)", name: "Selank", spec: "10mg*10", marvel: 85, tong: 72, tina: 65 },
+            { key: "Semaglutide (2mg*10)", name: "Semaglutide", spec: "2mg*10", marvel: null, tong: null, tina: 29 },
+            { key: "Semaglutide (5mg*10)", name: "Semaglutide", spec: "5mg*10", marvel: 50, tong: 43, tina: 38 },
+            { key: "Semaglutide (10mg*10)", name: "Semaglutide", spec: "10mg*10", marvel: 70, tong: 59, tina: 47 },
+            { key: "Semaglutide (15mg*10)", name: "Semaglutide", spec: "15mg*10", marvel: 85, tong: 75, tina: 59 },
+            { key: "Semaglutide (20mg*10)", name: "Semaglutide", spec: "20mg*10", marvel: 100, tong: 90, tina: 74 },
+            { key: "Semaglutide (30mg*10)", name: "Semaglutide", spec: "30mg*10", marvel: 110, tong: 124, tina: 103 },
+            { key: "Semax (5mg*10)", name: "Semax", spec: "5mg*10", marvel: 55, tong: 49, tina: 44 },
+            { key: "Semax (10mg*10)", name: "Semax", spec: "10mg*10", marvel: 75, tong: 66, tina: 59 },
+            { key: "Sermorelin (5mg*10)", name: "Sermorelin", spec: "5mg*10", marvel: 85, tong: 85, tina: 76 },
+            { key: "Sermorelin (10mg*10)", name: "Sermorelin", spec: "10mg*10", marvel: 145, tong: 130, tina: 143.2 },
+            { key: "SLU-PP-332 (10mg*10)", name: "SLU-PP-332", spec: "10mg*10", marvel: null, tong: 261, tina: null },
+            { key: "Snap-8 (10mg*10)", name: "Snap-8", spec: "10mg*10", marvel: 60, tong: 49, tina: 44 },
+            { key: "SS-31 (10mg*10)", name: "SS-31", spec: "10mg*10", marvel: 110, tong: 98, tina: 88 },
+            { key: "SS-31 (50mg*10)", name: "SS-31", spec: "50mg*10", marvel: 370, tong: 358, tina: 324 },
+            { key: "Survodutide (10mg*10)", name: "Survodutide", spec: "10mg*10", marvel: null, tong: 358, tina: 258 },
+            { key: "TB500 / Thymosin B4 (5mg*10)", name: "TB500 / Thymosin B4", spec: "5mg*10", marvel: 85, tong: 104, tina: 91 },
+            { key: "TB500 / Thymosin B4 (10mg*10)", name: "TB500 / Thymosin B4", spec: "10mg*10", marvel: 155, tong: 185, tina: 162 },
+            { key: "TB500 / Thymosin B4 (20mg*10)", name: "TB500 / Thymosin B4", spec: "20mg*10", marvel: null, tong: null, tina: 280 },
+            { key: "Tesamorelin (5mg*10)", name: "Tesamorelin", spec: "5mg*10", marvel: 95, tong: 130, tina: 115 },
+            { key: "Tesamorelin (10mg*10)", name: "Tesamorelin", spec: "10mg*10", marvel: 180, tong: 227, tina: 197 },
+            { key: "Tesamorelin (20mg*10)", name: "Tesamorelin", spec: "20mg*10", marvel: null, tong: null, tina: 280 },
+            { key: "Thymalin (10mg*10)", name: "Thymalin", spec: "10mg*10", marvel: 75, tong: 80, tina: 71 },
+            { key: "Thymosin Alpha-1 (5mg*10)", name: "Thymosin Alpha-1", spec: "5mg*10", marvel: 105, tong: 113, tina: 103 },
+            { key: "Thymosin Alpha-1 (10mg*10)", name: "Thymosin Alpha-1", spec: "10mg*10", marvel: 180, tong: 211, tina: 191 },
+            { key: "Tirzepatide (5mg*10)", name: "Tirzepatide", spec: "5mg*10", marvel: 55, tong: 45, tina: 38 },
+            { key: "Tirzepatide (10mg*10)", name: "Tirzepatide", spec: "10mg*10", marvel: 70, tong: 59, tina: 50 },
+            { key: "Tirzepatide (15mg*10)", name: "Tirzepatide", spec: "15mg*10", marvel: 85, tong: 82, tina: 65 },
+            { key: "Tirzepatide (20mg*10)", name: "Tirzepatide", spec: "20mg*10", marvel: 100, tong: 98, tina: 74 },
+            { key: "Tirzepatide (30mg*10)", name: "Tirzepatide", spec: "30mg*10", marvel: 135, tong: 124, tina: 97 },
+            { key: "Tirzepatide (40mg*10)", name: "Tirzepatide", spec: "40mg*10", marvel: 170, tong: 156, tina: 135 },
+            { key: "Tirzepatide (45mg*10)", name: "Tirzepatide", spec: "45mg*10", marvel: 190, tong: null, tina: null },
+            { key: "Tirzepatide (50mg*10)", name: "Tirzepatide", spec: "50mg*10", marvel: 205, tong: 188, tina: 165 },
+            { key: "Tirzepatide (60mg*10)", name: "Tirzepatide", spec: "60mg*10", marvel: 220, tong: 221, tina: 185 },
+            { key: "Tirzepatide (100mg*10)", name: "Tirzepatide", spec: "100mg*10", marvel: 400, tong: 352, tina: null },
+            { key: "VIP (5mg*10)", name: "VIP", spec: "5mg*10", marvel: 105, tong: 98, tina: 88 },
+            { key: "VIP (10mg*10)", name: "VIP", spec: "10mg*10", marvel: 190, tong: 178, tina: 162 }
+        ];
+
+        // Application State
+        let selectedItem = peptideData.find(i => i.key === "Semaglutide (10mg*10)") || peptideData[0];
+        let cart = []; // Array of { key, qty }
+
+        // DOM Elements
+        const searchInput = document.getElementById('peptide-search');
+        const clearBtn = document.getElementById('clear-search');
+        const dropdown = document.getElementById('dropdown-results');
+        const catalogTbody = document.getElementById('catalog-tbody');
+        const catalogCount = document.getElementById('catalog-count');
+        const addSpotlightBtn = document.getElementById('add-spotlight-to-cart');
+        const cartBadgeCount = document.getElementById('cart-badge-count');
+        const cartEmptyState = document.getElementById('cart-empty-state');
+        const cartContent = document.getElementById('cart-content');
+        const cartTbody = document.getElementById('cart-tbody');
+        const overallRecBox = document.getElementById('overall-recommendation-box');
+        const clearCartBtn = document.getElementById('clear-cart-btn');
+        const copySummaryBtn = document.getElementById('copy-summary-btn');
+
+        function showToast(message, iconClass = 'fa-check-circle') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.innerText = message;
+            toastIcon.className = `fa-solid ${iconClass} text-lg`;
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function getCatalogNumber(name, spec) {
+            if (!name || !spec) return '';
+            const n = String(name).toLowerCase();
+            const s = String(spec).toLowerCase();
+            const mgMatch = s.match(/(\d+)mg/);
+            const mg = mgMatch ? mgMatch[1] : '';
+            
+            if (n.includes('semaglutide')) return `SM${mg}`;
+            if (n.includes('tirzepatide')) return `TR${mg}`;
+            if (n.includes('retatrutide')) return `RT${mg}`;
+            if (n.includes('bpc-157') || n.includes('bpc 157')) return `BC${mg}`;
+            if (n.includes('tb500') || n.includes('tb-500') || n.includes('thymosin b4')) return `BT${mg}`;
+            if (n.includes('ghk-cu') || n.includes('ghk cu')) return `CU${mg}`;
+            if (n.includes('nad')) return `NJ${mg}`;
+            if (n.includes('cagrilintide')) return `CGL${mg}`;
+            if (n.includes('semax')) return `XA${mg}`;
+            if (n.includes('selank')) return `SK${mg}`;
+            if (n.includes('epithalon') || n.includes('epitalon')) return `ET${mg}`;
+            if (n.includes('mots-c') || n.includes('mots c')) return `MS${mg}`;
+            if (n.includes('adipotide')) return `AP${mg}`;
+            if (n.includes('tesamorelin')) return `TSM${mg}`;
+            if (n.includes('sermorelin')) return `SMO${mg}`;
+            if (n.includes('kisspeptin')) return `KS${mg}`;
+            if (n.includes('ss-31') || n.includes('ss31')) return `2S${mg}`;
+            if (n.includes('glow') || n.includes('bbg70')) return `BBG70`;
+            if (n.includes('klow') || n.includes('klow80')) return `KLOW80`;
+            if (n.includes('pt-141') || n.includes('pt141')) return `P41`;
+            if (n.includes('ipamorelin')) return `IP${mg}`;
+            if (n.includes('oxytocin')) return `OT${mg}`;
+            if (n.includes('cjc-1295 no dac') || n.includes('cjc 1295 no dac')) return `CND${mg}`;
+            if (n.includes('cjc-1295 with dac') || n.includes('cjc 1295 dac')) return `CD${mg}`;
+            if (n.includes('5-amino-1mq') || n.includes('5amino')) return `${mg}AM`;
+            return '';
+        }
+
+        function getLowestInfo(item) {
+            const prices = [
+                { vendor: "Marvel Chloe", price: item.marvel },
+                { vendor: "Tong Shi Po", price: item.tong },
+                { vendor: "Tina Tianjin Bio", price: item.tina }
+            ].filter(p => p.price !== null && !isNaN(p.price));
+
+            if (prices.length === 0) return { min: null, winners: [] };
+            
+            const minPrice = Math.min(...prices.map(p => p.price));
+            const winners = prices.filter(p => p.price === minPrice).map(p => p.vendor);
+
+            return { min: minPrice, winners };
+        }
+
+        function updateSpotlight(item) {
+            selectedItem = item;
+            document.getElementById('selected-title').innerText = item.key;
+
+            const info = getLowestInfo(item);
+            const min = info.min;
+
+            const vendors = [
+                { id: 'marvel', price: item.marvel, name: "Marvel Chloe" },
+                { id: 'tong', price: item.tong, name: "Tong Shi Po" },
+                { id: 'tina', price: item.tina, name: "Tina Tianjin Bio" }
+            ];
+
+            vendors.forEach(v => {
+                const priceEl = document.getElementById(`price-${v.id}`);
+                const diffEl = document.getElementById(`diff-${v.id}`);
+                const badgeEl = document.getElementById(`badge-${v.id}`);
+                const cardEl = document.getElementById(`card-${v.id}`);
+
+                if (v.price !== null && v.price !== undefined) {
+                    priceEl.innerText = `$${v.price.toFixed(2)}`;
+                    priceEl.classList.remove('text-slate-600');
+                    
+                    if (v.price === min) {
+                        badgeEl.classList.remove('hidden');
+                        diffEl.innerText = "🏆 Best Unit Price";
+                        diffEl.className = "block text-xs font-semibold text-amber-400 mt-1";
+                        cardEl.className = "bg-slate-950/90 border-2 border-amber-500/50 rounded-2xl p-5 flex flex-col justify-between shadow-lg shadow-amber-500/5";
+                    } else {
+                        badgeEl.classList.add('hidden');
+                        const diff = v.price - min;
+                        diffEl.innerText = `+$${diff.toFixed(2)} vs lowest`;
+                        diffEl.className = "block text-xs font-medium text-slate-400 mt-1";
+                        cardEl.className = "bg-slate-950/60 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700";
+                    }
+                } else {
+                    priceEl.innerText = "N/A";
+                    priceEl.classList.add('text-slate-600');
+                    diffEl.innerText = "Not listed";
+                    diffEl.className = "block text-xs text-slate-600 mt-1";
+                    badgeEl.classList.add('hidden');
+                    cardEl.className = "bg-slate-950/40 border border-slate-800/50 opacity-60 rounded-2xl p-5 flex flex-col justify-between";
+                }
+            });
+
+            const recBanner = document.getElementById('recommended-banner');
+            const recName = document.getElementById('rec-vendor-name');
+            if (info.winners.length > 0) {
+                recBanner.classList.remove('hidden');
+                recName.innerText = `${info.winners.join(' / ')} ($${min.toFixed(2)})`;
+            } else {
+                recBanner.classList.add('hidden');
+            }
+        }
+
+        function renderDropdownResults(term) {
+            if (!term || term.trim() === '') {
+                dropdown.classList.add('hidden');
+                return;
+            }
+
+            const cleanTerm = term.toLowerCase().trim();
+            const matches = peptideData.filter(i => 
+                i.key.toLowerCase().includes(cleanTerm) || 
+                i.name.toLowerCase().includes(cleanTerm)
+            );
+
+            if (matches.length === 0) {
+                dropdown.innerHTML = `<div class="p-4 text-xs text-slate-500 text-center bg-slate-900 rounded-xl">No peptide found matching "${term}"</div>`;
+                dropdown.classList.remove('hidden');
+                return;
+            }
+
+            dropdown.innerHTML = matches.map(item => {
+                const info = getLowestInfo(item);
+                const lowestTxt = info.min ? `$${info.min.toFixed(2)}` : 'N/A';
+                return `
+                    <div class="dropdown-item p-3 hover:bg-slate-800 cursor-pointer flex justify-between items-center transition bg-slate-900 border-b border-slate-800 last:border-0" data-key="${item.key}">
+                        <div>
+                            <div class="font-medium text-sm text-slate-100">${item.key}</div>
+                            <div class="text-xs text-slate-400">Spec: ${item.spec}</div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs font-bold text-emerald-400">Best: ${lowestTxt}</span>
+                            <button class="add-btn-dropdown bg-emerald-600 hover:bg-emerald-500 text-white shadow-md border border-emerald-500/40 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors cursor-pointer" data-key="${item.key}">
+                                <i class="fa-solid fa-plus mr-1"></i> Add
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            dropdown.classList.remove('hidden');
+
+            document.querySelectorAll('.dropdown-item').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('add-btn-dropdown')) return;
+                    const key = el.getAttribute('data-key');
+                    const item = peptideData.find(i => i.key === key);
+                    if (item) {
+                        updateSpotlight(item);
+                        dropdown.classList.add('hidden');
+                        clearBtn.classList.remove('hidden');
+                        renderCatalog(searchInput.value);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.add-btn-dropdown').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const key = btn.getAttribute('data-key');
+                    addToCart(key);
+                });
+            });
+        }
+
+        function renderCatalog(filterTerm = '') {
+            const clean = filterTerm.toLowerCase().trim();
+            const filtered = peptideData.filter(i => 
+                i.key.toLowerCase().includes(clean) || 
+                i.name.toLowerCase().includes(clean)
+            );
+
+            if (clean !== '' && filtered.length > 0) {
+                const matchInFiltered = filtered.find(i => i.key === selectedItem.key);
+                if (!matchInFiltered) {
+                    updateSpotlight(filtered[0]);
+                }
+            }
+
+            catalogCount.innerText = `Showing ${filtered.length} of ${peptideData.length} entries`;
+
+            catalogTbody.innerHTML = filtered.map(item => {
+                const info = getLowestInfo(item);
+                const isSelected = selectedItem && selectedItem.key === item.key;
+
+                return `
+                    <tr class="catalog-row border-b border-slate-800/50 hover:bg-slate-800/40 cursor-pointer transition ${isSelected ? 'bg-indigo-950/30' : ''}" data-key="${item.key}">
+                        <td class="py-3 px-4 font-medium text-white">${item.name}</td>
+                        <td class="py-3 px-4 text-slate-400 font-mono text-xs">${item.spec}</td>
+                        <td class="py-3 px-4 text-right ${item.marvel === info.min && info.min ? 'text-amber-300 font-bold' : 'text-slate-300'}">${item.marvel !== null ? '$' + item.marvel.toFixed(2) : '—'}</td>
+                        <td class="py-3 px-4 text-right ${item.tong === info.min && info.min ? 'text-amber-300 font-bold' : 'text-slate-300'}">${item.tong !== null ? '$' + item.tong.toFixed(2) : '—'}</td>
+                        <td class="py-3 px-4 text-right ${item.tina === info.min && info.min ? 'text-amber-300 font-bold' : 'text-slate-300'}">${item.tina !== null ? '$' + item.tina.toFixed(2) : '—'}</td>
+                        <td class="py-3 px-4 text-right font-semibold text-emerald-400">${info.min ? '$' + info.min.toFixed(2) : '—'}</td>
+                        <td class="py-3 px-4 text-center">
+                            <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-slate-300">
+                                ${info.winners.join(', ') || 'N/A'}
+                            </span>
+                        </td>
+                        <td class="py-3 px-4 text-center">
+                            <button class="add-to-cart-table-btn bg-indigo-600/30 hover:bg-indigo-600 text-indigo-300 hover:text-white border border-indigo-500/40 px-2.5 py-1 rounded-lg text-xs font-semibold transition cursor-pointer" data-key="${item.key}">
+                                <i class="fa-solid fa-plus mr-1"></i> Add
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            document.querySelectorAll('.catalog-row').forEach(row => {
+                row.addEventListener('click', (e) => {
+                    if (e.target.closest('.add-to-cart-table-btn')) return;
+                    const key = row.getAttribute('data-key');
+                    const item = peptideData.find(i => i.key === key);
+                    if (item) {
+                        updateSpotlight(item);
+                        clearBtn.classList.remove('hidden');
+                        renderCatalog(searchInput.value);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.add-to-cart-table-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const key = btn.getAttribute('data-key');
+                    addToCart(key);
+                });
+            });
+        }
+
+        function addToCart(key) {
+            const existing = cart.find(c => c.key === key);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ key: key, qty: 1 });
+            }
+            renderCart();
+            showToast(`Added ${key} to your order list`);
+        }
+
+        function updateCartQty(key, delta) {
+            const item = cart.find(c => c.key === key);
+            if (!item) return;
+            item.qty += delta;
+            if (item.qty <= 0) {
+                cart = cart.filter(c => c.key !== key);
+            }
+            renderCart();
+        }
+
+        function removeFromCart(key) {
+            cart = cart.filter(c => c.key !== key);
+            renderCart();
+            showToast(`Removed item from order list`, 'fa-trash-can');
+        }
+
+        window.sendWhatsApp = function(vendorId) {
+            if (!cart || cart.length === 0) {
+                showToast('Your order list is empty!', 'fa-triangle-exclamation');
+                return;
+            }
+
+            const vendors = {
+                'marvel': { name: 'Marvel Chloe', repName: 'Chloe', phone: '85365265146' },
+                'tong': { name: 'Tong Shi Po', repName: 'Tong', phone: '8613027198018' },
+                'tina': { name: 'Tina Tianjin Bio', repName: 'Tina', phone: '8613512884424' }
+            };
+            const vendor = vendors[vendorId];
+            if (!vendor) return;
+
+            let message = `Hi ${vendor.repName},\n\nI would like to place an order for the following:\n\n`;
+            
+            cart.forEach(item => {
+                const itemData = peptideData.find(i => i.key === item.key);
+                const name = itemData ? itemData.name : item.key;
+                const spec = itemData ? itemData.spec : '';
+                const catNo = getCatalogNumber(name, spec);
+                const catStr = catNo ? `[${catNo}] ` : '';
+                message += `• ${item.qty}x ${catStr}${item.key}\n`;
+            });
+
+            message += `\nPlease let me know the total cost including shipping to my address.\n\nThank you!`;
+
+            // Copy formatted order text to clipboard as fallback (iframe safe)
+            try {
+                const tempTextArea = document.createElement('textarea');
+                tempTextArea.value = message;
+                tempTextArea.style.position = 'fixed';
+                tempTextArea.style.left = '-9999px';
+                document.body.appendChild(tempTextArea);
+                tempTextArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempTextArea);
+            } catch (err) {
+                console.warn('Clipboard fallback error:', err);
+            }
+
+            const encodedMessage = encodeURIComponent(message);
+            const waUrl = `https://wa.me/${vendor.phone}?text=${encodedMessage}`;
+
+            // Create dynamic link element to trigger navigation reliably
+            const link = document.createElement('a');
+            link.href = waUrl;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showToast(`Opening WhatsApp for ${vendor.repName}...`, 'fa-brands fa-whatsapp');
+        };
+
+        function renderCart() {
+            const totalItemsCount = cart.reduce((acc, curr) => acc + curr.qty, 0);
+            cartBadgeCount.innerText = totalItemsCount;
+
+            if (cart.length === 0) {
+                cartEmptyState.classList.remove('hidden');
+                cartContent.classList.add('hidden');
+                return;
+            }
+
+            cartEmptyState.classList.add('hidden');
+            cartContent.classList.remove('hidden');
+
+            let marvelGrandTotal = 0;
+            let tongGrandTotal = 0;
+            let tinaGrandTotal = 0;
+
+            let marvelMissing = false;
+            let tongMissing = false;
+            let tinaMissing = false;
+
+            cartTbody.innerHTML = cart.map(cartItem => {
+                const itemData = peptideData.find(i => i.key === cartItem.key);
+                if (!itemData) return '';
+
+                const marvelSub = itemData.marvel !== null ? itemData.marvel * cartItem.qty : null;
+                const tongSub = itemData.tong !== null ? itemData.tong * cartItem.qty : null;
+                const tinaSub = itemData.tina !== null ? itemData.tina * cartItem.qty : null;
+
+                if (marvelSub !== null) marvelGrandTotal += marvelSub; else marvelMissing = true;
+                if (tongSub !== null) tongGrandTotal += tongSub; else tongMissing = true;
+                if (tinaSub !== null) tinaGrandTotal += tinaSub; else tinaMissing = true;
+
+                return `
+                    <tr class="border-b border-slate-800/50 hover:bg-slate-900/50 transition">
+                        <td class="py-3 px-4 font-medium text-white">
+                            <div>${itemData.name}</div>
+                            <div class="text-xs text-slate-500 font-mono">${itemData.spec}</div>
+                        </td>
+                        <td class="py-3 px-4 text-center">
+                            <div class="inline-flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 rounded-lg p-1">
+                                <button class="qty-btn text-slate-400 hover:text-white w-6 h-6 flex items-center justify-center rounded hover:bg-slate-800 cursor-pointer" onclick="updateCartQty('${cartItem.key}', -1)">-</button>
+                                <span class="text-xs font-bold w-6 text-center text-indigo-300">${cartItem.qty}</span>
+                                <button class="qty-btn text-slate-400 hover:text-white w-6 h-6 flex items-center justify-center rounded hover:bg-slate-800 cursor-pointer" onclick="updateCartQty('${cartItem.key}', 1)">+</button>
+                            </div>
+                        </td>
+                        <td class="py-3 px-4 text-right font-medium ${marvelSub !== null ? 'text-slate-200' : 'text-slate-600'}">
+                            ${marvelSub !== null ? '$' + marvelSub.toFixed(2) : 'N/A'}
+                        </td>
+                        <td class="py-3 px-4 text-right font-medium ${tongSub !== null ? 'text-slate-200' : 'text-slate-600'}">
+                            ${tongSub !== null ? '$' + tongSub.toFixed(2) : 'N/A'}
+                        </td>
+                        <td class="py-3 px-4 text-right font-medium ${tinaSub !== null ? 'text-slate-200' : 'text-slate-600'}">
+                            ${tinaSub !== null ? '$' + tinaSub.toFixed(2) : 'N/A'}
+                        </td>
+                        <td class="py-3 px-4 text-center">
+                            <button class="text-slate-500 hover:text-rose-400 p-1.5 transition cursor-pointer" onclick="removeFromCart('${cartItem.key}')">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Evaluate Overall Best Vendor for Cart
+            const validVendors = [];
+            if (!marvelMissing) validVendors.push({ name: 'Marvel Chloe', total: marvelGrandTotal, note: 'Direct Express Shipping' });
+            if (!tongMissing) validVendors.push({ name: 'Tong Shi Po', total: tongGrandTotal, note: 'Wholesale Export' });
+            if (!tinaMissing) {
+                const freeShipping = tinaGrandTotal >= 700;
+                validVendors.push({ 
+                    name: 'Tina Tianjin Bio', 
+                    total: tinaGrandTotal, 
+                    note: freeShipping ? '🎉 Free Shipping Applied (Over $700)' : 'Standard Courier Shipping' 
+                });
+            }
+
+            let bestVendor = null;
+            if (validVendors.length > 0) {
+                validVendors.sort((a, b) => a.total - b.total);
+                bestVendor = validVendors[0];
+            }
+
+            if (bestVendor) {
+                overallRecBox.className = "bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-900 border-2 border-emerald-500/50 rounded-2xl p-6 shadow-xl";
+                
+                let missingNotice = '';
+                const unstocked = [];
+                if (marvelMissing) unstocked.push('Marvel Chloe');
+                if (tongMissing) unstocked.push('Tong Shi Po');
+                if (tinaMissing) unstocked.push('Tina Tianjin Bio');
+
+                if (unstocked.length > 0) {
+                    missingNotice = `
+                        <div class="text-xs text-amber-400/90 bg-amber-950/30 border border-amber-800/40 px-3 py-2 rounded-lg mt-3">
+                            <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+                            <strong>Note:</strong> ${unstocked.join(', ')} does not stock all items in your cart. Calculations exclude incomplete vendors.
+                        </div>
+                    `;
+                }
+
+                overallRecBox.innerHTML = `
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div class="space-y-2">
+                            <div class="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-3 py-1 rounded-full text-xs font-bold">
+                                <i class="fa-solid fa-trophy"></i> OVERALL CHEAPEST VENDOR RECOMMENDATION
+                            </div>
+                            <h4 class="text-2xl font-extrabold text-white">
+                                ${bestVendor.name} <span class="text-emerald-400">($${bestVendor.total.toFixed(2)})</span>
+                            </h4>
+                            <p class="text-xs text-slate-300">
+                                Ordering all ${totalItemsCount} kit(s) from <strong>${bestVendor.name}</strong> provides the lowest combined price for your custom order. ${bestVendor.note}.
+                            </p>
+                            ${missingNotice}
+                        </div>
+
+                        <!-- Side-by-Side Cart Totals -->
+                        <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 min-w-[280px] space-y-2">
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 border-b border-slate-800 pb-1">Vendor Total Comparison</div>
+                            
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="${!marvelMissing && bestVendor.name === 'Marvel Chloe' ? 'text-emerald-400 font-bold' : 'text-slate-300'}">Marvel Chloe:</span>
+                                <span class="font-bold ${!marvelMissing ? 'text-white' : 'text-slate-600'}">${!marvelMissing ? '$' + marvelGrandTotal.toFixed(2) : 'Incomplete'}</span>
+                            </div>
+
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="${!tongMissing && bestVendor.name === 'Tong Shi Po' ? 'text-emerald-400 font-bold' : 'text-slate-300'}">Tong Shi Po:</span>
+                                <span class="font-bold ${!tongMissing ? 'text-white' : 'text-slate-600'}">${!tongMissing ? '$' + tongGrandTotal.toFixed(2) : 'Incomplete'}</span>
+                            </div>
+
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="${!tinaMissing && bestVendor.name === 'Tina Tianjin Bio' ? 'text-emerald-400 font-bold' : 'text-slate-300'}">Tina Tianjin Bio:</span>
+                                <span class="font-bold ${!tinaMissing ? 'text-white' : 'text-slate-600'}">${!tinaMissing ? '$' + tinaGrandTotal.toFixed(2) : 'Incomplete'}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                overallRecBox.className = "bg-slate-900 border border-slate-800 rounded-2xl p-6 text-slate-400 text-sm";
+                overallRecBox.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-circle-info text-amber-400 text-xl"></i>
+                        <div>
+                            <strong>No single vendor stocks every item in your current selection list.</strong>
+                            <p class="text-xs text-slate-500 mt-0.5">Try splitting your order or adjusting items to see overall vendor recommendations.</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Search bar listener
+        searchInput.addEventListener('input', (e) => {
+            const val = e.target.value;
+            if (val) clearBtn.classList.remove('hidden');
+            else clearBtn.classList.add('hidden');
+            renderDropdownResults(val);
+            renderCatalog(val);
+        });
+
+        clearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            clearBtn.classList.add('hidden');
+            dropdown.classList.add('hidden');
+            renderCatalog('');
+        });
+
+        // Quick search chips
+        document.querySelectorAll('.quick-chip').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const text = btn.innerText;
+                searchInput.value = text;
+                clearBtn.classList.remove('hidden');
+                renderDropdownResults(text);
+                renderCatalog(text);
+            });
+        });
+
+        // Spotlight Add to Cart
+        addSpotlightBtn.addEventListener('click', () => {
+            if (selectedItem) {
+                addToCart(selectedItem.key);
+            }
+        });
+
+        // Clear Cart
+        clearCartBtn.addEventListener('click', () => {
+            cart = [];
+            renderCart();
+            showToast('Cleared order list', 'fa-trash-can');
+        });
+
+        // Copy Order Summary Text
+        copySummaryBtn.addEventListener('click', () => {
+            if (cart.length === 0) return;
+
+            let summaryText = `PEPTIDE ORDER SELECTION LIST:\n`;
+            summaryText += `------------------------------------\n`;
+            cart.forEach(item => {
+                const itemData = peptideData.find(i => i.key === item.key);
+                const name = itemData ? itemData.name : item.key;
+                const spec = itemData ? itemData.spec : '';
+                const catNo = getCatalogNumber(name, spec);
+                const catStr = catNo ? `[${catNo}] ` : '';
+                summaryText += `• ${item.qty}x ${catStr}${item.key}\n`;
+            });
+            summaryText += `------------------------------------\n`;
+            
+            const el = document.createElement('textarea');
+            el.value = summaryText;
+            document.body.appendChild(el);
+            el.select();
+            try {
+                document.execCommand('copy');
+                showToast('Order summary copied to clipboard!', 'fa-copy');
+            } catch (e) {
+                showToast('Failed to copy', 'fa-triangle-exclamation');
+            }
+            document.body.removeChild(el);
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+
+        updateSpotlight(selectedItem);
+        renderCatalog();
+        renderCart();
+    </script>
+</body>
+</html>

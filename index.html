@@ -69,19 +69,29 @@
                 </div>
             </div>
             
-            <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-                <button id="open-import-modal-btn" title="Import / Update Price Sheet" class="flex items-center gap-1.5 sm:gap-2 bg-indigo-950/70 hover:bg-indigo-900 active:bg-indigo-950 text-indigo-200 hover:text-white font-medium px-2.5 py-2 sm:px-3.5 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-indigo-700/50 cursor-pointer shadow-sm">
+            <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                <!-- Export Master Catalog Button -->
+                <button id="export-catalog-btn" title="Export Master Catalog (.json) to commit to GitHub" class="flex items-center gap-1.5 sm:gap-2 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-slate-300 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-slate-800 hover:border-slate-700 cursor-pointer shadow-sm">
+                    <i class="fa-solid fa-download text-indigo-400 text-xs sm:text-sm"></i>
+                    <span class="hidden md:inline">Export Catalog</span>
+                    <span class="md:hidden">Export</span>
+                </button>
+
+                <!-- Import Price Sheet Button -->
+                <button id="open-import-modal-btn" title="Import / Update Price Sheet (CSV/TSV/Paste)" class="flex items-center gap-1.5 sm:gap-2 bg-indigo-950/70 hover:bg-indigo-900 active:bg-indigo-950 text-indigo-200 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-indigo-700/50 cursor-pointer shadow-sm">
                     <i class="fa-solid fa-file-import text-indigo-400 text-xs sm:text-sm"></i>
                     <span class="hidden sm:inline">Import Rates</span>
                     <span class="sm:hidden">Import</span>
                 </button>
 
-                <button id="reset-defaults-btn" title="Reset to Official Default Rates" class="flex items-center gap-1.5 sm:gap-2 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-slate-300 hover:text-white font-medium px-2.5 py-2 sm:px-3.5 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-slate-800 hover:border-slate-700 cursor-pointer shadow-sm">
+                <!-- Reset to Defaults Button -->
+                <button id="reset-defaults-btn" title="Reset to Official Default Rates" class="flex items-center gap-1.5 sm:gap-2 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-slate-300 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-slate-800 hover:border-slate-700 cursor-pointer shadow-sm">
                     <i class="fa-solid fa-rotate-left text-indigo-400 text-xs sm:text-sm"></i>
                     <span class="hidden sm:inline">Reset Rates</span>
                     <span class="sm:hidden">Reset</span>
                 </button>
 
+                <!-- Order List Cart Button -->
                 <a href="#cart-section" class="flex items-center gap-1.5 sm:gap-2 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm transition shadow-lg shadow-indigo-600/20 border border-indigo-500/50 cursor-pointer">
                     <i class="fa-solid fa-shopping-basket text-xs sm:text-sm"></i>
                     <span class="hidden xs:inline">Order List</span>
@@ -358,7 +368,7 @@
         <section class="bg-slate-950/70 border border-slate-800 rounded-xl sm:rounded-2xl overflow-hidden shadow-xl">
             <div class="p-4 sm:p-5 border-b border-slate-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
                 <div>
-                    <h3 class="font-bold text-slate-200 text-base sm:lg">Full Price Catalog Table</h3>
+                    <h3 class="font-bold text-slate-200 text-base sm:text-lg">Full Price Catalog Table</h3>
                     <p class="text-[11px] sm:text-xs text-slate-400">Tap any row to feature it above, or tap "+" to add to your order planner</p>
                 </div>
                 <div class="flex items-center gap-2">
@@ -396,13 +406,13 @@
 
     </main>
 
-    <!-- Price Sheet Importer Modal -->
-    <div id="import-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-6 bg-slate-950/80 backdrop-blur-md overflow-y-auto">
+    <!-- Price Sheet Importer Modal with Diff Review -->
+    <div id="import-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-6 bg-slate-950/85 backdrop-blur-md overflow-y-auto">
         <div class="relative w-full max-w-4xl bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] my-auto">
             <!-- Modal Header -->
             <div class="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30 shrink-0">
                         <i class="fa-solid fa-file-import text-sm"></i>
                     </div>
                     <div>
@@ -477,35 +487,35 @@
                     </div>
                 </div>
 
-                <!-- Step 2: Parsed Preview & Approval Section -->
+                <!-- Step 2: Parsed Diff Review & Approval Section -->
                 <div id="import-step-preview" class="hidden space-y-4">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-slate-950/60 border border-slate-800 rounded-xl text-xs">
-                        <div id="preview-summary-stats" class="text-slate-300 font-medium">
+                    <!-- Summary Stats & Pill Badges -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 bg-slate-950/60 border border-slate-800 rounded-xl text-xs">
+                        <div id="preview-summary-stats" class="text-slate-300 font-medium space-y-1 sm:space-y-0 sm:flex sm:items-center sm:gap-2">
                             <!-- Stats injected dynamically -->
                         </div>
-                        <div class="flex items-center gap-2">
-                            <button id="toggle-select-all-btn" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">
+                        <div class="flex items-center gap-2 shrink-0">
+                            <button id="toggle-select-all-btn" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 transition cursor-pointer font-medium">
                                 Toggle All
                             </button>
                         </div>
                     </div>
 
-                    <!-- Preview Table -->
-                    <div class="overflow-x-auto rounded-xl border border-slate-800 max-h-80 touch-scroll">
-                        <table class="w-full text-left text-xs min-w-[640px]">
+                    <!-- Diff Review Table -->
+                    <div class="overflow-x-auto rounded-xl border border-slate-800 max-h-84 touch-scroll">
+                        <table class="w-full text-left text-xs min-w-[660px]">
                             <thead class="bg-slate-950 sticky top-0 z-10 text-[11px] text-slate-400 uppercase tracking-wider border-b border-slate-800">
                                 <tr>
-                                    <th class="py-2.5 px-3 font-semibold text-center w-12">Include</th>
-                                    <th class="py-2.5 px-3 font-semibold">Imported Name & Spec</th>
-                                    <th class="py-2.5 px-3 font-semibold">Matched Catalog Entry</th>
-                                    <th class="py-2.5 px-3 font-semibold text-right">Marvel</th>
-                                    <th class="py-2.5 px-3 font-semibold text-right">Tong</th>
-                                    <th class="py-2.5 px-3 font-semibold text-right">Tina</th>
+                                    <th class="py-2.5 px-3 font-semibold text-center w-12">Apply</th>
+                                    <th class="py-2.5 px-3 font-semibold">Item & Specification</th>
+                                    <th class="py-2.5 px-3 font-semibold">Vendor Scope</th>
+                                    <th class="py-2.5 px-3 font-semibold text-right">Old Price → New Price</th>
+                                    <th class="py-2.5 px-3 font-semibold text-center">Price Diff (% Change)</th>
                                     <th class="py-2.5 px-3 font-semibold text-center">Status</th>
                                 </tr>
                             </thead>
                             <tbody id="import-preview-tbody" class="divide-y divide-slate-800/60 text-slate-300 bg-slate-900/60">
-                                <!-- Preview rows injected dynamically -->
+                                <!-- Diff rows injected dynamically -->
                             </tbody>
                         </table>
                     </div>
@@ -523,7 +533,7 @@
                         Cancel
                     </button>
                     <button id="parse-data-btn" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white rounded-xl text-xs font-bold transition shadow-lg shadow-indigo-600/20 border border-indigo-500/40 cursor-pointer flex items-center gap-1.5">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> Parse & Preview
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Parse & Review Diff
                     </button>
                     <button id="apply-import-btn" class="hidden px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-lg shadow-emerald-600/20 border border-emerald-500/40 cursor-pointer flex items-center gap-1.5">
                         <i class="fa-solid fa-check"></i> Apply Updates & Save
@@ -2312,6 +2322,7 @@
         const catalogTbody = document.getElementById('catalog-tbody');
         const catalogCount = document.getElementById('catalog-count');
         const rateBadge = document.getElementById('rate-badge');
+        const exportCatalogBtn = document.getElementById('export-catalog-btn');
         const resetDefaultsBtn = document.getElementById('reset-defaults-btn');
         const addSpotlightBtn = document.getElementById('add-spotlight-to-cart');
         const cartBadgeCount = document.getElementById('cart-badge-count');
@@ -2363,7 +2374,7 @@
             window._toastTimer = setTimeout(() => {
                 toast.classList.remove('translate-y-0', 'opacity-100');
                 toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3200);
+            }, 3500);
         }
 
         // Normalizes individual peptide records ensuring accessor properties and consistent typing
@@ -2569,6 +2580,48 @@
         }
 
         // ==========================================
+        // EXPORT / BACKUP MASTER CATALOG MODULE
+        // ==========================================
+        function exportMasterCatalogJson() {
+            if (!peptideData || peptideData.length === 0) {
+                showToast('No catalog data available to export', 'fa-triangle-exclamation');
+                return;
+            }
+
+            const exportPayload = peptideData.map(item => ({
+                id: item.id,
+                name: item.name,
+                spec: item.spec,
+                category: item.category || 'Research Peptides',
+                catNo: item.catNo || '',
+                prices: {
+                    marvel: item.prices.marvel !== undefined ? item.prices.marvel : null,
+                    tong: item.prices.tong !== undefined ? item.prices.tong : null,
+                    tina: item.prices.tina !== undefined ? item.prices.tina : null
+                },
+                lastUpdated: item.lastUpdated || new Date().toISOString()
+            }));
+
+            const jsonStr = JSON.stringify(exportPayload, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = 'peptides.json';
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            URL.revokeObjectURL(url);
+
+            showToast(`Exported master catalog with ${exportPayload.length} entries as peptides.json`, 'fa-download');
+        }
+
+        if (exportCatalogBtn) {
+            exportCatalogBtn.addEventListener('click', exportMasterCatalogJson);
+        }
+
+        // ==========================================
         // FUZZY MATCHING & PARSING MODULE
         // ==========================================
         const COMMON_ALIASES = {
@@ -2711,14 +2764,13 @@
         function parseImportData(rawText, targetVendor, catalogItems) {
             const rawTrimmed = (rawText || '').trim();
             if (!rawTrimmed) {
-                return { items: [], stats: { total: 0, updates: 0, newItems: 0, skipped: 0 } };
+                return { items: [], stats: { total: 0, updates: 0, newItems: 0, skipped: 0, priceDrops: 0, priceIncreases: 0 }, targetVendor };
             }
 
             let rawRows = [];
             if (typeof Papa !== 'undefined') {
                 rawRows = Papa.parse(rawTrimmed, { header: false, skipEmptyLines: true }).data;
             } else {
-                // Fallback manual CSV/TSV splitter
                 rawRows = rawTrimmed.split('\n').map(line => {
                     const sep = line.includes('\t') ? '\t' : ',';
                     return line.split(sep).map(c => c.trim().replace(/^["']|["']$/g, ''));
@@ -2726,7 +2778,7 @@
             }
 
             if (!rawRows || rawRows.length === 0) {
-                return { items: [], stats: { total: 0, updates: 0, newItems: 0, skipped: 0 } };
+                return { items: [], stats: { total: 0, updates: 0, newItems: 0, skipped: 0, priceDrops: 0, priceIncreases: 0 }, targetVendor };
             }
 
             const hasHeaders = detectHasHeaders(rawRows[0]);
@@ -2778,6 +2830,8 @@
             const results = [];
             let updateCount = 0;
             let newCount = 0;
+            let priceDrops = 0;
+            let priceIncreases = 0;
 
             dataRows.forEach((row, idx) => {
                 const rawName = row[nameIdx];
@@ -2820,6 +2874,19 @@
                                           (tongPrice !== null && tongPrice !== currentItem.prices.tong) ||
                                           (tinaPrice !== null && tinaPrice !== currentItem.prices.tina);
 
+                    // Track price directional changes
+                    const checks = [
+                        { n: marvelPrice, o: currentItem.prices.marvel },
+                        { n: tongPrice, o: currentItem.prices.tong },
+                        { n: tinaPrice, o: currentItem.prices.tina }
+                    ];
+                    checks.forEach(c => {
+                        if (c.n !== null && c.o !== null && c.n !== c.o) {
+                            if (c.n < c.o) priceDrops++;
+                            else priceIncreases++;
+                        }
+                    });
+
                     results.push({
                         index: idx,
                         action: hasPriceChange ? 'update' : 'unchanged',
@@ -2829,10 +2896,16 @@
                         targetId: matchResult.item.id,
                         catNo: catNo || matchResult.item.catNo,
                         category: category || matchResult.item.category,
+                        targetVendor: targetVendor,
                         prices: {
                             marvel: marvelPrice !== null ? marvelPrice : currentItem.prices.marvel,
                             tong: tongPrice !== null ? tongPrice : currentItem.prices.tong,
                             tina: tinaPrice !== null ? tinaPrice : currentItem.prices.tina
+                        },
+                        importedVendorPrices: {
+                            marvel: marvelPrice,
+                            tong: tongPrice,
+                            tina: tinaPrice
                         },
                         oldPrices: { ...currentItem.prices },
                         confidence: matchResult.confidence,
@@ -2850,7 +2923,13 @@
                         targetId: (rawName + '_' + spec).toLowerCase().replace(/[^a-z0-9]+/g, '_'),
                         catNo: catNo || '',
                         category: category || 'Custom & User Imported',
+                        targetVendor: targetVendor,
                         prices: {
+                            marvel: marvelPrice,
+                            tong: tongPrice,
+                            tina: tinaPrice
+                        },
+                        importedVendorPrices: {
                             marvel: marvelPrice,
                             tong: tongPrice,
                             tina: tinaPrice
@@ -2869,73 +2948,169 @@
                     total: results.length,
                     updates: updateCount,
                     newItems: newCount,
-                    skipped: results.filter(r => r.action === 'unchanged').length
-                }
+                    skipped: results.filter(r => r.action === 'unchanged').length,
+                    priceDrops,
+                    priceIncreases
+                },
+                targetVendor
             };
         }
 
-        // Render preview table rows
+        // ==========================================
+        // DIFF REVIEW TABLE RENDERER
+        // ==========================================
+        function formatPercentChangeBadge(oldPrice, newPrice) {
+            if (oldPrice === null || oldPrice === undefined) {
+                return '<span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/50 font-bold text-[10px]"><i class="fa-solid fa-plus mr-0.5"></i> New</span>';
+            }
+            if (newPrice === null || newPrice === undefined) {
+                return '<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-400 text-[10px]">Removed</span>';
+            }
+            const diff = newPrice - oldPrice;
+            if (Math.abs(diff) < 0.005) {
+                return '<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-400 text-[10px]">0.0%</span>';
+            }
+            const pct = (diff / oldPrice) * 100;
+            const sign = pct > 0 ? '+' : '';
+            if (pct < 0) {
+                return `<span class="px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-700/50 font-bold text-[10px] inline-flex items-center gap-1"><i class="fa-solid fa-arrow-down text-[9px]"></i> ${pct.toFixed(1)}%</span>`;
+            } else {
+                return `<span class="px-2 py-0.5 rounded bg-rose-950/80 text-rose-300 border border-rose-700/50 font-bold text-[10px] inline-flex items-center gap-1"><i class="fa-solid fa-arrow-up text-[9px]"></i> ${sign}${pct.toFixed(1)}%</span>`;
+            }
+        }
+
         function renderPreviewTable(parsed) {
             currentParsedResults = parsed.items;
             const stats = parsed.stats;
+            const targetVendor = parsed.targetVendor;
+
+            const vendorLabels = {
+                'all': 'All Vendors',
+                'marvel': 'Marvel Chloe',
+                'tong': 'Tong Shi Po',
+                'tina': 'Tina Tianjin Bio'
+            };
 
             previewSummaryStats.innerHTML = `
-                <span class="text-emerald-400 font-bold">${stats.updates} Updates</span> • 
-                <span class="text-indigo-400 font-bold">${stats.newItems} New Items</span> • 
-                <span class="text-slate-400">${stats.skipped} Unchanged</span> 
-                <span class="text-slate-500 font-normal">(${stats.total} total rows parsed)</span>
+                <div class="flex flex-wrap items-center gap-2">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded bg-amber-950/70 text-amber-300 border border-amber-800/50 font-semibold">${stats.updates} Updates</span>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded bg-emerald-950/70 text-emerald-300 border border-emerald-800/50 font-semibold">${stats.newItems} New Items</span>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-semibold">${stats.skipped} Unchanged</span>
+                    ${stats.priceDrops > 0 ? `<span class="inline-flex items-center px-2 py-0.5 rounded bg-emerald-950/50 text-emerald-400 font-bold text-[11px]"><i class="fa-solid fa-arrow-trend-down mr-1"></i> ${stats.priceDrops} price drops</span>` : ''}
+                    ${stats.priceIncreases > 0 ? `<span class="inline-flex items-center px-2 py-0.5 rounded bg-rose-950/50 text-rose-400 font-bold text-[11px]"><i class="fa-solid fa-arrow-trend-up mr-1"></i> ${stats.priceIncreases} price hikes</span>` : ''}
+                </div>
             `;
 
             if (currentParsedResults.length === 0) {
-                importPreviewTbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-500 text-xs">No valid rows found to import.</td></tr>`;
+                importPreviewTbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-slate-500 text-xs">No valid rows found in price sheet.</td></tr>`;
                 return;
             }
 
             importPreviewTbody.innerHTML = currentParsedResults.map((row, i) => {
-                let actionBadge = '';
-                if (row.action === 'update') {
-                    actionBadge = `<span class="px-2 py-0.5 rounded bg-amber-950/80 text-amber-300 border border-amber-700/50 text-[10px] font-bold">Update</span>`;
-                } else if (row.action === 'new') {
-                    actionBadge = `<span class="px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-700/50 text-[10px] font-bold">New Item</span>`;
+                let statusBadge = '';
+                if (row.action === 'new') {
+                    statusBadge = `<span class="px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-500/50 text-[10px] font-bold inline-flex items-center gap-1"><i class="fa-solid fa-plus-circle text-[9px]"></i> + New Item</span>`;
+                } else if (row.action === 'update') {
+                    statusBadge = `<span class="px-2.5 py-1 rounded-full bg-amber-950/80 text-amber-300 border border-amber-700/50 text-[10px] font-bold inline-flex items-center gap-1"><i class="fa-solid fa-pen text-[9px]"></i> Price Update</span>`;
                 } else {
-                    actionBadge = `<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-400 text-[10px]">Unchanged</span>`;
+                    statusBadge = `<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-400 text-[10px]">Unchanged</span>`;
                 }
 
-                function formatPriceCell(newP, oldP) {
+                // Vendor scope label & Diff column construction
+                let vendorScopeDisplay = '';
+                let priceDiffDisplay = '';
+                let pctChangeDisplay = '';
+
+                if (targetVendor === 'tina') {
+                    vendorScopeDisplay = 'Tina Bio';
+                    const o = row.oldPrices.tina;
+                    const n = row.prices.tina;
+                    priceDiffDisplay = formatSingleDiff(o, n);
+                    pctChangeDisplay = formatPercentChangeBadge(o, n);
+                } else if (targetVendor === 'marvel') {
+                    vendorScopeDisplay = 'Marvel Chloe';
+                    const o = row.oldPrices.marvel;
+                    const n = row.prices.marvel;
+                    priceDiffDisplay = formatSingleDiff(o, n);
+                    pctChangeDisplay = formatPercentChangeBadge(o, n);
+                } else if (targetVendor === 'tong') {
+                    vendorScopeDisplay = 'Tong Shi Po';
+                    const o = row.oldPrices.tong;
+                    const n = row.prices.tong;
+                    priceDiffDisplay = formatSingleDiff(o, n);
+                    pctChangeDisplay = formatPercentChangeBadge(o, n);
+                } else {
+                    // Multi-vendor mode
+                    vendorScopeDisplay = 'All Vendors';
+                    const diffLines = [];
+                    const pcts = [];
+
+                    const vList = [
+                        { name: 'Marvel', o: row.oldPrices.marvel, n: row.importedVendorPrices.marvel !== null ? row.importedVendorPrices.marvel : row.prices.marvel, imported: row.importedVendorPrices.marvel !== null },
+                        { name: 'Tong', o: row.oldPrices.tong, n: row.importedVendorPrices.tong !== null ? row.importedVendorPrices.tong : row.prices.tong, imported: row.importedVendorPrices.tong !== null },
+                        { name: 'Tina', o: row.oldPrices.tina, n: row.importedVendorPrices.tina !== null ? row.importedVendorPrices.tina : row.prices.tina, imported: row.importedVendorPrices.tina !== null }
+                    ];
+
+                    vList.forEach(v => {
+                        if (row.action === 'new' && v.n !== null) {
+                            diffLines.push(`<div>${v.name}: <strong class="text-emerald-400">$${v.n.toFixed(2)}</strong></div>`);
+                        } else if (v.imported && v.n !== null) {
+                            if (v.o !== null && v.o !== v.n) {
+                                diffLines.push(`<div>${v.name}: <span class="text-slate-500 line-through mr-1">$${v.o.toFixed(2)}</span><strong class="text-emerald-400">$${v.n.toFixed(2)}</strong></div>`);
+                                pcts.push(formatPercentChangeBadge(v.o, v.n));
+                            } else if (v.o === null) {
+                                diffLines.push(`<div>${v.name}: <strong class="text-emerald-400">$${v.n.toFixed(2)}</strong></div>`);
+                                pcts.push(formatPercentChangeBadge(null, v.n));
+                            } else {
+                                diffLines.push(`<div>${v.name}: <span class="text-slate-400">$${v.n.toFixed(2)}</span></div>`);
+                            }
+                        }
+                    });
+
+                    priceDiffDisplay = diffLines.length > 0 ? diffLines.join('') : '<span class="text-slate-500">No prices</span>';
+                    pctChangeDisplay = pcts.length > 0 ? pcts.join(' ') : (row.action === 'new' ? '<span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-500/50 font-bold text-[10px]">+ New</span>' : '<span class="text-slate-500 text-xs">0.0%</span>');
+                }
+
+                function formatSingleDiff(oldP, newP) {
                     if (newP === null) return '<span class="text-slate-600">—</span>';
-                    if (oldP !== null && oldP !== undefined && oldP !== newP) {
-                        return `<span class="text-slate-500 line-through text-[10px] mr-1">$${oldP.toFixed(2)}</span><span class="text-emerald-400 font-bold">$${newP.toFixed(2)}</span>`;
+                    if (oldP === null || oldP === undefined) {
+                        return `<span class="text-emerald-400 font-bold">$${newP.toFixed(2)}</span>`;
+                    }
+                    if (oldP !== newP) {
+                        return `<span class="text-slate-500 line-through text-[11px] mr-1.5">$${oldP.toFixed(2)}</span><span class="text-slate-400 mr-1.5">→</span><span class="text-emerald-400 font-bold text-sm">$${newP.toFixed(2)}</span>`;
                     }
                     return `<span class="text-slate-300">$${newP.toFixed(2)}</span>`;
                 }
 
-                const matchedLabel = row.matchedItem 
-                    ? `<div class="font-medium text-slate-200">${row.matchedItem.name} <span class="text-slate-400 text-[11px]">(${row.matchedItem.spec})</span></div>`
-                    : `<div class="text-indigo-400 font-medium flex items-center gap-1"><i class="fa-solid fa-plus-circle text-[10px]"></i> Create as New Compound</div>`;
+                const catBadge = row.catNo ? `<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800/50 mr-1.5">${row.catNo}</span>` : '';
+                const itemName = row.matchedItem ? row.matchedItem.name : row.importedName;
+                const itemSpec = row.matchedItem ? row.matchedItem.spec : row.importedSpec;
 
                 return `
-                    <tr class="hover:bg-slate-800/40 transition">
+                    <tr class="hover:bg-slate-800/40 transition ${!row.selected ? 'opacity-50' : ''}">
                         <td class="py-2.5 px-3 text-center">
                             <input type="checkbox" data-index="${i}" class="preview-row-checkbox rounded bg-slate-950 border-slate-700 text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer" ${row.selected ? 'checked' : ''}>
                         </td>
                         <td class="py-2.5 px-3 whitespace-nowrap">
-                            <div class="font-medium text-white">${row.importedName}</div>
-                            <div class="text-[10px] text-slate-400 font-mono">${row.importedSpec}</div>
+                            <div class="font-medium text-white flex items-center">
+                                ${catBadge}
+                                <span>${itemName}</span>
+                            </div>
+                            <div class="text-[11px] text-slate-400 font-mono mt-0.5">${itemSpec}</div>
                         </td>
                         <td class="py-2.5 px-3 whitespace-nowrap">
-                            ${matchedLabel}
+                            <span class="text-[11px] px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-medium">
+                                ${vendorScopeDisplay}
+                            </span>
                         </td>
                         <td class="py-2.5 px-3 text-right whitespace-nowrap">
-                            ${formatPriceCell(row.prices.marvel, row.oldPrices.marvel)}
-                        </td>
-                        <td class="py-2.5 px-3 text-right whitespace-nowrap">
-                            ${formatPriceCell(row.prices.tong, row.oldPrices.tong)}
-                        </td>
-                        <td class="py-2.5 px-3 text-right whitespace-nowrap">
-                            ${formatPriceCell(row.prices.tina, row.oldPrices.tina)}
+                            ${priceDiffDisplay}
                         </td>
                         <td class="py-2.5 px-3 text-center whitespace-nowrap">
-                            ${actionBadge}
+                            ${pctChangeDisplay}
+                        </td>
+                        <td class="py-2.5 px-3 text-center whitespace-nowrap">
+                            ${statusBadge}
                         </td>
                     </tr>
                 `;
@@ -2946,6 +3121,11 @@
                     const idx = parseInt(e.target.getAttribute('data-index'), 10);
                     if (currentParsedResults[idx]) {
                         currentParsedResults[idx].selected = e.target.checked;
+                        const tr = e.target.closest('tr');
+                        if (tr) {
+                            if (e.target.checked) tr.classList.remove('opacity-50');
+                            else tr.classList.add('opacity-50');
+                        }
                     }
                 });
             });
@@ -3098,7 +3278,14 @@
                 const anyUnselected = currentParsedResults.some(r => !r.selected);
                 const newState = anyUnselected;
                 currentParsedResults.forEach(r => { r.selected = newState; });
-                document.querySelectorAll('.preview-row-checkbox').forEach(cb => { cb.checked = newState; });
+                document.querySelectorAll('.preview-row-checkbox').forEach(cb => { 
+                    cb.checked = newState; 
+                    const tr = cb.closest('tr');
+                    if (tr) {
+                        if (newState) tr.classList.remove('opacity-50');
+                        else tr.classList.add('opacity-50');
+                    }
+                });
             });
         }
 
@@ -3194,7 +3381,36 @@
                 renderCart();
                 closeImportModal();
 
-                showToast(`Applied ${selectedRows.length} updates (${updatedCount} updated, ${addedCount} added)!`, 'fa-circle-check');
+                // Format comprehensive success toast message
+                const targetVendor = importVendorTarget ? importVendorTarget.value : 'all';
+                const vendorNames = {
+                    'marvel': 'Marvel Chloe',
+                    'tong': 'Tong Shi Po',
+                    'tina': 'Tina Bio',
+                    'all': 'catalog'
+                };
+
+                let successMsg = '';
+                const vName = vendorNames[targetVendor] || targetVendor;
+                if (targetVendor !== 'all') {
+                    if (updatedCount > 0 && addedCount > 0) {
+                        successMsg = `Successfully updated ${updatedCount} prices across ${vName} and added ${addedCount} new items`;
+                    } else if (updatedCount > 0) {
+                        successMsg = `Successfully updated ${updatedCount} prices across ${vName}`;
+                    } else {
+                        successMsg = `Successfully added ${addedCount} new items`;
+                    }
+                } else {
+                    if (updatedCount > 0 && addedCount > 0) {
+                        successMsg = `Successfully updated ${updatedCount} prices and added ${addedCount} new items`;
+                    } else if (updatedCount > 0) {
+                        successMsg = `Successfully updated ${updatedCount} prices across catalog`;
+                    } else {
+                        successMsg = `Successfully added ${addedCount} new items`;
+                    }
+                }
+
+                showToast(successMsg, 'fa-circle-check');
             });
         }
 

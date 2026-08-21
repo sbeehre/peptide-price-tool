@@ -1,0 +1,1757 @@
+[
+  {
+    "id": "5_amino_1mq_5mg",
+    "name": "5-amino-1mq",
+    "spec": "5mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "5AM",
+    "prices": {
+      "marvel": 65,
+      "tong": 66,
+      "tina": 59
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "5_amino_1mq_10mg",
+    "name": "5-amino-1mq",
+    "spec": "10mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "10AM",
+    "prices": {
+      "marvel": 85,
+      "tong": null,
+      "tina": 80
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "5_amino_1mq_50mg",
+    "name": "5-amino-1mq",
+    "spec": "50mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "50AM",
+    "prices": {
+      "marvel": 110,
+      "tong": 151,
+      "tina": 132
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "ace_031_1mg",
+    "name": "ACE-031",
+    "spec": "1mg*10",
+    "category": "Muscle & Body Composition",
+    "catNo": "ACE1",
+    "prices": {
+      "marvel": 180,
+      "tong": null,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "acetic_acid_water_0_6pct_3ml",
+    "name": "Acetic Acid water 0.6%",
+    "spec": "3ml*10",
+    "category": "Reconstitution & Supplies",
+    "catNo": "AA3",
+    "prices": {
+      "marvel": null,
+      "tong": 8,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "acetic_acid_water_0_6pct_10ml",
+    "name": "Acetic Acid water 0.6%",
+    "spec": "10ml*10",
+    "category": "Reconstitution & Supplies",
+    "catNo": "AA10",
+    "prices": {
+      "marvel": null,
+      "tong": 10,
+      "tina": 7
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "adamax_5mg",
+    "name": "Adamax",
+    "spec": "5mg*10",
+    "category": "Nootropics & Cognitive",
+    "catNo": "ADX5",
+    "prices": {
+      "marvel": null,
+      "tong": 113,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "adamax_10mg",
+    "name": "Adamax",
+    "spec": "10mg*10",
+    "category": "Nootropics & Cognitive",
+    "catNo": "ADX10",
+    "prices": {
+      "marvel": null,
+      "tong": 159,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "adipotide_5mg",
+    "name": "Adipotide",
+    "spec": "5mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "AP5",
+    "prices": {
+      "marvel": null,
+      "tong": 211,
+      "tina": 191
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "ahk_cu_50mg",
+    "name": "AHK-Cu",
+    "spec": "50mg*10",
+    "category": "Healing & Recovery",
+    "catNo": "AHK50",
+    "prices": {
+      "marvel": null,
+      "tong": 78,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "ahk_cu_100mg",
+    "name": "AHK-Cu",
+    "spec": "100mg*10",
+    "category": "Healing & Recovery",
+    "catNo": "AHK100",
+    "prices": {
+      "marvel": null,
+      "tong": 95,
+      "tina": 84
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "aod_9604_5mg",
+    "name": "AOD 9604",
+    "spec": "5mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "AOD5",
+    "prices": {
+      "marvel": 145,
+      "tong": 140,
+      "tina": 112
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "aod_9604_10mg",
+    "name": "AOD 9604",
+    "spec": "10mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "AOD10",
+    "prices": {
+      "marvel": null,
+      "tong": 200,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "ara_290_10mg",
+    "name": "Ara-290",
+    "spec": "10mg*10",
+    "category": "Healing & Recovery",
+    "catNo": "ARA10",
+    "prices": {
+      "marvel": null,
+      "tong": 82,
+      "tina": 74
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "bac_water_benzyl_alcohol_0_9pct_3ml",
+    "name": "BAC Water / Benzyl Alcohol 0.9%",
+    "spec": "3ml*10",
+    "category": "Reconstitution & Supplies",
+    "catNo": "BAC3",
+    "prices": {
+      "marvel": 10,
+      "tong": 8,
+      "tina": 6
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "bac_water_benzyl_alcohol_0_9pct_10ml",
+    "name": "BAC Water / Benzyl Alcohol 0.9%",
+    "spec": "10ml*10",
+    "category": "Reconstitution & Supplies",
+    "catNo": "BAC10",
+    "prices": {
+      "marvel": 12,
+      "tong": 10,
+      "tina": 7
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "b12_vitamin_10ml",
+    "name": "B12 Vitamin",
+    "spec": "10ml*10",
+    "category": "Reconstitution & Supplies",
+    "catNo": "B12",
+    "prices": {
+      "marvel": 65,
+      "tong": 33,
+      "tina": 29
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "bpc_157_5mg",
+    "name": "BPC-157",
+    "spec": "5mg*10",
+    "category": "Healing & Recovery",
+    "catNo": "BC5",
+    "prices": {
+      "marvel": 70,
+      "tong": 49,
+      "tina": 44
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "bpc_157_10mg",
+    "name": "BPC-157",
+    "spec": "10mg*10",
+    "category": "Healing & Recovery",
+    "catNo": "BC10",
+    "prices": {
+      "marvel": 85,
+      "tong": 70,
+      "tina": 65
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "bpc_157_20mg",
+    "name": "BPC-157",
+    "spec": "20mg*10",
+    "category": "Healing & Recovery",
+    "catNo": "BC20",
+    "prices": {
+      "marvel": 150,
+      "tong": null,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "bpc_157_tb500_10mg",
+    "name": "BPC-157 + TB500",
+    "spec": "10mg*10",
+    "category": "Healing & Recovery",
+    "catNo": "BTB10",
+    "prices": {
+      "marvel": 110,
+      "tong": 123,
+      "tina": 109
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "bpc_157_tb500_20mg",
+    "name": "BPC-157 + TB500",
+    "spec": "20mg*10",
+    "category": "Healing & Recovery",
+    "catNo": "BTB20",
+    "prices": {
+      "marvel": 180,
+      "tong": 244,
+      "tina": 220
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "glow_blend_70mg",
+    "name": "GLOW Blend",
+    "spec": "70mg*10",
+    "category": "Healing & Recovery",
+    "catNo": "BBG70",
+    "prices": {
+      "marvel": 210,
+      "tong": 244,
+      "tina": 212
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "klow_blend_80mg",
+    "name": "KLOW Blend",
+    "spec": "80mg*10",
+    "category": "Healing & Recovery",
+    "catNo": "KLOW80",
+    "prices": {
+      "marvel": 245,
+      "tong": 293,
+      "tina": 250
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "cagrilintide_5mg",
+    "name": "Cagrilintide",
+    "spec": "5mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "CGL5",
+    "prices": {
+      "marvel": 130,
+      "tong": 136,
+      "tina": 121
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "cagrilintide_10mg",
+    "name": "Cagrilintide",
+    "spec": "10mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "CGL10",
+    "prices": {
+      "marvel": 210,
+      "tong": 215,
+      "tina": 191
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "cagrilintide_semaglutide_5mg",
+    "name": "Cagrilintide + Semaglutide",
+    "spec": "5mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "CS5",
+    "prices": {
+      "marvel": null,
+      "tong": 134,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "cagrilintide_semaglutide_10mg",
+    "name": "Cagrilintide + Semaglutide",
+    "spec": "10mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "CS10",
+    "prices": {
+      "marvel": null,
+      "tong": 179,
+      "tina": 162
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "cardiogen_20mg",
+    "name": "Cardiogen",
+    "spec": "20mg*10",
+    "category": "Longevity & Cellular Health",
+    "catNo": "CDG20",
+    "prices": {
+      "marvel": 130,
+      "tong": null,
+      "tina": 137.5
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "cartlax_20mg",
+    "name": "Cartlax",
+    "spec": "20mg*10",
+    "category": "Healing & Recovery",
+    "catNo": "CTX20",
+    "prices": {
+      "marvel": 130,
+      "tong": null,
+      "tina": 130
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "cjc_1295_no_dac_5mg",
+    "name": "CJC-1295 no dac",
+    "spec": "5mg*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "CND5",
+    "prices": {
+      "marvel": 105,
+      "tong": 104,
+      "tina": 94
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "cjc_1295_no_dac_10mg",
+    "name": "CJC-1295 no dac",
+    "spec": "10mg*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "CND10",
+    "prices": {
+      "marvel": 160,
+      "tong": 195,
+      "tina": 171
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "cjc_1295_no_dac_ipamorelin_10mg",
+    "name": "CJC-1295 no DAC + Ipamorelin",
+    "spec": "10mg*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "CDIP10",
+    "prices": {
+      "marvel": 110,
+      "tong": 130,
+      "tina": 115
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "cjc_1295_with_dac_5mg",
+    "name": "CJC-1295 with dac",
+    "spec": "5mg*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "CD5",
+    "prices": {
+      "marvel": 185,
+      "tong": 195,
+      "tina": 176
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "cjc_1295_with_dac_10mg",
+    "name": "CJC-1295 with dac",
+    "spec": "10mg*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "CD10",
+    "prices": {
+      "marvel": null,
+      "tong": null,
+      "tina": 287
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "dermorphin_5mg",
+    "name": "Dermorphin",
+    "spec": "5mg*10",
+    "category": "Hormones & Sexual Health",
+    "catNo": "DM5",
+    "prices": {
+      "marvel": 75,
+      "tong": null,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "dermorphin_10mg",
+    "name": "Dermorphin",
+    "spec": "10mg*10",
+    "category": "Hormones & Sexual Health",
+    "catNo": "DM10",
+    "prices": {
+      "marvel": 80,
+      "tong": null,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "dihexa_10mg",
+    "name": "Dihexa",
+    "spec": "10mg*10",
+    "category": "Nootropics & Cognitive",
+    "catNo": "DHX10",
+    "prices": {
+      "marvel": null,
+      "tong": 74,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "dsip_5mg",
+    "name": "DSIP",
+    "spec": "5mg*10",
+    "category": "Hormones & Sexual Health",
+    "catNo": "DS5",
+    "prices": {
+      "marvel": 70,
+      "tong": 49,
+      "tina": 44
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "dsip_10mg",
+    "name": "DSIP",
+    "spec": "10mg*10",
+    "category": "Hormones & Sexual Health",
+    "catNo": "DS10",
+    "prices": {
+      "marvel": null,
+      "tong": null,
+      "tina": 75
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "dsip_15mg",
+    "name": "DSIP",
+    "spec": "15mg*10",
+    "category": "Hormones & Sexual Health",
+    "catNo": "DS15",
+    "prices": {
+      "marvel": 110,
+      "tong": 113,
+      "tina": 103
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "eloralintide_10mg",
+    "name": "Eloralintide",
+    "spec": "10mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "EL10",
+    "prices": {
+      "marvel": null,
+      "tong": null,
+      "tina": 477
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "epithalon_10mg",
+    "name": "Epithalon",
+    "spec": "10mg*10",
+    "category": "Longevity & Cellular Health",
+    "catNo": "ET10",
+    "prices": {
+      "marvel": 65,
+      "tong": 78,
+      "tina": 71
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "epithalon_50mg",
+    "name": "Epithalon",
+    "spec": "50mg*10",
+    "category": "Longevity & Cellular Health",
+    "catNo": "ET50",
+    "prices": {
+      "marvel": 165,
+      "tong": 227,
+      "tina": 200
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "foxo4_dri_10mg",
+    "name": "FOXO4-DRI",
+    "spec": "10mg*10",
+    "category": "Longevity & Cellular Health",
+    "catNo": "FOX10",
+    "prices": {
+      "marvel": null,
+      "tong": 409,
+      "tina": 430
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "ghk_cu_50mg",
+    "name": "GHK-Cu",
+    "spec": "50mg*10",
+    "category": "Healing & Recovery",
+    "catNo": "CU50",
+    "prices": {
+      "marvel": 50,
+      "tong": 40,
+      "tina": 32
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "ghk_cu_100mg",
+    "name": "GHK-Cu",
+    "spec": "100mg*10",
+    "category": "Healing & Recovery",
+    "catNo": "CU100",
+    "prices": {
+      "marvel": 70,
+      "tong": 49,
+      "tina": 41
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "ghrp_2_5mg",
+    "name": "GHRP-2",
+    "spec": "5mg*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "G25",
+    "prices": {
+      "marvel": null,
+      "tong": 53,
+      "tina": 47
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "ghrp_2_10mg",
+    "name": "GHRP-2",
+    "spec": "10mg*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "G210",
+    "prices": {
+      "marvel": 60,
+      "tong": null,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "ghrp_6_5mg",
+    "name": "GHRP-6",
+    "spec": "5mg*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "G65",
+    "prices": {
+      "marvel": 45,
+      "tong": 53,
+      "tina": 47
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "hcg_5000iu",
+    "name": "HCG",
+    "spec": "5000iu*10",
+    "category": "Hormones & Sexual Health",
+    "catNo": "HCG5K",
+    "prices": {
+      "marvel": 100,
+      "tong": 96,
+      "tina": 88
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "hcg_10000iu",
+    "name": "HCG",
+    "spec": "10000iu*10",
+    "category": "Hormones & Sexual Health",
+    "catNo": "HCG1K0",
+    "prices": {
+      "marvel": 190,
+      "tong": 195,
+      "tina": 176
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "hgh_somatropin_10iu",
+    "name": "HGH Somatropin",
+    "spec": "10iu*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "HGH10",
+    "prices": {
+      "marvel": null,
+      "tong": null,
+      "tina": 137.5
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "hgh_somatropin_15iu",
+    "name": "HGH Somatropin",
+    "spec": "15iu*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "HGH15",
+    "prices": {
+      "marvel": 90,
+      "tong": null,
+      "tina": 154.8
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "hgh_somatropin_24iu",
+    "name": "HGH Somatropin",
+    "spec": "24iu*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "HGH24",
+    "prices": {
+      "marvel": 160,
+      "tong": null,
+      "tina": 198.4
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "hgh_somatropin_36iu",
+    "name": "HGH Somatropin",
+    "spec": "36iu*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "HGH36",
+    "prices": {
+      "marvel": 190,
+      "tong": null,
+      "tina": 234.9
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "igf_1lr3_0_1mg",
+    "name": "IGF-1LR3",
+    "spec": "0.1mg*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "IGF1",
+    "prices": {
+      "marvel": 60,
+      "tong": 49,
+      "tina": 47
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "igf_1lr3_1mg",
+    "name": "IGF-1LR3",
+    "spec": "1mg*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "IGF1",
+    "prices": {
+      "marvel": 240,
+      "tong": 227,
+      "tina": 206
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "ipamorelin_5mg",
+    "name": "Ipamorelin",
+    "spec": "5mg*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "IP5",
+    "prices": {
+      "marvel": 65,
+      "tong": 49,
+      "tina": 44
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "ipamorelin_10mg",
+    "name": "Ipamorelin",
+    "spec": "10mg*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "IP10",
+    "prices": {
+      "marvel": 75,
+      "tong": 90,
+      "tina": 82
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "kisspeptin_10_5mg",
+    "name": "KissPeptin-10",
+    "spec": "5mg*10",
+    "category": "Hormones & Sexual Health",
+    "catNo": "KS5",
+    "prices": {
+      "marvel": 65,
+      "tong": 75,
+      "tina": 68
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "kisspeptin_10_10mg",
+    "name": "KissPeptin-10",
+    "spec": "10mg*10",
+    "category": "Hormones & Sexual Health",
+    "catNo": "KS10",
+    "prices": {
+      "marvel": 110,
+      "tong": 150,
+      "tina": 118
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "kpv_5mg",
+    "name": "KPV",
+    "spec": "5mg*10",
+    "category": "Immune & Antimicrobial",
+    "catNo": "KPV5",
+    "prices": {
+      "marvel": 70,
+      "tong": 56,
+      "tina": 50
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "kpv_10mg",
+    "name": "KPV",
+    "spec": "10mg*10",
+    "category": "Immune & Antimicrobial",
+    "catNo": "KPV10",
+    "prices": {
+      "marvel": 75,
+      "tong": 72,
+      "tina": 65
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "lc120_lipo_c_10ml",
+    "name": "LC120 / Lipo-C",
+    "spec": "10ml*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "LC120",
+    "prices": {
+      "marvel": 90,
+      "tong": 82,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "lc216_10ml",
+    "name": "LC216",
+    "spec": "10ml*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "LC216",
+    "prices": {
+      "marvel": 105,
+      "tong": 82,
+      "tina": 68
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "lc526_fat_blaster_10ml",
+    "name": "LC526 / Fat Blaster",
+    "spec": "10ml*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "LC526",
+    "prices": {
+      "marvel": 195,
+      "tong": 136,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "lc553_super_shred_10ml",
+    "name": "LC553 / Super Shred",
+    "spec": "10ml*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "LC553",
+    "prices": {
+      "marvel": 190,
+      "tong": 132,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "lemon_bottle_10ml",
+    "name": "Lemon Bottle",
+    "spec": "10ml*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "LB10",
+    "prices": {
+      "marvel": 80,
+      "tong": 82,
+      "tina": 68
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "ll_37_5mg",
+    "name": "LL-37",
+    "spec": "5mg*10",
+    "category": "Immune & Antimicrobial",
+    "catNo": "LL37",
+    "prices": {
+      "marvel": 115,
+      "tong": 113,
+      "tina": 103
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "melanotan_i_mt_1_5mg",
+    "name": "Melanotan I / MT-1",
+    "spec": "5mg*10",
+    "category": "Hormones & Sexual Health",
+    "catNo": "MT1_5",
+    "prices": {
+      "marvel": 70,
+      "tong": null,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "melanotan_i_mt_1_10mg",
+    "name": "Melanotan I / MT-1",
+    "spec": "10mg*10",
+    "category": "Hormones & Sexual Health",
+    "catNo": "MT1_10",
+    "prices": {
+      "marvel": null,
+      "tong": 59,
+      "tina": 53
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "melanotan_ii_5mg",
+    "name": "Melanotan II",
+    "spec": "5mg*10",
+    "category": "Hormones & Sexual Health",
+    "catNo": "MT2_5",
+    "prices": {
+      "marvel": null,
+      "tong": null,
+      "tina": 45.8
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "melanotan_ii_10mg",
+    "name": "Melanotan II",
+    "spec": "10mg*10",
+    "category": "Hormones & Sexual Health",
+    "catNo": "MT2_10",
+    "prices": {
+      "marvel": 65,
+      "tong": 52,
+      "tina": 53
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "mots_c_10mg",
+    "name": "MOTS-c",
+    "spec": "10mg*10",
+    "category": "Longevity & Cellular Health",
+    "catNo": "MS10",
+    "prices": {
+      "marvel": 85,
+      "tong": 78,
+      "tina": 71
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "mots_c_20mg",
+    "name": "MOTS-c",
+    "spec": "20mg*10",
+    "category": "Longevity & Cellular Health",
+    "catNo": "MS20",
+    "prices": {
+      "marvel": null,
+      "tong": 130,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "mots_c_40mg",
+    "name": "MOTS-c",
+    "spec": "40mg*10",
+    "category": "Longevity & Cellular Health",
+    "catNo": "MS40",
+    "prices": {
+      "marvel": 210,
+      "tong": 227,
+      "tina": 200
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "nad_250mg",
+    "name": "NAD+",
+    "spec": "250mg*10",
+    "category": "Longevity & Cellular Health",
+    "catNo": "NJ250",
+    "prices": {
+      "marvel": null,
+      "tong": null,
+      "tina": 41
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "nad_500mg",
+    "name": "NAD+",
+    "spec": "500mg*10",
+    "category": "Longevity & Cellular Health",
+    "catNo": "NJ500",
+    "prices": {
+      "marvel": 85,
+      "tong": 98,
+      "tina": 88
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "nad_1000mg",
+    "name": "NAD+",
+    "spec": "1000mg*10",
+    "category": "Longevity & Cellular Health",
+    "catNo": "NJ1000",
+    "prices": {
+      "marvel": 120,
+      "tong": 195,
+      "tina": 153
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "oxytocin_2mg",
+    "name": "Oxytocin",
+    "spec": "2mg*10",
+    "category": "Hormones & Sexual Health",
+    "catNo": "OT2",
+    "prices": {
+      "marvel": 40,
+      "tong": 49,
+      "tina": 38
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "pegmgf_2mg",
+    "name": "PEGMGF",
+    "spec": "2mg*10",
+    "category": "Muscle & Body Composition",
+    "catNo": "PMGF2",
+    "prices": {
+      "marvel": 135,
+      "tong": null,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "pinealon_5mg",
+    "name": "Pinealon",
+    "spec": "5mg*10",
+    "category": "Nootropics & Cognitive",
+    "catNo": "PN5",
+    "prices": {
+      "marvel": 65,
+      "tong": 49,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "pinealon_10mg",
+    "name": "Pinealon",
+    "spec": "10mg*10",
+    "category": "Nootropics & Cognitive",
+    "catNo": "PN10",
+    "prices": {
+      "marvel": 85,
+      "tong": 82,
+      "tina": 71.6
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "pinealon_20mg",
+    "name": "Pinealon",
+    "spec": "20mg*10",
+    "category": "Nootropics & Cognitive",
+    "catNo": "PN20",
+    "prices": {
+      "marvel": 130,
+      "tong": 113,
+      "tina": 93.6
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "pnc_27_5mg",
+    "name": "PNC-27",
+    "spec": "5mg*10",
+    "category": "Longevity & Cellular Health",
+    "catNo": "PNC5",
+    "prices": {
+      "marvel": 90,
+      "tong": 94,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "pnc_27_10mg",
+    "name": "PNC-27",
+    "spec": "10mg*10",
+    "category": "Longevity & Cellular Health",
+    "catNo": "PNC10",
+    "prices": {
+      "marvel": 150,
+      "tong": 151,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "pt_141_10mg",
+    "name": "PT-141",
+    "spec": "10mg*10",
+    "category": "Hormones & Sexual Health",
+    "catNo": "P41",
+    "prices": {
+      "marvel": 80,
+      "tong": 72,
+      "tina": 65
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "retatrutide_5mg",
+    "name": "Retatrutide",
+    "spec": "5mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "RT5",
+    "prices": {
+      "marvel": 80,
+      "tong": 66,
+      "tina": 59
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "retatrutide_10mg",
+    "name": "Retatrutide",
+    "spec": "10mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "RT10",
+    "prices": {
+      "marvel": 100,
+      "tong": 104,
+      "tina": 85
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "retatrutide_15mg",
+    "name": "Retatrutide",
+    "spec": "15mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "RT15",
+    "prices": {
+      "marvel": 155,
+      "tong": 130,
+      "tina": 109
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "retatrutide_20mg",
+    "name": "Retatrutide",
+    "spec": "20mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "RT20",
+    "prices": {
+      "marvel": 175,
+      "tong": 162,
+      "tina": 135
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "retatrutide_30mg",
+    "name": "Retatrutide",
+    "spec": "30mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "RT30",
+    "prices": {
+      "marvel": 240,
+      "tong": 227,
+      "tina": 188
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "retatrutide_40mg",
+    "name": "Retatrutide",
+    "spec": "40mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "RT40",
+    "prices": {
+      "marvel": 320,
+      "tong": 293,
+      "tina": 253
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "retatrutide_50mg",
+    "name": "Retatrutide",
+    "spec": "50mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "RT50",
+    "prices": {
+      "marvel": 400,
+      "tong": 325,
+      "tina": 282
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "retatrutide_60mg",
+    "name": "Retatrutide",
+    "spec": "60mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "RT60",
+    "prices": {
+      "marvel": 440,
+      "tong": 352,
+      "tina": 285
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "retatrutide_100mg",
+    "name": "Retatrutide",
+    "spec": "100mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "RT100",
+    "prices": {
+      "marvel": 800,
+      "tong": 316,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "selank_5mg",
+    "name": "Selank",
+    "spec": "5mg*10",
+    "category": "Nootropics & Cognitive",
+    "catNo": "SK5",
+    "prices": {
+      "marvel": 65,
+      "tong": 49,
+      "tina": 44
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "selank_10mg",
+    "name": "Selank",
+    "spec": "10mg*10",
+    "category": "Nootropics & Cognitive",
+    "catNo": "SK10",
+    "prices": {
+      "marvel": 85,
+      "tong": 72,
+      "tina": 65
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "semaglutide_2mg",
+    "name": "Semaglutide",
+    "spec": "2mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "SM2",
+    "prices": {
+      "marvel": null,
+      "tong": null,
+      "tina": 29
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "semaglutide_5mg",
+    "name": "Semaglutide",
+    "spec": "5mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "SM5",
+    "prices": {
+      "marvel": 50,
+      "tong": 43,
+      "tina": 38
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "semaglutide_10mg",
+    "name": "Semaglutide",
+    "spec": "10mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "SM10",
+    "prices": {
+      "marvel": 70,
+      "tong": 59,
+      "tina": 47
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "semaglutide_15mg",
+    "name": "Semaglutide",
+    "spec": "15mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "SM15",
+    "prices": {
+      "marvel": 85,
+      "tong": 75,
+      "tina": 59
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "semaglutide_20mg",
+    "name": "Semaglutide",
+    "spec": "20mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "SM20",
+    "prices": {
+      "marvel": 100,
+      "tong": 90,
+      "tina": 74
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "semaglutide_30mg",
+    "name": "Semaglutide",
+    "spec": "30mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "SM30",
+    "prices": {
+      "marvel": 110,
+      "tong": 124,
+      "tina": 103
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "semax_5mg",
+    "name": "Semax",
+    "spec": "5mg*10",
+    "category": "Nootropics & Cognitive",
+    "catNo": "XA5",
+    "prices": {
+      "marvel": 55,
+      "tong": 49,
+      "tina": 44
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "semax_10mg",
+    "name": "Semax",
+    "spec": "10mg*10",
+    "category": "Nootropics & Cognitive",
+    "catNo": "XA10",
+    "prices": {
+      "marvel": 75,
+      "tong": 66,
+      "tina": 59
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "sermorelin_5mg",
+    "name": "Sermorelin",
+    "spec": "5mg*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "SMO5",
+    "prices": {
+      "marvel": 85,
+      "tong": 85,
+      "tina": 76
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "sermorelin_10mg",
+    "name": "Sermorelin",
+    "spec": "10mg*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "SMO10",
+    "prices": {
+      "marvel": 145,
+      "tong": 130,
+      "tina": 143.2
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "slu_pp_332_10mg",
+    "name": "SLU-PP-332",
+    "spec": "10mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "SLU10",
+    "prices": {
+      "marvel": null,
+      "tong": 261,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "snap_8_10mg",
+    "name": "Snap-8",
+    "spec": "10mg*10",
+    "category": "Muscle & Body Composition",
+    "catNo": "SNP10",
+    "prices": {
+      "marvel": 60,
+      "tong": 49,
+      "tina": 44
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "ss_31_10mg",
+    "name": "SS-31",
+    "spec": "10mg*10",
+    "category": "Longevity & Cellular Health",
+    "catNo": "2S10",
+    "prices": {
+      "marvel": 110,
+      "tong": 98,
+      "tina": 88
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "ss_31_50mg",
+    "name": "SS-31",
+    "spec": "50mg*10",
+    "category": "Longevity & Cellular Health",
+    "catNo": "2S50",
+    "prices": {
+      "marvel": 370,
+      "tong": 358,
+      "tina": 324
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "survodutide_10mg",
+    "name": "Survodutide",
+    "spec": "10mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "SVD10",
+    "prices": {
+      "marvel": null,
+      "tong": 358,
+      "tina": 258
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "tb500_thymosin_b4_5mg",
+    "name": "TB500 / Thymosin B4",
+    "spec": "5mg*10",
+    "category": "Healing & Recovery",
+    "catNo": "BT5",
+    "prices": {
+      "marvel": 85,
+      "tong": 104,
+      "tina": 91
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "tb500_thymosin_b4_10mg",
+    "name": "TB500 / Thymosin B4",
+    "spec": "10mg*10",
+    "category": "Healing & Recovery",
+    "catNo": "BT10",
+    "prices": {
+      "marvel": 155,
+      "tong": 185,
+      "tina": 162
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "tb500_thymosin_b4_20mg",
+    "name": "TB500 / Thymosin B4",
+    "spec": "20mg*10",
+    "category": "Healing & Recovery",
+    "catNo": "BT20",
+    "prices": {
+      "marvel": null,
+      "tong": null,
+      "tina": 280
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "tesamorelin_5mg",
+    "name": "Tesamorelin",
+    "spec": "5mg*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "TSM5",
+    "prices": {
+      "marvel": 95,
+      "tong": 130,
+      "tina": 115
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "tesamorelin_10mg",
+    "name": "Tesamorelin",
+    "spec": "10mg*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "TSM10",
+    "prices": {
+      "marvel": 180,
+      "tong": 227,
+      "tina": 197
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "tesamorelin_20mg",
+    "name": "Tesamorelin",
+    "spec": "20mg*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "TSM20",
+    "prices": {
+      "marvel": null,
+      "tong": null,
+      "tina": 280
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "thymalin_10mg",
+    "name": "Thymalin",
+    "spec": "10mg*10",
+    "category": "Immune & Antimicrobial",
+    "catNo": "THY10",
+    "prices": {
+      "marvel": 75,
+      "tong": 80,
+      "tina": 71
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "thymosin_alpha_1_5mg",
+    "name": "Thymosin Alpha-1",
+    "spec": "5mg*10",
+    "category": "Immune & Antimicrobial",
+    "catNo": "TA5",
+    "prices": {
+      "marvel": 105,
+      "tong": 113,
+      "tina": 103
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "thymosin_alpha_1_10mg",
+    "name": "Thymosin Alpha-1",
+    "spec": "10mg*10",
+    "category": "Immune & Antimicrobial",
+    "catNo": "TA10",
+    "prices": {
+      "marvel": 180,
+      "tong": 211,
+      "tina": 191
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "tirzepatide_5mg",
+    "name": "Tirzepatide",
+    "spec": "5mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "TR5",
+    "prices": {
+      "marvel": 55,
+      "tong": 45,
+      "tina": 38
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "tirzepatide_10mg",
+    "name": "Tirzepatide",
+    "spec": "10mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "TR10",
+    "prices": {
+      "marvel": 70,
+      "tong": 59,
+      "tina": 50
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "tirzepatide_15mg",
+    "name": "Tirzepatide",
+    "spec": "15mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "TR15",
+    "prices": {
+      "marvel": 85,
+      "tong": 82,
+      "tina": 65
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "tirzepatide_20mg",
+    "name": "Tirzepatide",
+    "spec": "20mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "TR20",
+    "prices": {
+      "marvel": 100,
+      "tong": 98,
+      "tina": 74
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "tirzepatide_30mg",
+    "name": "Tirzepatide",
+    "spec": "30mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "TR30",
+    "prices": {
+      "marvel": 135,
+      "tong": 124,
+      "tina": 97
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "tirzepatide_40mg",
+    "name": "Tirzepatide",
+    "spec": "40mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "TR40",
+    "prices": {
+      "marvel": 170,
+      "tong": 156,
+      "tina": 135
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "tirzepatide_45mg",
+    "name": "Tirzepatide",
+    "spec": "45mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "TR45",
+    "prices": {
+      "marvel": 190,
+      "tong": null,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "tirzepatide_50mg",
+    "name": "Tirzepatide",
+    "spec": "50mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "TR50",
+    "prices": {
+      "marvel": 205,
+      "tong": 188,
+      "tina": 165
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "tirzepatide_60mg",
+    "name": "Tirzepatide",
+    "spec": "60mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "TR60",
+    "prices": {
+      "marvel": 220,
+      "tong": 221,
+      "tina": 185
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "tirzepatide_100mg",
+    "name": "Tirzepatide",
+    "spec": "100mg*10",
+    "category": "GLP-1 & Metabolic",
+    "catNo": "TR100",
+    "prices": {
+      "marvel": 400,
+      "tong": 352,
+      "tina": null
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "vip_5mg",
+    "name": "VIP",
+    "spec": "5mg*10",
+    "category": "Hormones & Sexual Health",
+    "catNo": "VIP5",
+    "prices": {
+      "marvel": 105,
+      "tong": 98,
+      "tina": 88
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  },
+  {
+    "id": "vip_10mg",
+    "name": "VIP",
+    "spec": "10mg*10",
+    "category": "Hormones & Sexual Health",
+    "catNo": "VIP10",
+    "prices": {
+      "marvel": 190,
+      "tong": 178,
+      "tina": 162
+    },
+    "lastUpdated": "2026-08-22T00:00:00.000Z"
+  }
+]

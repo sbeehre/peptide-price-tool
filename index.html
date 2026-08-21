@@ -58,17 +58,26 @@
                     <i class="fa-solid fa-flask-vial text-xl sm:text-2xl"></i>
                 </div>
                 <div class="min-w-0">
-                    <h1 class="text-base sm:text-xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent truncate">
-                        Peptide Price Tool
-                    </h1>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-base sm:text-xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent truncate">
+                            Peptide Price Tool
+                        </h1>
+                        <span id="rate-badge" class="hidden xs:inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-indigo-950 text-indigo-300 border border-indigo-800/40">Official Rates</span>
+                    </div>
                     <p class="text-[11px] sm:text-xs text-slate-400 truncate">Marvel Chloe • Tong Shi Po • Tina Bio</p>
                 </div>
             </div>
             
             <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                <button id="reset-defaults-btn" title="Reset to Official Default Rates" class="flex items-center gap-1.5 sm:gap-2 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-slate-300 hover:text-white font-medium px-2.5 py-2 sm:px-3.5 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-slate-800 hover:border-slate-700 cursor-pointer shadow-sm">
+                    <i class="fa-solid fa-rotate-left text-indigo-400 text-xs sm:text-sm"></i>
+                    <span class="hidden sm:inline">Reset Rates</span>
+                    <span class="sm:hidden">Reset</span>
+                </button>
+
                 <a href="#cart-section" class="flex items-center gap-1.5 sm:gap-2 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm transition shadow-lg shadow-indigo-600/20 border border-indigo-500/50 cursor-pointer">
                     <i class="fa-solid fa-shopping-basket text-xs sm:text-sm"></i>
-                    <span>Order List</span>
+                    <span class="hidden xs:inline">Order List</span>
                     <span id="cart-badge-count" class="bg-indigo-950 text-indigo-200 border border-indigo-400/40 text-[11px] sm:text-xs px-1.5 py-0.5 sm:px-2 rounded-full font-bold min-w-[20px] text-center">0</span>
                 </a>
             </div>
@@ -126,8 +135,14 @@
         <section id="spotlight-section" class="space-y-4 relative z-0">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-950/50 border border-slate-800/60 rounded-xl sm:rounded-2xl p-4 sm:p-5">
                 <div class="min-w-0">
-                    <span class="text-[11px] sm:text-xs font-bold tracking-wider uppercase text-indigo-400 block mb-0.5">Featured Product Spotlight</span>
-                    <h2 id="selected-title" class="text-xl sm:text-2xl font-extrabold text-white break-words">Semaglutide (10mg*10)</h2>
+                    <div class="flex items-center gap-2 mb-0.5">
+                        <span class="text-[11px] sm:text-xs font-bold tracking-wider uppercase text-indigo-400">Featured Product Spotlight</span>
+                        <span id="spotlight-category-badge" class="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">GLP-1 & Metabolic</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <h2 id="selected-title" class="text-xl sm:text-2xl font-extrabold text-white break-words">Semaglutide (10mg*10)</h2>
+                        <span id="spotlight-catno-badge" class="text-xs font-mono px-2 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-700/50">SM10</span>
+                    </div>
                 </div>
                 
                 <div class="flex flex-col xs:flex-row items-stretch sm:items-center gap-2 sm:gap-3 shrink-0">
@@ -339,8 +354,10 @@
                     <h3 class="font-bold text-slate-200 text-base sm:text-lg">Full Price Catalog Table</h3>
                     <p class="text-[11px] sm:text-xs text-slate-400">Tap any row to feature it above, or tap "+" to add to your order planner</p>
                 </div>
-                <div id="catalog-count" class="text-xs text-indigo-400 bg-indigo-950/60 border border-indigo-800/50 px-3 py-1.5 rounded-lg shrink-0">
-                    Loading entries...
+                <div class="flex items-center gap-2">
+                    <div id="catalog-count" class="text-xs text-indigo-400 bg-indigo-950/60 border border-indigo-800/50 px-3 py-1.5 rounded-lg shrink-0">
+                        Loading entries...
+                    </div>
                 </div>
             </div>
 
@@ -379,148 +396,1769 @@
     </div>
 
     <script>
-        // Complete verified dataset matching official PDF price lists across all 3 vendors
-        const peptideData = [
-            { key: "5-amino-1mq (5mg*10)", name: "5-amino-1mq", spec: "5mg*10", marvel: 65, tong: 66, tina: 59 },
-            { key: "5-amino-1mq (10mg*10)", name: "5-amino-1mq", spec: "10mg*10", marvel: 85, tong: null, tina: 80 },
-            { key: "5-amino-1mq (50mg*10)", name: "5-amino-1mq", spec: "50mg*10", marvel: 110, tong: 151, tina: 132 },
-            { key: "ACE-031 (1mg*10)", name: "ACE-031", spec: "1mg*10", marvel: 180, tong: null, tina: null },
-            { key: "Acetic Acid water 0.6% (3ml*10)", name: "Acetic Acid water 0.6%", spec: "3ml*10", marvel: null, tong: 8, tina: null },
-            { key: "Acetic Acid water 0.6% (10ml*10)", name: "Acetic Acid water 0.6%", spec: "10ml*10", marvel: null, tong: 10, tina: 7 },
-            { key: "Adamax (5mg*10)", name: "Adamax", spec: "5mg*10", marvel: null, tong: 113, tina: null },
-            { key: "Adamax (10mg*10)", name: "Adamax", spec: "10mg*10", marvel: null, tong: 159, tina: null },
-            { key: "Adipotide (5mg*10)", name: "Adipotide", spec: "5mg*10", marvel: null, tong: 211, tina: 191 },
-            { key: "AHK-Cu (50mg*10)", name: "AHK-Cu", spec: "50mg*10", marvel: null, tong: 78, tina: null },
-            { key: "AHK-Cu (100mg*10)", name: "AHK-Cu", spec: "100mg*10", marvel: null, tong: 95, tina: 84 },
-            { key: "AOD 9604 (5mg*10)", name: "AOD 9604", spec: "5mg*10", marvel: 145, tong: 140, tina: 112 },
-            { key: "AOD 9604 (10mg*10)", name: "AOD 9604", spec: "10mg*10", marvel: null, tong: 200, tina: null },
-            { key: "Ara-290 (10mg*10)", name: "Ara-290", spec: "10mg*10", marvel: null, tong: 82, tina: 74 },
-            { key: "BAC Water / Benzyl Alcohol 0.9% (3ml*10)", name: "BAC Water / Benzyl Alcohol 0.9%", spec: "3ml*10", marvel: 10, tong: 8, tina: 6 },
-            { key: "BAC Water / Benzyl Alcohol 0.9% (10ml*10)", name: "BAC Water / Benzyl Alcohol 0.9%", spec: "10ml*10", marvel: 12, tong: 10, tina: 7 },
-            { key: "B12 Vitamin (10ml*10)", name: "B12 Vitamin", spec: "10ml*10", marvel: 65, tong: 33, tina: 29 },
-            { key: "BPC-157 (5mg*10)", name: "BPC-157", spec: "5mg*10", marvel: 70, tong: 49, tina: 44 },
-            { key: "BPC-157 (10mg*10)", name: "BPC-157", spec: "10mg*10", marvel: 85, tong: 70, tina: 65 },
-            { key: "BPC-157 (20mg*10)", name: "BPC-157", spec: "20mg*10", marvel: 150, tong: null, tina: null },
-            { key: "BPC-157 5mg + TB500 5mg (10mg*10)", name: "BPC-157 + TB500", spec: "10mg*10", marvel: 110, tong: 123, tina: 109 },
-            { key: "BPC-157 10mg + TB500 10mg (20mg*10)", name: "BPC-157 + TB500", spec: "20mg*10", marvel: 180, tong: 244, tina: 220 },
-            { key: "GLOW / BBG70 (BPC 10mg+GHK-Cu 50mg+TB500 10mg)", name: "GLOW Blend", spec: "70mg*10", marvel: 210, tong: 244, tina: 212 },
-            { key: "KLOW80 (CU50+TB10+BC10+KPV10)", name: "KLOW Blend", spec: "80mg*10", marvel: 245, tong: 293, tina: 250 },
-            { key: "Cagrilintide (5mg*10)", name: "Cagrilintide", spec: "5mg*10", marvel: 130, tong: 136, tina: 121 },
-            { key: "Cagrilintide (10mg*10)", name: "Cagrilintide", spec: "10mg*10", marvel: 210, tong: 215, tina: 191 },
-            { key: "Cagrilintide 2.5mg + Semaglutide 2.5mg (5mg*10)", name: "Cagrilintide + Semaglutide", spec: "5mg*10", marvel: null, tong: 134, tina: null },
-            { key: "Cagrilintide 5mg + Semaglutide 5mg (10mg*10)", name: "Cagrilintide + Semaglutide", spec: "10mg*10", marvel: null, tong: 179, tina: 162 },
-            { key: "Cardiogen (20mg*10)", name: "Cardiogen", spec: "20mg*10", marvel: 130, tong: null, tina: 137.5 },
-            { key: "Cartlax (20mg*10)", name: "Cartlax", spec: "20mg*10", marvel: 130, tong: null, tina: 130 },
-            { key: "CJC-1295 no DAC (5mg*10)", name: "CJC-1295 no dac", spec: "5mg*10", marvel: 105, tong: 104, tina: 94 },
-            { key: "CJC-1295 no DAC (10mg*10)", name: "CJC-1295 no dac", spec: "10mg*10", marvel: 160, tong: 195, tina: 171 },
-            { key: "CJC-1295 no DAC 5mg + Ipamorelin 5mg (10mg*10)", name: "CJC-1295 no DAC + Ipamorelin", spec: "10mg*10", marvel: 110, tong: 130, tina: 115 },
-            { key: "CJC-1295 with DAC (5mg*10)", name: "CJC-1295 with dac", spec: "5mg*10", marvel: 185, tong: 195, tina: 176 },
-            { key: "CJC-1295 with DAC (10mg*10)", name: "CJC-1295 with dac", spec: "10mg*10", marvel: null, tong: null, tina: 287 },
-            { key: "Dermorphin (5mg*10)", name: "Dermorphin", spec: "5mg*10", marvel: 75, tong: null, tina: null },
-            { key: "Dermorphin (10mg*10)", name: "Dermorphin", spec: "10mg*10", marvel: 80, tong: null, tina: null },
-            { key: "Dihexa (10mg*10)", name: "Dihexa", spec: "10mg*10", marvel: null, tong: 74, tina: null },
-            { key: "DSIP (5mg*10)", name: "DSIP", spec: "5mg*10", marvel: 70, tong: 49, tina: 44 },
-            { key: "DSIP (10mg*10)", name: "DSIP", spec: "10mg*10", marvel: null, tong: null, tina: 75 },
-            { key: "DSIP (15mg*10)", name: "DSIP", spec: "15mg*10", marvel: 110, tong: 113, tina: 103 },
-            { key: "Eloralintide (10mg*10)", name: "Eloralintide", spec: "10mg*10", marvel: null, tong: null, tina: 477 },
-            { key: "Epithalon (10mg*10)", name: "Epithalon", spec: "10mg*10", marvel: 65, tong: 78, tina: 71 },
-            { key: "Epithalon (50mg*10)", name: "Epithalon", spec: "50mg*10", marvel: 165, tong: 227, tina: 200 },
-            { key: "FOXO4-DRI (10mg*10)", name: "FOXO4-DRI", spec: "10mg*10", marvel: null, tong: 409, tina: 430 },
-            { key: "GHK-Cu (50mg*10)", name: "GHK-Cu", spec: "50mg*10", marvel: 50, tong: 40, tina: 32 },
-            { key: "GHK-Cu (100mg*10)", name: "GHK-Cu", spec: "100mg*10", marvel: 70, tong: 49, tina: 41 },
-            { key: "GHRP-2 (5mg*10)", name: "GHRP-2", spec: "5mg*10", marvel: null, tong: 53, tina: 47 },
-            { key: "GHRP-2 (10mg*10)", name: "GHRP-2", spec: "10mg*10", marvel: 60, tong: null, tina: null },
-            { key: "GHRP-6 (5mg*10)", name: "GHRP-6", spec: "5mg*10", marvel: 45, tong: 53, tina: 47 },
-            { key: "HCG (5000iu*10)", name: "HCG", spec: "5000iu*10", marvel: 100, tong: 96, tina: 88 },
-            { key: "HCG (10000iu*10)", name: "HCG", spec: "10000iu*10", marvel: 190, tong: 195, tina: 176 },
-            { key: "HGH Somatropin (10iu*10)", name: "HGH Somatropin", spec: "10iu*10", marvel: null, tong: null, tina: 137.5 },
-            { key: "HGH Somatropin (15iu*10)", name: "HGH Somatropin", spec: "15iu*10", marvel: 90, tong: null, tina: 154.8 },
-            { key: "HGH Somatropin (24iu*10)", name: "HGH Somatropin", spec: "24iu*10", marvel: 160, tong: null, tina: 198.4 },
-            { key: "HGH Somatropin (36iu*10)", name: "HGH Somatropin", spec: "36iu*10", marvel: 190, tong: null, tina: 234.9 },
-            { key: "IGF-1LR3 (0.1mg*10)", name: "IGF-1LR3", spec: "0.1mg*10", marvel: 60, tong: 49, tina: 47 },
-            { key: "IGF-1LR3 (1mg*10)", name: "IGF-1LR3", spec: "1mg*10", marvel: 240, tong: 227, tina: 206 },
-            { key: "Ipamorelin (5mg*10)", name: "Ipamorelin", spec: "5mg*10", marvel: 65, tong: 49, tina: 44 },
-            { key: "Ipamorelin (10mg*10)", name: "Ipamorelin", spec: "10mg*10", marvel: 75, tong: 90, tina: 82 },
-            { key: "KissPeptin-10 (5mg*10)", name: "KissPeptin-10", spec: "5mg*10", marvel: 65, tong: 75, tina: 68 },
-            { key: "KissPeptin-10 (10mg*10)", name: "KissPeptin-10", spec: "10mg*10", marvel: 110, tong: 150, tina: 118 },
-            { key: "KPV (5mg*10)", name: "KPV", spec: "5mg*10", marvel: 70, tong: 56, tina: 50 },
-            { key: "KPV (10mg*10)", name: "KPV", spec: "10mg*10", marvel: 75, tong: 72, tina: 65 },
-            { key: "LC120 / Lipo-C (10ml*10)", name: "LC120 / Lipo-C", spec: "10ml*10", marvel: 90, tong: 82, tina: null },
-            { key: "LC216 (10ml*10)", name: "LC216", spec: "10ml*10", marvel: 105, tong: 82, tina: 68 },
-            { key: "LC526 / Fat Blaster (10ml*10)", name: "LC526 / Fat Blaster", spec: "10ml*10", marvel: 195, tong: 136, tina: null },
-            { key: "LC553 / Super Shred (10ml*10)", name: "LC553 / Super Shred", spec: "10ml*10", marvel: 190, tong: 132, tina: null },
-            { key: "Lemon Bottle (10ml*10)", name: "Lemon Bottle", spec: "10ml*10", marvel: 80, tong: 82, tina: 68 },
-            { key: "LL-37 (5mg*10)", name: "LL-37", spec: "5mg*10", marvel: 115, tong: 113, tina: 103 },
-            { key: "Melanotan I / MT-1 (5mg*10)", name: "Melanotan I / MT-1", spec: "5mg*10", marvel: 70, tong: null, tina: null },
-            { key: "Melanotan I / MT-1 (10mg*10)", name: "Melanotan I / MT-1", spec: "10mg*10", marvel: null, tong: 59, tina: 53 },
-            { key: "Melanotan II (5mg*10)", name: "Melanotan II", spec: "5mg*10", marvel: null, tong: null, tina: 45.8 },
-            { key: "Melanotan II (10mg*10)", name: "Melanotan II", spec: "10mg*10", marvel: 65, tong: 52, tina: 53 },
-            { key: "MOTS-c (10mg*10)", name: "MOTS-c", spec: "10mg*10", marvel: 85, tong: 78, tina: 71 },
-            { key: "MOTS-c (20mg*10)", name: "MOTS-c", spec: "20mg*10", marvel: null, tong: 130, tina: null },
-            { key: "MOTS-c (40mg*10)", name: "MOTS-c", spec: "40mg*10", marvel: 210, tong: 227, tina: 200 },
-            { key: "NAD+ (250mg*10)", name: "NAD+", spec: "250mg*10", marvel: null, tong: null, tina: 41 },
-            { key: "NAD+ (500mg*10)", name: "NAD+", spec: "500mg*10", marvel: 85, tong: 98, tina: 88 },
-            { key: "NAD+ (1000mg*10)", name: "NAD+", spec: "1000mg*10", marvel: 120, tong: 195, tina: 153 },
-            { key: "Oxytocin (2mg*10)", name: "Oxytocin", spec: "2mg*10", marvel: 40, tong: 49, tina: 38 },
-            { key: "PEGMGF (2mg*10)", name: "PEGMGF", spec: "2mg*10", marvel: 135, tong: null, tina: null },
-            { key: "Pinealon (5mg*10)", name: "Pinealon", spec: "5mg*10", marvel: 65, tong: 49, tina: null },
-            { key: "Pinealon (10mg*10)", name: "Pinealon", spec: "10mg*10", marvel: 85, tong: 82, tina: 71.6 },
-            { key: "Pinealon (20mg*10)", name: "Pinealon", spec: "20mg*10", marvel: 130, tong: 113, tina: 93.6 },
-            { key: "PNC-27 (5mg*10)", name: "PNC-27", spec: "5mg*10", marvel: 90, tong: 94, tina: null },
-            { key: "PNC-27 (10mg*10)", name: "PNC-27", spec: "10mg*10", marvel: 150, tong: 151, tina: null },
-            { key: "PT-141 (10mg*10)", name: "PT-141", spec: "10mg*10", marvel: 80, tong: 72, tina: 65 },
-            { key: "Retatrutide (5mg*10)", name: "Retatrutide", spec: "5mg*10", marvel: 80, tong: 66, tina: 59 },
-            { key: "Retatrutide (10mg*10)", name: "Retatrutide", spec: "10mg*10", marvel: 100, tong: 104, tina: 85 },
-            { key: "Retatrutide (15mg*10)", name: "Retatrutide", spec: "15mg*10", marvel: 155, tong: 130, tina: 109 },
-            { key: "Retatrutide (20mg*10)", name: "Retatrutide", spec: "20mg*10", marvel: 175, tong: 162, tina: 135 },
-            { key: "Retatrutide (30mg*10)", name: "Retatrutide", spec: "30mg*10", marvel: 240, tong: 227, tina: 188 },
-            { key: "Retatrutide (40mg*10)", name: "Retatrutide", spec: "40mg*10", marvel: 320, tong: 293, tina: 253 },
-            { key: "Retatrutide (50mg*10)", name: "Retatrutide", spec: "50mg*10", marvel: 400, tong: 325, tina: 282 },
-            { key: "Retatrutide (60mg*10)", name: "Retatrutide", spec: "60mg*10", marvel: 440, tong: 352, tina: 285 },
-            { key: "Retatrutide (100mg*10)", name: "Retatrutide", spec: "100mg*10", marvel: 800, tong: 316, tina: null },
-            { key: "Selank (5mg*10)", name: "Selank", spec: "5mg*10", marvel: 65, tong: 49, tina: 44 },
-            { key: "Selank (10mg*10)", name: "Selank", spec: "10mg*10", marvel: 85, tong: 72, tina: 65 },
-            { key: "Semaglutide (2mg*10)", name: "Semaglutide", spec: "2mg*10", marvel: null, tong: null, tina: 29 },
-            { key: "Semaglutide (5mg*10)", name: "Semaglutide", spec: "5mg*10", marvel: 50, tong: 43, tina: 38 },
-            { key: "Semaglutide (10mg*10)", name: "Semaglutide", spec: "10mg*10", marvel: 70, tong: 59, tina: 47 },
-            { key: "Semaglutide (15mg*10)", name: "Semaglutide", spec: "15mg*10", marvel: 85, tong: 75, tina: 59 },
-            { key: "Semaglutide (20mg*10)", name: "Semaglutide", spec: "20mg*10", marvel: 100, tong: 90, tina: 74 },
-            { key: "Semaglutide (30mg*10)", name: "Semaglutide", spec: "30mg*10", marvel: 110, tong: 124, tina: 103 },
-            { key: "Semax (5mg*10)", name: "Semax", spec: "5mg*10", marvel: 55, tong: 49, tina: 44 },
-            { key: "Semax (10mg*10)", name: "Semax", spec: "10mg*10", marvel: 75, tong: 66, tina: 59 },
-            { key: "Sermorelin (5mg*10)", name: "Sermorelin", spec: "5mg*10", marvel: 85, tong: 85, tina: 76 },
-            { key: "Sermorelin (10mg*10)", name: "Sermorelin", spec: "10mg*10", marvel: 145, tong: 130, tina: 143.2 },
-            { key: "SLU-PP-332 (10mg*10)", name: "SLU-PP-332", spec: "10mg*10", marvel: null, tong: 261, tina: null },
-            { key: "Snap-8 (10mg*10)", name: "Snap-8", spec: "10mg*10", marvel: 60, tong: 49, tina: 44 },
-            { key: "SS-31 (10mg*10)", name: "SS-31", spec: "10mg*10", marvel: 110, tong: 98, tina: 88 },
-            { key: "SS-31 (50mg*10)", name: "SS-31", spec: "50mg*10", marvel: 370, tong: 358, tina: 324 },
-            { key: "Survodutide (10mg*10)", name: "Survodutide", spec: "10mg*10", marvel: null, tong: 358, tina: 258 },
-            { key: "TB500 / Thymosin B4 (5mg*10)", name: "TB500 / Thymosin B4", spec: "5mg*10", marvel: 85, tong: 104, tina: 91 },
-            { key: "TB500 / Thymosin B4 (10mg*10)", name: "TB500 / Thymosin B4", spec: "10mg*10", marvel: 155, tong: 185, tina: 162 },
-            { key: "TB500 / Thymosin B4 (20mg*10)", name: "TB500 / Thymosin B4", spec: "20mg*10", marvel: null, tong: null, tina: 280 },
-            { key: "Tesamorelin (5mg*10)", name: "Tesamorelin", spec: "5mg*10", marvel: 95, tong: 130, tina: 115 },
-            { key: "Tesamorelin (10mg*10)", name: "Tesamorelin", spec: "10mg*10", marvel: 180, tong: 227, tina: 197 },
-            { key: "Tesamorelin (20mg*10)", name: "Tesamorelin", spec: "20mg*10", marvel: null, tong: null, tina: 280 },
-            { key: "Thymalin (10mg*10)", name: "Thymalin", spec: "10mg*10", marvel: 75, tong: 80, tina: 71 },
-            { key: "Thymosin Alpha-1 (5mg*10)", name: "Thymosin Alpha-1", spec: "5mg*10", marvel: 105, tong: 113, tina: 103 },
-            { key: "Thymosin Alpha-1 (10mg*10)", name: "Thymosin Alpha-1", spec: "10mg*10", marvel: 180, tong: 211, tina: 191 },
-            { key: "Tirzepatide (5mg*10)", name: "Tirzepatide", spec: "5mg*10", marvel: 55, tong: 45, tina: 38 },
-            { key: "Tirzepatide (10mg*10)", name: "Tirzepatide", spec: "10mg*10", marvel: 70, tong: 59, tina: 50 },
-            { key: "Tirzepatide (15mg*10)", name: "Tirzepatide", spec: "15mg*10", marvel: 85, tong: 82, tina: 65 },
-            { key: "Tirzepatide (20mg*10)", name: "Tirzepatide", spec: "20mg*10", marvel: 100, tong: 98, tina: 74 },
-            { key: "Tirzepatide (30mg*10)", name: "Tirzepatide", spec: "30mg*10", marvel: 135, tong: 124, tina: 97 },
-            { key: "Tirzepatide (40mg*10)", name: "Tirzepatide", spec: "40mg*10", marvel: 170, tong: 156, tina: 135 },
-            { key: "Tirzepatide (45mg*10)", name: "Tirzepatide", spec: "45mg*10", marvel: 190, tong: null, tina: null },
-            { key: "Tirzepatide (50mg*10)", name: "Tirzepatide", spec: "50mg*10", marvel: 205, tong: 188, tina: 165 },
-            { key: "Tirzepatide (60mg*10)", name: "Tirzepatide", spec: "60mg*10", marvel: 220, tong: 221, tina: 185 },
-            { key: "Tirzepatide (100mg*10)", name: "Tirzepatide", spec: "100mg*10", marvel: 400, tong: 352, tina: null },
-            { key: "VIP (5mg*10)", name: "VIP", spec: "5mg*10", marvel: 105, tong: 98, tina: 88 },
-            { key: "VIP (10mg*10)", name: "VIP", spec: "10mg*10", marvel: 190, tong: 178, tina: 162 }
-        ];
+        // Inline fallback catalog dataset (guarantees zero-network availability & file:// compatibility)
+        const INLINE_DEFAULT_PEPTIDES = [
+        {
+                "id": "5_amino_1mq_5mg",
+                "name": "5-amino-1mq",
+                "spec": "5mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "5AM",
+                "prices": {
+                        "marvel": 65,
+                        "tong": 66,
+                        "tina": 59
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "5_amino_1mq_10mg",
+                "name": "5-amino-1mq",
+                "spec": "10mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "10AM",
+                "prices": {
+                        "marvel": 85,
+                        "tong": null,
+                        "tina": 80
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "5_amino_1mq_50mg",
+                "name": "5-amino-1mq",
+                "spec": "50mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "50AM",
+                "prices": {
+                        "marvel": 110,
+                        "tong": 151,
+                        "tina": 132
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "ace_031_1mg",
+                "name": "ACE-031",
+                "spec": "1mg*10",
+                "category": "Muscle & Body Composition",
+                "catNo": "ACE1",
+                "prices": {
+                        "marvel": 180,
+                        "tong": null,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "acetic_acid_water_0_6pct_3ml",
+                "name": "Acetic Acid water 0.6%",
+                "spec": "3ml*10",
+                "category": "Reconstitution & Supplies",
+                "catNo": "AA3",
+                "prices": {
+                        "marvel": null,
+                        "tong": 8,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "acetic_acid_water_0_6pct_10ml",
+                "name": "Acetic Acid water 0.6%",
+                "spec": "10ml*10",
+                "category": "Reconstitution & Supplies",
+                "catNo": "AA10",
+                "prices": {
+                        "marvel": null,
+                        "tong": 10,
+                        "tina": 7
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "adamax_5mg",
+                "name": "Adamax",
+                "spec": "5mg*10",
+                "category": "Nootropics & Cognitive",
+                "catNo": "ADX5",
+                "prices": {
+                        "marvel": null,
+                        "tong": 113,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "adamax_10mg",
+                "name": "Adamax",
+                "spec": "10mg*10",
+                "category": "Nootropics & Cognitive",
+                "catNo": "ADX10",
+                "prices": {
+                        "marvel": null,
+                        "tong": 159,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "adipotide_5mg",
+                "name": "Adipotide",
+                "spec": "5mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "AP5",
+                "prices": {
+                        "marvel": null,
+                        "tong": 211,
+                        "tina": 191
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "ahk_cu_50mg",
+                "name": "AHK-Cu",
+                "spec": "50mg*10",
+                "category": "Healing & Recovery",
+                "catNo": "AHK50",
+                "prices": {
+                        "marvel": null,
+                        "tong": 78,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "ahk_cu_100mg",
+                "name": "AHK-Cu",
+                "spec": "100mg*10",
+                "category": "Healing & Recovery",
+                "catNo": "AHK100",
+                "prices": {
+                        "marvel": null,
+                        "tong": 95,
+                        "tina": 84
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "aod_9604_5mg",
+                "name": "AOD 9604",
+                "spec": "5mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "AOD5",
+                "prices": {
+                        "marvel": 145,
+                        "tong": 140,
+                        "tina": 112
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "aod_9604_10mg",
+                "name": "AOD 9604",
+                "spec": "10mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "AOD10",
+                "prices": {
+                        "marvel": null,
+                        "tong": 200,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "ara_290_10mg",
+                "name": "Ara-290",
+                "spec": "10mg*10",
+                "category": "Healing & Recovery",
+                "catNo": "ARA10",
+                "prices": {
+                        "marvel": null,
+                        "tong": 82,
+                        "tina": 74
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "bac_water_benzyl_alcohol_0_9pct_3ml",
+                "name": "BAC Water / Benzyl Alcohol 0.9%",
+                "spec": "3ml*10",
+                "category": "Reconstitution & Supplies",
+                "catNo": "BAC3",
+                "prices": {
+                        "marvel": 10,
+                        "tong": 8,
+                        "tina": 6
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "bac_water_benzyl_alcohol_0_9pct_10ml",
+                "name": "BAC Water / Benzyl Alcohol 0.9%",
+                "spec": "10ml*10",
+                "category": "Reconstitution & Supplies",
+                "catNo": "BAC10",
+                "prices": {
+                        "marvel": 12,
+                        "tong": 10,
+                        "tina": 7
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "b12_vitamin_10ml",
+                "name": "B12 Vitamin",
+                "spec": "10ml*10",
+                "category": "Reconstitution & Supplies",
+                "catNo": "B12",
+                "prices": {
+                        "marvel": 65,
+                        "tong": 33,
+                        "tina": 29
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "bpc_157_5mg",
+                "name": "BPC-157",
+                "spec": "5mg*10",
+                "category": "Healing & Recovery",
+                "catNo": "BC5",
+                "prices": {
+                        "marvel": 70,
+                        "tong": 49,
+                        "tina": 44
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "bpc_157_10mg",
+                "name": "BPC-157",
+                "spec": "10mg*10",
+                "category": "Healing & Recovery",
+                "catNo": "BC10",
+                "prices": {
+                        "marvel": 85,
+                        "tong": 70,
+                        "tina": 65
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "bpc_157_20mg",
+                "name": "BPC-157",
+                "spec": "20mg*10",
+                "category": "Healing & Recovery",
+                "catNo": "BC20",
+                "prices": {
+                        "marvel": 150,
+                        "tong": null,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "bpc_157_tb500_10mg",
+                "name": "BPC-157 + TB500",
+                "spec": "10mg*10",
+                "category": "Healing & Recovery",
+                "catNo": "BTB10",
+                "prices": {
+                        "marvel": 110,
+                        "tong": 123,
+                        "tina": 109
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "bpc_157_tb500_20mg",
+                "name": "BPC-157 + TB500",
+                "spec": "20mg*10",
+                "category": "Healing & Recovery",
+                "catNo": "BTB20",
+                "prices": {
+                        "marvel": 180,
+                        "tong": 244,
+                        "tina": 220
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "glow_blend_70mg",
+                "name": "GLOW Blend",
+                "spec": "70mg*10",
+                "category": "Healing & Recovery",
+                "catNo": "BBG70",
+                "prices": {
+                        "marvel": 210,
+                        "tong": 244,
+                        "tina": 212
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "klow_blend_80mg",
+                "name": "KLOW Blend",
+                "spec": "80mg*10",
+                "category": "Healing & Recovery",
+                "catNo": "KLOW80",
+                "prices": {
+                        "marvel": 245,
+                        "tong": 293,
+                        "tina": 250
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "cagrilintide_5mg",
+                "name": "Cagrilintide",
+                "spec": "5mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "CGL5",
+                "prices": {
+                        "marvel": 130,
+                        "tong": 136,
+                        "tina": 121
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "cagrilintide_10mg",
+                "name": "Cagrilintide",
+                "spec": "10mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "CGL10",
+                "prices": {
+                        "marvel": 210,
+                        "tong": 215,
+                        "tina": 191
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "cagrilintide_semaglutide_5mg",
+                "name": "Cagrilintide + Semaglutide",
+                "spec": "5mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "CS5",
+                "prices": {
+                        "marvel": null,
+                        "tong": 134,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "cagrilintide_semaglutide_10mg",
+                "name": "Cagrilintide + Semaglutide",
+                "spec": "10mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "CS10",
+                "prices": {
+                        "marvel": null,
+                        "tong": 179,
+                        "tina": 162
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "cardiogen_20mg",
+                "name": "Cardiogen",
+                "spec": "20mg*10",
+                "category": "Longevity & Cellular Health",
+                "catNo": "CDG20",
+                "prices": {
+                        "marvel": 130,
+                        "tong": null,
+                        "tina": 137.5
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "cartlax_20mg",
+                "name": "Cartlax",
+                "spec": "20mg*10",
+                "category": "Healing & Recovery",
+                "catNo": "CTX20",
+                "prices": {
+                        "marvel": 130,
+                        "tong": null,
+                        "tina": 130
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "cjc_1295_no_dac_5mg",
+                "name": "CJC-1295 no dac",
+                "spec": "5mg*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "CND5",
+                "prices": {
+                        "marvel": 105,
+                        "tong": 104,
+                        "tina": 94
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "cjc_1295_no_dac_10mg",
+                "name": "CJC-1295 no dac",
+                "spec": "10mg*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "CND10",
+                "prices": {
+                        "marvel": 160,
+                        "tong": 195,
+                        "tina": 171
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "cjc_1295_no_dac_ipamorelin_10mg",
+                "name": "CJC-1295 no DAC + Ipamorelin",
+                "spec": "10mg*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "CDIP10",
+                "prices": {
+                        "marvel": 110,
+                        "tong": 130,
+                        "tina": 115
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "cjc_1295_with_dac_5mg",
+                "name": "CJC-1295 with dac",
+                "spec": "5mg*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "CD5",
+                "prices": {
+                        "marvel": 185,
+                        "tong": 195,
+                        "tina": 176
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "cjc_1295_with_dac_10mg",
+                "name": "CJC-1295 with dac",
+                "spec": "10mg*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "CD10",
+                "prices": {
+                        "marvel": null,
+                        "tong": null,
+                        "tina": 287
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "dermorphin_5mg",
+                "name": "Dermorphin",
+                "spec": "5mg*10",
+                "category": "Hormones & Sexual Health",
+                "catNo": "DM5",
+                "prices": {
+                        "marvel": 75,
+                        "tong": null,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "dermorphin_10mg",
+                "name": "Dermorphin",
+                "spec": "10mg*10",
+                "category": "Hormones & Sexual Health",
+                "catNo": "DM10",
+                "prices": {
+                        "marvel": 80,
+                        "tong": null,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "dihexa_10mg",
+                "name": "Dihexa",
+                "spec": "10mg*10",
+                "category": "Nootropics & Cognitive",
+                "catNo": "DHX10",
+                "prices": {
+                        "marvel": null,
+                        "tong": 74,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "dsip_5mg",
+                "name": "DSIP",
+                "spec": "5mg*10",
+                "category": "Hormones & Sexual Health",
+                "catNo": "DS5",
+                "prices": {
+                        "marvel": 70,
+                        "tong": 49,
+                        "tina": 44
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "dsip_10mg",
+                "name": "DSIP",
+                "spec": "10mg*10",
+                "category": "Hormones & Sexual Health",
+                "catNo": "DS10",
+                "prices": {
+                        "marvel": null,
+                        "tong": null,
+                        "tina": 75
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "dsip_15mg",
+                "name": "DSIP",
+                "spec": "15mg*10",
+                "category": "Hormones & Sexual Health",
+                "catNo": "DS15",
+                "prices": {
+                        "marvel": 110,
+                        "tong": 113,
+                        "tina": 103
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "eloralintide_10mg",
+                "name": "Eloralintide",
+                "spec": "10mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "EL10",
+                "prices": {
+                        "marvel": null,
+                        "tong": null,
+                        "tina": 477
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "epithalon_10mg",
+                "name": "Epithalon",
+                "spec": "10mg*10",
+                "category": "Longevity & Cellular Health",
+                "catNo": "ET10",
+                "prices": {
+                        "marvel": 65,
+                        "tong": 78,
+                        "tina": 71
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "epithalon_50mg",
+                "name": "Epithalon",
+                "spec": "50mg*10",
+                "category": "Longevity & Cellular Health",
+                "catNo": "ET50",
+                "prices": {
+                        "marvel": 165,
+                        "tong": 227,
+                        "tina": 200
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "foxo4_dri_10mg",
+                "name": "FOXO4-DRI",
+                "spec": "10mg*10",
+                "category": "Longevity & Cellular Health",
+                "catNo": "FOX10",
+                "prices": {
+                        "marvel": null,
+                        "tong": 409,
+                        "tina": 430
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "ghk_cu_50mg",
+                "name": "GHK-Cu",
+                "spec": "50mg*10",
+                "category": "Healing & Recovery",
+                "catNo": "CU50",
+                "prices": {
+                        "marvel": 50,
+                        "tong": 40,
+                        "tina": 32
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "ghk_cu_100mg",
+                "name": "GHK-Cu",
+                "spec": "100mg*10",
+                "category": "Healing & Recovery",
+                "catNo": "CU100",
+                "prices": {
+                        "marvel": 70,
+                        "tong": 49,
+                        "tina": 41
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "ghrp_2_5mg",
+                "name": "GHRP-2",
+                "spec": "5mg*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "G25",
+                "prices": {
+                        "marvel": null,
+                        "tong": 53,
+                        "tina": 47
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "ghrp_2_10mg",
+                "name": "GHRP-2",
+                "spec": "10mg*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "G210",
+                "prices": {
+                        "marvel": 60,
+                        "tong": null,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "ghrp_6_5mg",
+                "name": "GHRP-6",
+                "spec": "5mg*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "G65",
+                "prices": {
+                        "marvel": 45,
+                        "tong": 53,
+                        "tina": 47
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "hcg_5000iu",
+                "name": "HCG",
+                "spec": "5000iu*10",
+                "category": "Hormones & Sexual Health",
+                "catNo": "HCG5K",
+                "prices": {
+                        "marvel": 100,
+                        "tong": 96,
+                        "tina": 88
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "hcg_10000iu",
+                "name": "HCG",
+                "spec": "10000iu*10",
+                "category": "Hormones & Sexual Health",
+                "catNo": "HCG1K0",
+                "prices": {
+                        "marvel": 190,
+                        "tong": 195,
+                        "tina": 176
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "hgh_somatropin_10iu",
+                "name": "HGH Somatropin",
+                "spec": "10iu*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "HGH10",
+                "prices": {
+                        "marvel": null,
+                        "tong": null,
+                        "tina": 137.5
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "hgh_somatropin_15iu",
+                "name": "HGH Somatropin",
+                "spec": "15iu*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "HGH15",
+                "prices": {
+                        "marvel": 90,
+                        "tong": null,
+                        "tina": 154.8
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "hgh_somatropin_24iu",
+                "name": "HGH Somatropin",
+                "spec": "24iu*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "HGH24",
+                "prices": {
+                        "marvel": 160,
+                        "tong": null,
+                        "tina": 198.4
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "hgh_somatropin_36iu",
+                "name": "HGH Somatropin",
+                "spec": "36iu*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "HGH36",
+                "prices": {
+                        "marvel": 190,
+                        "tong": null,
+                        "tina": 234.9
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "igf_1lr3_0_1mg",
+                "name": "IGF-1LR3",
+                "spec": "0.1mg*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "IGF1",
+                "prices": {
+                        "marvel": 60,
+                        "tong": 49,
+                        "tina": 47
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "igf_1lr3_1mg",
+                "name": "IGF-1LR3",
+                "spec": "1mg*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "IGF1",
+                "prices": {
+                        "marvel": 240,
+                        "tong": 227,
+                        "tina": 206
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "ipamorelin_5mg",
+                "name": "Ipamorelin",
+                "spec": "5mg*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "IP5",
+                "prices": {
+                        "marvel": 65,
+                        "tong": 49,
+                        "tina": 44
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "ipamorelin_10mg",
+                "name": "Ipamorelin",
+                "spec": "10mg*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "IP10",
+                "prices": {
+                        "marvel": 75,
+                        "tong": 90,
+                        "tina": 82
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "kisspeptin_10_5mg",
+                "name": "KissPeptin-10",
+                "spec": "5mg*10",
+                "category": "Hormones & Sexual Health",
+                "catNo": "KS5",
+                "prices": {
+                        "marvel": 65,
+                        "tong": 75,
+                        "tina": 68
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "kisspeptin_10_10mg",
+                "name": "KissPeptin-10",
+                "spec": "10mg*10",
+                "category": "Hormones & Sexual Health",
+                "catNo": "KS10",
+                "prices": {
+                        "marvel": 110,
+                        "tong": 150,
+                        "tina": 118
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "kpv_5mg",
+                "name": "KPV",
+                "spec": "5mg*10",
+                "category": "Immune & Antimicrobial",
+                "catNo": "KPV5",
+                "prices": {
+                        "marvel": 70,
+                        "tong": 56,
+                        "tina": 50
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "kpv_10mg",
+                "name": "KPV",
+                "spec": "10mg*10",
+                "category": "Immune & Antimicrobial",
+                "catNo": "KPV10",
+                "prices": {
+                        "marvel": 75,
+                        "tong": 72,
+                        "tina": 65
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "lc120_lipo_c_10ml",
+                "name": "LC120 / Lipo-C",
+                "spec": "10ml*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "LC120",
+                "prices": {
+                        "marvel": 90,
+                        "tong": 82,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "lc216_10ml",
+                "name": "LC216",
+                "spec": "10ml*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "LC216",
+                "prices": {
+                        "marvel": 105,
+                        "tong": 82,
+                        "tina": 68
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "lc526_fat_blaster_10ml",
+                "name": "LC526 / Fat Blaster",
+                "spec": "10ml*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "LC526",
+                "prices": {
+                        "marvel": 195,
+                        "tong": 136,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "lc553_super_shred_10ml",
+                "name": "LC553 / Super Shred",
+                "spec": "10ml*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "LC553",
+                "prices": {
+                        "marvel": 190,
+                        "tong": 132,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "lemon_bottle_10ml",
+                "name": "Lemon Bottle",
+                "spec": "10ml*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "LB10",
+                "prices": {
+                        "marvel": 80,
+                        "tong": 82,
+                        "tina": 68
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "ll_37_5mg",
+                "name": "LL-37",
+                "spec": "5mg*10",
+                "category": "Immune & Antimicrobial",
+                "catNo": "LL37",
+                "prices": {
+                        "marvel": 115,
+                        "tong": 113,
+                        "tina": 103
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "melanotan_i_mt_1_5mg",
+                "name": "Melanotan I / MT-1",
+                "spec": "5mg*10",
+                "category": "Hormones & Sexual Health",
+                "catNo": "MT1_5",
+                "prices": {
+                        "marvel": 70,
+                        "tong": null,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "melanotan_i_mt_1_10mg",
+                "name": "Melanotan I / MT-1",
+                "spec": "10mg*10",
+                "category": "Hormones & Sexual Health",
+                "catNo": "MT1_10",
+                "prices": {
+                        "marvel": null,
+                        "tong": 59,
+                        "tina": 53
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "melanotan_ii_5mg",
+                "name": "Melanotan II",
+                "spec": "5mg*10",
+                "category": "Hormones & Sexual Health",
+                "catNo": "MT2_5",
+                "prices": {
+                        "marvel": null,
+                        "tong": null,
+                        "tina": 45.8
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "melanotan_ii_10mg",
+                "name": "Melanotan II",
+                "spec": "10mg*10",
+                "category": "Hormones & Sexual Health",
+                "catNo": "MT2_10",
+                "prices": {
+                        "marvel": 65,
+                        "tong": 52,
+                        "tina": 53
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "mots_c_10mg",
+                "name": "MOTS-c",
+                "spec": "10mg*10",
+                "category": "Longevity & Cellular Health",
+                "catNo": "MS10",
+                "prices": {
+                        "marvel": 85,
+                        "tong": 78,
+                        "tina": 71
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "mots_c_20mg",
+                "name": "MOTS-c",
+                "spec": "20mg*10",
+                "category": "Longevity & Cellular Health",
+                "catNo": "MS20",
+                "prices": {
+                        "marvel": null,
+                        "tong": 130,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "mots_c_40mg",
+                "name": "MOTS-c",
+                "spec": "40mg*10",
+                "category": "Longevity & Cellular Health",
+                "catNo": "MS40",
+                "prices": {
+                        "marvel": 210,
+                        "tong": 227,
+                        "tina": 200
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "nad_250mg",
+                "name": "NAD+",
+                "spec": "250mg*10",
+                "category": "Longevity & Cellular Health",
+                "catNo": "NJ250",
+                "prices": {
+                        "marvel": null,
+                        "tong": null,
+                        "tina": 41
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "nad_500mg",
+                "name": "NAD+",
+                "spec": "500mg*10",
+                "category": "Longevity & Cellular Health",
+                "catNo": "NJ500",
+                "prices": {
+                        "marvel": 85,
+                        "tong": 98,
+                        "tina": 88
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "nad_1000mg",
+                "name": "NAD+",
+                "spec": "1000mg*10",
+                "category": "Longevity & Cellular Health",
+                "catNo": "NJ1000",
+                "prices": {
+                        "marvel": 120,
+                        "tong": 195,
+                        "tina": 153
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "oxytocin_2mg",
+                "name": "Oxytocin",
+                "spec": "2mg*10",
+                "category": "Hormones & Sexual Health",
+                "catNo": "OT2",
+                "prices": {
+                        "marvel": 40,
+                        "tong": 49,
+                        "tina": 38
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "pegmgf_2mg",
+                "name": "PEGMGF",
+                "spec": "2mg*10",
+                "category": "Muscle & Body Composition",
+                "catNo": "PMGF2",
+                "prices": {
+                        "marvel": 135,
+                        "tong": null,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "pinealon_5mg",
+                "name": "Pinealon",
+                "spec": "5mg*10",
+                "category": "Nootropics & Cognitive",
+                "catNo": "PN5",
+                "prices": {
+                        "marvel": 65,
+                        "tong": 49,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "pinealon_10mg",
+                "name": "Pinealon",
+                "spec": "10mg*10",
+                "category": "Nootropics & Cognitive",
+                "catNo": "PN10",
+                "prices": {
+                        "marvel": 85,
+                        "tong": 82,
+                        "tina": 71.6
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "pinealon_20mg",
+                "name": "Pinealon",
+                "spec": "20mg*10",
+                "category": "Nootropics & Cognitive",
+                "catNo": "PN20",
+                "prices": {
+                        "marvel": 130,
+                        "tong": 113,
+                        "tina": 93.6
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "pnc_27_5mg",
+                "name": "PNC-27",
+                "spec": "5mg*10",
+                "category": "Longevity & Cellular Health",
+                "catNo": "PNC5",
+                "prices": {
+                        "marvel": 90,
+                        "tong": 94,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "pnc_27_10mg",
+                "name": "PNC-27",
+                "spec": "10mg*10",
+                "category": "Longevity & Cellular Health",
+                "catNo": "PNC10",
+                "prices": {
+                        "marvel": 150,
+                        "tong": 151,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "pt_141_10mg",
+                "name": "PT-141",
+                "spec": "10mg*10",
+                "category": "Hormones & Sexual Health",
+                "catNo": "P41",
+                "prices": {
+                        "marvel": 80,
+                        "tong": 72,
+                        "tina": 65
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "retatrutide_5mg",
+                "name": "Retatrutide",
+                "spec": "5mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "RT5",
+                "prices": {
+                        "marvel": 80,
+                        "tong": 66,
+                        "tina": 59
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "retatrutide_10mg",
+                "name": "Retatrutide",
+                "spec": "10mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "RT10",
+                "prices": {
+                        "marvel": 100,
+                        "tong": 104,
+                        "tina": 85
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "retatrutide_15mg",
+                "name": "Retatrutide",
+                "spec": "15mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "RT15",
+                "prices": {
+                        "marvel": 155,
+                        "tong": 130,
+                        "tina": 109
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "retatrutide_20mg",
+                "name": "Retatrutide",
+                "spec": "20mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "RT20",
+                "prices": {
+                        "marvel": 175,
+                        "tong": 162,
+                        "tina": 135
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "retatrutide_30mg",
+                "name": "Retatrutide",
+                "spec": "30mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "RT30",
+                "prices": {
+                        "marvel": 240,
+                        "tong": 227,
+                        "tina": 188
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "retatrutide_40mg",
+                "name": "Retatrutide",
+                "spec": "40mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "RT40",
+                "prices": {
+                        "marvel": 320,
+                        "tong": 293,
+                        "tina": 253
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "retatrutide_50mg",
+                "name": "Retatrutide",
+                "spec": "50mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "RT50",
+                "prices": {
+                        "marvel": 400,
+                        "tong": 325,
+                        "tina": 282
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "retatrutide_60mg",
+                "name": "Retatrutide",
+                "spec": "60mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "RT60",
+                "prices": {
+                        "marvel": 440,
+                        "tong": 352,
+                        "tina": 285
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "retatrutide_100mg",
+                "name": "Retatrutide",
+                "spec": "100mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "RT100",
+                "prices": {
+                        "marvel": 800,
+                        "tong": 316,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "selank_5mg",
+                "name": "Selank",
+                "spec": "5mg*10",
+                "category": "Nootropics & Cognitive",
+                "catNo": "SK5",
+                "prices": {
+                        "marvel": 65,
+                        "tong": 49,
+                        "tina": 44
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "selank_10mg",
+                "name": "Selank",
+                "spec": "10mg*10",
+                "category": "Nootropics & Cognitive",
+                "catNo": "SK10",
+                "prices": {
+                        "marvel": 85,
+                        "tong": 72,
+                        "tina": 65
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "semaglutide_2mg",
+                "name": "Semaglutide",
+                "spec": "2mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "SM2",
+                "prices": {
+                        "marvel": null,
+                        "tong": null,
+                        "tina": 29
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "semaglutide_5mg",
+                "name": "Semaglutide",
+                "spec": "5mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "SM5",
+                "prices": {
+                        "marvel": 50,
+                        "tong": 43,
+                        "tina": 38
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "semaglutide_10mg",
+                "name": "Semaglutide",
+                "spec": "10mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "SM10",
+                "prices": {
+                        "marvel": 70,
+                        "tong": 59,
+                        "tina": 47
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "semaglutide_15mg",
+                "name": "Semaglutide",
+                "spec": "15mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "SM15",
+                "prices": {
+                        "marvel": 85,
+                        "tong": 75,
+                        "tina": 59
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "semaglutide_20mg",
+                "name": "Semaglutide",
+                "spec": "20mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "SM20",
+                "prices": {
+                        "marvel": 100,
+                        "tong": 90,
+                        "tina": 74
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "semaglutide_30mg",
+                "name": "Semaglutide",
+                "spec": "30mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "SM30",
+                "prices": {
+                        "marvel": 110,
+                        "tong": 124,
+                        "tina": 103
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "semax_5mg",
+                "name": "Semax",
+                "spec": "5mg*10",
+                "category": "Nootropics & Cognitive",
+                "catNo": "XA5",
+                "prices": {
+                        "marvel": 55,
+                        "tong": 49,
+                        "tina": 44
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "semax_10mg",
+                "name": "Semax",
+                "spec": "10mg*10",
+                "category": "Nootropics & Cognitive",
+                "catNo": "XA10",
+                "prices": {
+                        "marvel": 75,
+                        "tong": 66,
+                        "tina": 59
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "sermorelin_5mg",
+                "name": "Sermorelin",
+                "spec": "5mg*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "SMO5",
+                "prices": {
+                        "marvel": 85,
+                        "tong": 85,
+                        "tina": 76
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "sermorelin_10mg",
+                "name": "Sermorelin",
+                "spec": "10mg*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "SMO10",
+                "prices": {
+                        "marvel": 145,
+                        "tong": 130,
+                        "tina": 143.2
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "slu_pp_332_10mg",
+                "name": "SLU-PP-332",
+                "spec": "10mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "SLU10",
+                "prices": {
+                        "marvel": null,
+                        "tong": 261,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "snap_8_10mg",
+                "name": "Snap-8",
+                "spec": "10mg*10",
+                "category": "Muscle & Body Composition",
+                "catNo": "SNP10",
+                "prices": {
+                        "marvel": 60,
+                        "tong": 49,
+                        "tina": 44
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "ss_31_10mg",
+                "name": "SS-31",
+                "spec": "10mg*10",
+                "category": "Longevity & Cellular Health",
+                "catNo": "2S10",
+                "prices": {
+                        "marvel": 110,
+                        "tong": 98,
+                        "tina": 88
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "ss_31_50mg",
+                "name": "SS-31",
+                "spec": "50mg*10",
+                "category": "Longevity & Cellular Health",
+                "catNo": "2S50",
+                "prices": {
+                        "marvel": 370,
+                        "tong": 358,
+                        "tina": 324
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "survodutide_10mg",
+                "name": "Survodutide",
+                "spec": "10mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "SVD10",
+                "prices": {
+                        "marvel": null,
+                        "tong": 358,
+                        "tina": 258
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "tb500_thymosin_b4_5mg",
+                "name": "TB500 / Thymosin B4",
+                "spec": "5mg*10",
+                "category": "Healing & Recovery",
+                "catNo": "BT5",
+                "prices": {
+                        "marvel": 85,
+                        "tong": 104,
+                        "tina": 91
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "tb500_thymosin_b4_10mg",
+                "name": "TB500 / Thymosin B4",
+                "spec": "10mg*10",
+                "category": "Healing & Recovery",
+                "catNo": "BT10",
+                "prices": {
+                        "marvel": 155,
+                        "tong": 185,
+                        "tina": 162
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "tb500_thymosin_b4_20mg",
+                "name": "TB500 / Thymosin B4",
+                "spec": "20mg*10",
+                "category": "Healing & Recovery",
+                "catNo": "BT20",
+                "prices": {
+                        "marvel": null,
+                        "tong": null,
+                        "tina": 280
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "tesamorelin_5mg",
+                "name": "Tesamorelin",
+                "spec": "5mg*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "TSM5",
+                "prices": {
+                        "marvel": 95,
+                        "tong": 130,
+                        "tina": 115
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "tesamorelin_10mg",
+                "name": "Tesamorelin",
+                "spec": "10mg*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "TSM10",
+                "prices": {
+                        "marvel": 180,
+                        "tong": 227,
+                        "tina": 197
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "tesamorelin_20mg",
+                "name": "Tesamorelin",
+                "spec": "20mg*10",
+                "category": "Growth Hormone & Anti-Aging",
+                "catNo": "TSM20",
+                "prices": {
+                        "marvel": null,
+                        "tong": null,
+                        "tina": 280
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "thymalin_10mg",
+                "name": "Thymalin",
+                "spec": "10mg*10",
+                "category": "Immune & Antimicrobial",
+                "catNo": "THY10",
+                "prices": {
+                        "marvel": 75,
+                        "tong": 80,
+                        "tina": 71
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "thymosin_alpha_1_5mg",
+                "name": "Thymosin Alpha-1",
+                "spec": "5mg*10",
+                "category": "Immune & Antimicrobial",
+                "catNo": "TA5",
+                "prices": {
+                        "marvel": 105,
+                        "tong": 113,
+                        "tina": 103
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "thymosin_alpha_1_10mg",
+                "name": "Thymosin Alpha-1",
+                "spec": "10mg*10",
+                "category": "Immune & Antimicrobial",
+                "catNo": "TA10",
+                "prices": {
+                        "marvel": 180,
+                        "tong": 211,
+                        "tina": 191
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "tirzepatide_5mg",
+                "name": "Tirzepatide",
+                "spec": "5mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "TR5",
+                "prices": {
+                        "marvel": 55,
+                        "tong": 45,
+                        "tina": 38
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "tirzepatide_10mg",
+                "name": "Tirzepatide",
+                "spec": "10mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "TR10",
+                "prices": {
+                        "marvel": 70,
+                        "tong": 59,
+                        "tina": 50
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "tirzepatide_15mg",
+                "name": "Tirzepatide",
+                "spec": "15mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "TR15",
+                "prices": {
+                        "marvel": 85,
+                        "tong": 82,
+                        "tina": 65
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "tirzepatide_20mg",
+                "name": "Tirzepatide",
+                "spec": "20mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "TR20",
+                "prices": {
+                        "marvel": 100,
+                        "tong": 98,
+                        "tina": 74
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "tirzepatide_30mg",
+                "name": "Tirzepatide",
+                "spec": "30mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "TR30",
+                "prices": {
+                        "marvel": 135,
+                        "tong": 124,
+                        "tina": 97
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "tirzepatide_40mg",
+                "name": "Tirzepatide",
+                "spec": "40mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "TR40",
+                "prices": {
+                        "marvel": 170,
+                        "tong": 156,
+                        "tina": 135
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "tirzepatide_45mg",
+                "name": "Tirzepatide",
+                "spec": "45mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "TR45",
+                "prices": {
+                        "marvel": 190,
+                        "tong": null,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "tirzepatide_50mg",
+                "name": "Tirzepatide",
+                "spec": "50mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "TR50",
+                "prices": {
+                        "marvel": 205,
+                        "tong": 188,
+                        "tina": 165
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "tirzepatide_60mg",
+                "name": "Tirzepatide",
+                "spec": "60mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "TR60",
+                "prices": {
+                        "marvel": 220,
+                        "tong": 221,
+                        "tina": 185
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "tirzepatide_100mg",
+                "name": "Tirzepatide",
+                "spec": "100mg*10",
+                "category": "GLP-1 & Metabolic",
+                "catNo": "TR100",
+                "prices": {
+                        "marvel": 400,
+                        "tong": 352,
+                        "tina": null
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "vip_5mg",
+                "name": "VIP",
+                "spec": "5mg*10",
+                "category": "Hormones & Sexual Health",
+                "catNo": "VIP5",
+                "prices": {
+                        "marvel": 105,
+                        "tong": 98,
+                        "tina": 88
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        },
+        {
+                "id": "vip_10mg",
+                "name": "VIP",
+                "spec": "10mg*10",
+                "category": "Hormones & Sexual Health",
+                "catNo": "VIP10",
+                "prices": {
+                        "marvel": 190,
+                        "tong": 178,
+                        "tina": 162
+                },
+                "lastUpdated": "2026-08-22T00:00:00.000Z"
+        }
+];
 
-        // Application State
-        let selectedItem = peptideData.find(i => i.key === "Semaglutide (10mg*10)") || peptideData[0];
-        let cart = []; // Array of { key, qty }
+        // Global State
+        let peptideData = [];
+        let selectedItem = null;
+        let cart = []; // Array of { key, id, qty }
 
         // DOM Elements
         const searchInput = document.getElementById('peptide-search');
@@ -528,6 +2166,8 @@
         const dropdown = document.getElementById('dropdown-results');
         const catalogTbody = document.getElementById('catalog-tbody');
         const catalogCount = document.getElementById('catalog-count');
+        const rateBadge = document.getElementById('rate-badge');
+        const resetDefaultsBtn = document.getElementById('reset-defaults-btn');
         const addSpotlightBtn = document.getElementById('add-spotlight-to-cart');
         const cartBadgeCount = document.getElementById('cart-badge-count');
         const cartEmptyState = document.getElementById('cart-empty-state');
@@ -548,26 +2188,64 @@
             toast.classList.remove('translate-y-20', 'opacity-0');
             toast.classList.add('translate-y-0', 'opacity-100');
 
-            setTimeout(() => {
+            if (window._toastTimer) clearTimeout(window._toastTimer);
+            window._toastTimer = setTimeout(() => {
                 toast.classList.remove('translate-y-0', 'opacity-100');
                 toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
+            }, 3200);
         }
 
-        function getCatalogNumber(name, spec) {
+        // Normalizes individual peptide records ensuring accessor properties and consistent typing
+        function normalizePeptideItem(raw) {
+            const name = raw.name || 'Unknown Compound';
+            const spec = raw.spec || '';
+            const key = raw.key || (spec ? `${name} (${spec})` : name);
+            const id = raw.id || key.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+
+            const prices = raw.prices || {
+                marvel: raw.marvel !== undefined ? raw.marvel : null,
+                tong: raw.tong !== undefined ? raw.tong : null,
+                tina: raw.tina !== undefined ? raw.tina : null
+            };
+
+            const item = {
+                id: id,
+                key: key,
+                name: name,
+                spec: spec,
+                category: raw.category || 'Research Peptides',
+                catNo: raw.catNo || getCatalogNumberFallback(name, spec),
+                prices: {
+                    marvel: prices.marvel !== undefined && prices.marvel !== null && prices.marvel !== '' ? Number(prices.marvel) : null,
+                    tong: prices.tong !== undefined && prices.tong !== null && prices.tong !== '' ? Number(prices.tong) : null,
+                    tina: prices.tina !== undefined && prices.tina !== null && prices.tina !== '' ? Number(prices.tina) : null
+                },
+                lastUpdated: raw.lastUpdated || new Date().toISOString(),
+                isCustom: !!raw.isCustom
+            };
+
+            // Define property getters for backwards-compatibility
+            Object.defineProperty(item, 'marvel', { get() { return this.prices.marvel; }, enumerable: true });
+            Object.defineProperty(item, 'tong', { get() { return this.prices.tong; }, enumerable: true });
+            Object.defineProperty(item, 'tina', { get() { return this.prices.tina; }, enumerable: true });
+
+            return item;
+        }
+
+        function getCatalogNumberFallback(name, spec) {
             if (!name || !spec) return '';
             const n = String(name).toLowerCase();
             const s = String(spec).toLowerCase();
             const mgMatch = s.match(/(\d+)mg/);
             const mg = mgMatch ? mgMatch[1] : '';
             
-            if (n.includes('semaglutide')) return `SM${mg}`;
+            if (n.includes('semaglutide') && !n.includes('cagrilintide')) return `SM${mg}`;
             if (n.includes('tirzepatide')) return `TR${mg}`;
             if (n.includes('retatrutide')) return `RT${mg}`;
             if (n.includes('bpc-157') || n.includes('bpc 157')) return `BC${mg}`;
             if (n.includes('tb500') || n.includes('tb-500') || n.includes('thymosin b4')) return `BT${mg}`;
             if (n.includes('ghk-cu') || n.includes('ghk cu')) return `CU${mg}`;
-            if (n.includes('nad')) return `NJ${mg}`;
+            if (n.includes('nad')) return `NJ${mg || '500'}`;
             if (n.includes('cagrilintide')) return `CGL${mg}`;
             if (n.includes('semax')) return `XA${mg}`;
             if (n.includes('selank')) return `SK${mg}`;
@@ -589,11 +2267,141 @@
             return '';
         }
 
+        // Merges user-imported customizations stored in localStorage into the base catalog
+        function mergeCustomPeptideData(baseList, customData) {
+            const baseMap = new Map();
+            const result = baseList.map(item => ({
+                ...item,
+                prices: { ...item.prices }
+            }));
+            
+            result.forEach(item => {
+                if (item.id) baseMap.set(item.id, item);
+                if (item.key) baseMap.set(item.key, item);
+                baseMap.set(`${item.name} (${item.spec})`, item);
+            });
+
+            if (Array.isArray(customData)) {
+                customData.forEach(customItem => {
+                    const lookupKey = customItem.id || customItem.key || `${customItem.name} (${customItem.spec})`;
+                    const existing = baseMap.get(lookupKey);
+                    if (existing) {
+                        if (customItem.name) existing.name = customItem.name;
+                        if (customItem.spec) existing.spec = customItem.spec;
+                        if (customItem.category) existing.category = customItem.category;
+                        if (customItem.catNo) existing.catNo = customItem.catNo;
+                        if (customItem.prices) {
+                            existing.prices = { ...existing.prices, ...customItem.prices };
+                        } else {
+                            if (customItem.marvel !== undefined) existing.prices.marvel = customItem.marvel;
+                            if (customItem.tong !== undefined) existing.prices.tong = customItem.tong;
+                            if (customItem.tina !== undefined) existing.prices.tina = customItem.tina;
+                        }
+                        if (customItem.lastUpdated) existing.lastUpdated = customItem.lastUpdated;
+                        existing.isCustom = true;
+                    } else if (customItem.name) {
+                        const newItem = {
+                            id: customItem.id || (customItem.name + '_' + (customItem.spec || '')).toLowerCase().replace(/[^a-z0-9]+/g, '_'),
+                            name: customItem.name,
+                            spec: customItem.spec || '',
+                            category: customItem.category || 'Custom & User Imported',
+                            catNo: customItem.catNo || '',
+                            prices: customItem.prices || {
+                                marvel: customItem.marvel !== undefined ? customItem.marvel : null,
+                                tong: customItem.tong !== undefined ? customItem.tong : null,
+                                tina: customItem.tina !== undefined ? customItem.tina : null
+                            },
+                            lastUpdated: customItem.lastUpdated || new Date().toISOString(),
+                            isCustom: true
+                        };
+                        result.push(newItem);
+                        baseMap.set(newItem.id, newItem);
+                    }
+                });
+            } else if (typeof customData === 'object' && customData !== null) {
+                Object.entries(customData).forEach(([key, customVal]) => {
+                    const existing = baseMap.get(key);
+                    if (existing && typeof customVal === 'object') {
+                        if (customVal.prices) {
+                            existing.prices = { ...existing.prices, ...customVal.prices };
+                        } else {
+                            if (customVal.marvel !== undefined) existing.prices.marvel = customVal.marvel;
+                            if (customVal.tong !== undefined) existing.prices.tong = customVal.tong;
+                            if (customVal.tina !== undefined) existing.prices.tina = customVal.tina;
+                        }
+                        if (customVal.category) existing.category = customVal.category;
+                        if (customVal.catNo) existing.catNo = customVal.catNo;
+                        existing.isCustom = true;
+                    }
+                });
+            }
+
+            return result;
+        }
+
+        // Dynamically loads peptide dataset on startup
+        async function loadPeptideData(forceDefault = false) {
+            let baseCatalog = null;
+            let loadedFromNetwork = false;
+
+            // 1. Attempt dynamic fetch if running via HTTP/HTTPS
+            if (window.location.protocol !== 'file:') {
+                try {
+                    const res = await fetch('./data/peptides.json', { cache: 'no-cache' });
+                    if (res.ok) {
+                        const json = await res.json();
+                        if (Array.isArray(json) && json.length > 0) {
+                            baseCatalog = json;
+                            loadedFromNetwork = true;
+                        }
+                    }
+                } catch (fetchErr) {
+                    console.warn('peptides.json fetch failed; using inline defaults:', fetchErr);
+                }
+            }
+
+            // 2. Fall back gracefully to inline defaults if fetch was not used or failed
+            if (!baseCatalog || !Array.isArray(baseCatalog) || baseCatalog.length === 0) {
+                baseCatalog = JSON.parse(JSON.stringify(INLINE_DEFAULT_PEPTIDES));
+            }
+
+            // 3. Merge user-imported customizations if not forcing official defaults
+            let hasCustomData = false;
+            if (!forceDefault) {
+                try {
+                    const customRaw = localStorage.getItem('custom_peptide_data');
+                    if (customRaw) {
+                        const parsedCustom = JSON.parse(customRaw);
+                        baseCatalog = mergeCustomPeptideData(baseCatalog, parsedCustom);
+                        hasCustomData = true;
+                    }
+                } catch (storageErr) {
+                    console.error('Error reading custom_peptide_data from localStorage:', storageErr);
+                }
+            }
+
+            // Normalize every record in memory
+            peptideData = baseCatalog.map(normalizePeptideItem);
+
+            // Update UI status badge
+            if (rateBadge) {
+                if (hasCustomData) {
+                    rateBadge.className = "inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-950/80 text-amber-300 border border-amber-700/50";
+                    rateBadge.innerText = "Custom Rates Active";
+                } else {
+                    rateBadge.className = "hidden xs:inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-indigo-950 text-indigo-300 border border-indigo-800/40";
+                    rateBadge.innerText = "Official Rates";
+                }
+            }
+
+            return { peptideData, hasCustomData, loadedFromNetwork };
+        }
+
         function getLowestInfo(item) {
             const prices = [
-                { vendor: "Marvel Chloe", price: item.marvel },
-                { vendor: "Tong Shi Po", price: item.tong },
-                { vendor: "Tina Tianjin Bio", price: item.tina }
+                { vendor: "Marvel Chloe", price: item.prices.marvel },
+                { vendor: "Tong Shi Po", price: item.prices.tong },
+                { vendor: "Tina Tianjin Bio", price: item.prices.tina }
             ].filter(p => p.price !== null && !isNaN(p.price));
 
             if (prices.length === 0) return { min: null, winners: [] };
@@ -605,16 +2413,34 @@
         }
 
         function updateSpotlight(item) {
+            if (!item) return;
             selectedItem = item;
-            document.getElementById('selected-title').innerText = item.key;
+
+            const selectedTitle = document.getElementById('selected-title');
+            const spotlightCategory = document.getElementById('spotlight-category-badge');
+            const spotlightCatNo = document.getElementById('spotlight-catno-badge');
+
+            selectedTitle.innerText = item.key;
+            
+            if (spotlightCategory) {
+                spotlightCategory.innerText = item.category || 'General Peptides';
+            }
+            if (spotlightCatNo) {
+                if (item.catNo) {
+                    spotlightCatNo.innerText = item.catNo;
+                    spotlightCatNo.classList.remove('hidden');
+                } else {
+                    spotlightCatNo.classList.add('hidden');
+                }
+            }
 
             const info = getLowestInfo(item);
             const min = info.min;
 
             const vendors = [
-                { id: 'marvel', price: item.marvel, name: "Marvel Chloe" },
-                { id: 'tong', price: item.tong, name: "Tong Shi Po" },
-                { id: 'tina', price: item.tina, name: "Tina Tianjin Bio" }
+                { id: 'marvel', price: item.prices.marvel, name: "Marvel Chloe" },
+                { id: 'tong', price: item.prices.tong, name: "Tong Shi Po" },
+                { id: 'tina', price: item.prices.tina, name: "Tina Tianjin Bio" }
             ];
 
             vendors.forEach(v => {
@@ -668,7 +2494,10 @@
             const cleanTerm = term.toLowerCase().trim();
             const matches = peptideData.filter(i => 
                 i.key.toLowerCase().includes(cleanTerm) || 
-                i.name.toLowerCase().includes(cleanTerm)
+                i.name.toLowerCase().includes(cleanTerm) ||
+                i.id.toLowerCase().includes(cleanTerm) ||
+                (i.catNo && i.catNo.toLowerCase().includes(cleanTerm)) ||
+                (i.category && i.category.toLowerCase().includes(cleanTerm))
             );
 
             if (matches.length === 0) {
@@ -680,11 +2509,20 @@
             dropdown.innerHTML = matches.map(item => {
                 const info = getLowestInfo(item);
                 const lowestTxt = info.min ? `$${info.min.toFixed(2)}` : 'N/A';
+                const catCode = item.catNo ? `<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800/50 mr-1.5">${item.catNo}</span>` : '';
+
                 return `
                     <div class="dropdown-item p-3 sm:p-3.5 hover:bg-slate-800/90 active:bg-slate-800 cursor-pointer flex justify-between items-center transition bg-slate-900 gap-2 min-h-[48px]" data-key="${item.key}">
                         <div class="min-w-0 flex-1">
-                            <div class="font-medium text-xs sm:text-sm text-slate-100 truncate">${item.key}</div>
-                            <div class="text-[11px] text-slate-400">Spec: ${item.spec}</div>
+                            <div class="font-medium text-xs sm:text-sm text-slate-100 truncate flex items-center">
+                                ${catCode}
+                                <span class="truncate">${item.key}</span>
+                            </div>
+                            <div class="text-[11px] text-slate-400 flex items-center gap-2 mt-0.5">
+                                <span>Spec: ${item.spec}</span>
+                                <span>•</span>
+                                <span class="text-slate-500">${item.category}</span>
+                            </div>
                         </div>
                         <div class="flex items-center gap-2 sm:gap-3 shrink-0">
                             <span class="text-xs font-bold text-emerald-400">${lowestTxt}</span>
@@ -702,7 +2540,7 @@
                 el.addEventListener('click', (e) => {
                     if (e.target.closest('.add-btn-dropdown')) return;
                     const key = el.getAttribute('data-key');
-                    const item = peptideData.find(i => i.key === key);
+                    const item = peptideData.find(i => i.key === key || i.id === key);
                     if (item) {
                         updateSpotlight(item);
                         dropdown.classList.add('hidden');
@@ -725,11 +2563,14 @@
             const clean = filterTerm.toLowerCase().trim();
             const filtered = peptideData.filter(i => 
                 i.key.toLowerCase().includes(clean) || 
-                i.name.toLowerCase().includes(clean)
+                i.name.toLowerCase().includes(clean) ||
+                i.id.toLowerCase().includes(clean) ||
+                (i.catNo && i.catNo.toLowerCase().includes(clean)) ||
+                (i.category && i.category.toLowerCase().includes(clean))
             );
 
             if (clean !== '' && filtered.length > 0) {
-                const matchInFiltered = filtered.find(i => i.key === selectedItem.key);
+                const matchInFiltered = filtered.find(i => selectedItem && (i.key === selectedItem.key || i.id === selectedItem.id));
                 if (!matchInFiltered) {
                     updateSpotlight(filtered[0]);
                 }
@@ -739,15 +2580,23 @@
 
             catalogTbody.innerHTML = filtered.map(item => {
                 const info = getLowestInfo(item);
-                const isSelected = selectedItem && selectedItem.key === item.key;
+                const isSelected = selectedItem && (selectedItem.key === item.key || selectedItem.id === item.id);
+                const marvelPrice = item.prices.marvel;
+                const tongPrice = item.prices.tong;
+                const tinaPrice = item.prices.tina;
 
                 return `
                     <tr class="catalog-row border-b border-slate-800/50 hover:bg-slate-800/40 active:bg-slate-800/60 cursor-pointer transition ${isSelected ? 'bg-indigo-950/30' : ''}" data-key="${item.key}">
-                        <td class="py-3 px-3.5 sm:py-3.5 sm:px-4 font-medium text-white whitespace-nowrap">${item.name}</td>
+                        <td class="py-3 px-3.5 sm:py-3.5 sm:px-4 font-medium text-white whitespace-nowrap">
+                            <div class="flex items-center gap-1.5">
+                                ${item.catNo ? `<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-800/40">${item.catNo}</span>` : ''}
+                                <span>${item.name}</span>
+                            </div>
+                        </td>
                         <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-slate-400 font-mono text-xs whitespace-nowrap">${item.spec}</td>
-                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right whitespace-nowrap ${item.marvel === info.min && info.min ? 'text-amber-300 font-bold' : 'text-slate-300'}">${item.marvel !== null ? '$' + item.marvel.toFixed(2) : '—'}</td>
-                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right whitespace-nowrap ${item.tong === info.min && info.min ? 'text-amber-300 font-bold' : 'text-slate-300'}">${item.tong !== null ? '$' + item.tong.toFixed(2) : '—'}</td>
-                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right whitespace-nowrap ${item.tina === info.min && info.min ? 'text-amber-300 font-bold' : 'text-slate-300'}">${item.tina !== null ? '$' + item.tina.toFixed(2) : '—'}</td>
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right whitespace-nowrap ${marvelPrice === info.min && info.min ? 'text-amber-300 font-bold' : 'text-slate-300'}">${marvelPrice !== null ? '$' + marvelPrice.toFixed(2) : '—'}</td>
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right whitespace-nowrap ${tongPrice === info.min && info.min ? 'text-amber-300 font-bold' : 'text-slate-300'}">${tongPrice !== null ? '$' + tongPrice.toFixed(2) : '—'}</td>
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right whitespace-nowrap ${tinaPrice === info.min && info.min ? 'text-amber-300 font-bold' : 'text-slate-300'}">${tinaPrice !== null ? '$' + tinaPrice.toFixed(2) : '—'}</td>
                         <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right font-semibold text-emerald-400 whitespace-nowrap">${info.min ? '$' + info.min.toFixed(2) : '—'}</td>
                         <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-center whitespace-nowrap">
                             <span class="text-[11px] sm:text-xs px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-slate-300 inline-block">
@@ -767,7 +2616,7 @@
                 row.addEventListener('click', (e) => {
                     if (e.target.closest('.add-to-cart-table-btn')) return;
                     const key = row.getAttribute('data-key');
-                    const item = peptideData.find(i => i.key === key);
+                    const item = peptideData.find(i => i.key === key || i.id === key);
                     if (item) {
                         updateSpotlight(item);
                         clearBtn.classList.remove('hidden');
@@ -785,15 +2634,17 @@
             });
         }
 
-        function addToCart(key) {
-            const existing = cart.find(c => c.key === key);
+        function addToCart(keyOrId) {
+            const item = peptideData.find(i => i.key === keyOrId || i.id === keyOrId);
+            const itemKey = item ? item.key : keyOrId;
+            const existing = cart.find(c => c.key === itemKey);
             if (existing) {
                 existing.qty += 1;
             } else {
-                cart.push({ key: key, qty: 1 });
+                cart.push({ key: itemKey, id: item ? item.id : '', qty: 1 });
             }
             renderCart();
-            showToast(`Added ${key} to your order list`);
+            showToast(`Added ${itemKey} to your order list`);
         }
 
         function updateCartQty(key, delta) {
@@ -829,10 +2680,9 @@
             let message = `Hi ${vendor.repName},\n\nI would like to place an order for the following:\n\n`;
             
             cart.forEach(item => {
-                const itemData = peptideData.find(i => i.key === item.key);
+                const itemData = peptideData.find(i => i.key === item.key || i.id === item.key);
                 const name = itemData ? itemData.name : item.key;
-                const spec = itemData ? itemData.spec : '';
-                const catNo = getCatalogNumber(name, spec);
+                const catNo = itemData ? itemData.catNo : '';
                 const catStr = catNo ? `[${catNo}] ` : '';
                 message += `• ${item.qty}x ${catStr}${item.key}\n`;
             });
@@ -890,12 +2740,16 @@
             let tinaMissing = false;
 
             cartTbody.innerHTML = cart.map(cartItem => {
-                const itemData = peptideData.find(i => i.key === cartItem.key);
+                const itemData = peptideData.find(i => i.key === cartItem.key || i.id === cartItem.key);
                 if (!itemData) return '';
 
-                const marvelSub = itemData.marvel !== null ? itemData.marvel * cartItem.qty : null;
-                const tongSub = itemData.tong !== null ? itemData.tong * cartItem.qty : null;
-                const tinaSub = itemData.tina !== null ? itemData.tina * cartItem.qty : null;
+                const marvelPrice = itemData.prices.marvel;
+                const tongPrice = itemData.prices.tong;
+                const tinaPrice = itemData.prices.tina;
+
+                const marvelSub = marvelPrice !== null ? marvelPrice * cartItem.qty : null;
+                const tongSub = tongPrice !== null ? tongPrice * cartItem.qty : null;
+                const tinaSub = tinaPrice !== null ? tinaPrice * cartItem.qty : null;
 
                 if (marvelSub !== null) marvelGrandTotal += marvelSub; else marvelMissing = true;
                 if (tongSub !== null) tongGrandTotal += tongSub; else tongMissing = true;
@@ -904,7 +2758,10 @@
                 return `
                     <tr class="border-b border-slate-800/50 hover:bg-slate-900/50 transition">
                         <td class="py-3 px-3.5 sm:py-3.5 sm:px-4 font-medium text-white whitespace-nowrap">
-                            <div class="text-xs sm:text-sm">${itemData.name}</div>
+                            <div class="text-xs sm:text-sm flex items-center gap-1.5">
+                                ${itemData.catNo ? `<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800/40">${itemData.catNo}</span>` : ''}
+                                <span>${itemData.name}</span>
+                            </div>
                             <div class="text-[11px] text-slate-500 font-mono">${itemData.spec}</div>
                         </td>
                         <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-center whitespace-nowrap">
@@ -1039,7 +2896,7 @@
         // Quick search chips
         document.querySelectorAll('.quick-chip').forEach(btn => {
             btn.addEventListener('click', () => {
-                const text = btn.innerText;
+                const text = (btn.innerText || btn.textContent || '').trim();
                 searchInput.value = text;
                 clearBtn.classList.remove('hidden');
                 renderDropdownResults(text);
@@ -1068,10 +2925,9 @@
             let summaryText = `PEPTIDE ORDER SELECTION LIST:\n`;
             summaryText += `------------------------------------\n`;
             cart.forEach(item => {
-                const itemData = peptideData.find(i => i.key === item.key);
+                const itemData = peptideData.find(i => i.key === item.key || i.id === item.key);
                 const name = itemData ? itemData.name : item.key;
-                const spec = itemData ? itemData.spec : '';
-                const catNo = getCatalogNumber(name, spec);
+                const catNo = itemData ? itemData.catNo : '';
                 const catStr = catNo ? `[${catNo}] ` : '';
                 summaryText += `• ${item.qty}x ${catStr}${item.key}\n`;
             });
@@ -1090,6 +2946,32 @@
             document.body.removeChild(el);
         });
 
+        // Reset to Official Default Rates
+        resetDefaultsBtn.addEventListener('click', async () => {
+            const hadCustom = !!localStorage.getItem('custom_peptide_data');
+            localStorage.removeItem('custom_peptide_data');
+            
+            await loadPeptideData(true);
+
+            // Re-select active item if valid or fallback
+            if (selectedItem) {
+                const match = peptideData.find(i => i.key === selectedItem.key || i.id === selectedItem.id);
+                selectedItem = match || peptideData.find(i => i.key === "Semaglutide (10mg*10)") || peptideData[0];
+            } else {
+                selectedItem = peptideData.find(i => i.key === "Semaglutide (10mg*10)") || peptideData[0];
+            }
+
+            updateSpotlight(selectedItem);
+            renderCatalog(searchInput.value);
+            renderCart();
+
+            if (hadCustom) {
+                showToast('Restored official default vendor rate cards', 'fa-rotate-left');
+            } else {
+                showToast('Official default rates are active', 'fa-circle-check');
+            }
+        });
+
         // Close dropdown when clicking outside
         document.addEventListener('click', (e) => {
             if (!searchInput.contains(e.target) && !dropdown.contains(e.target)) {
@@ -1098,9 +2980,15 @@
         });
 
         // Initialize state on page load
-        updateSpotlight(selectedItem);
-        renderCatalog();
-        renderCart();
+        async function initApp() {
+            await loadPeptideData();
+            selectedItem = peptideData.find(i => i.key === "Semaglutide (10mg*10)" || i.id === "semaglutide_10mg") || peptideData[0];
+            updateSpotlight(selectedItem);
+            renderCatalog();
+            renderCart();
+        }
+
+        initApp();
     </script>
 </body>
 </html>

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Peptide Vendor Price Comparison & Order Planner</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -68,7 +69,13 @@
                 </div>
             </div>
             
-            <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+            <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+                <button id="open-import-modal-btn" title="Import / Update Price Sheet" class="flex items-center gap-1.5 sm:gap-2 bg-indigo-950/70 hover:bg-indigo-900 active:bg-indigo-950 text-indigo-200 hover:text-white font-medium px-2.5 py-2 sm:px-3.5 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-indigo-700/50 cursor-pointer shadow-sm">
+                    <i class="fa-solid fa-file-import text-indigo-400 text-xs sm:text-sm"></i>
+                    <span class="hidden sm:inline">Import Rates</span>
+                    <span class="sm:hidden">Import</span>
+                </button>
+
                 <button id="reset-defaults-btn" title="Reset to Official Default Rates" class="flex items-center gap-1.5 sm:gap-2 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-slate-300 hover:text-white font-medium px-2.5 py-2 sm:px-3.5 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-slate-800 hover:border-slate-700 cursor-pointer shadow-sm">
                     <i class="fa-solid fa-rotate-left text-indigo-400 text-xs sm:text-sm"></i>
                     <span class="hidden sm:inline">Reset Rates</span>
@@ -351,7 +358,7 @@
         <section class="bg-slate-950/70 border border-slate-800 rounded-xl sm:rounded-2xl overflow-hidden shadow-xl">
             <div class="p-4 sm:p-5 border-b border-slate-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
                 <div>
-                    <h3 class="font-bold text-slate-200 text-base sm:text-lg">Full Price Catalog Table</h3>
+                    <h3 class="font-bold text-slate-200 text-base sm:lg">Full Price Catalog Table</h3>
                     <p class="text-[11px] sm:text-xs text-slate-400">Tap any row to feature it above, or tap "+" to add to your order planner</p>
                 </div>
                 <div class="flex items-center gap-2">
@@ -388,6 +395,143 @@
         </section>
 
     </main>
+
+    <!-- Price Sheet Importer Modal -->
+    <div id="import-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-6 bg-slate-950/80 backdrop-blur-md overflow-y-auto">
+        <div class="relative w-full max-w-4xl bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] my-auto">
+            <!-- Modal Header -->
+            <div class="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
+                        <i class="fa-solid fa-file-import text-sm"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base sm:text-lg font-bold text-white">Import & Update Vendor Rates</h3>
+                        <p class="text-[11px] sm:text-xs text-slate-400">Upload CSV/TSV rate sheets or paste rows copied directly from Excel/Sheets</p>
+                    </div>
+                </div>
+                <button id="close-import-modal-btn" class="w-8 h-8 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center justify-center cursor-pointer">
+                    <i class="fa-solid fa-times text-base"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-4 sm:p-6 overflow-y-auto space-y-5 flex-1 touch-scroll">
+                
+                <!-- Step 1: Input & Configuration Section -->
+                <div id="import-step-input" class="space-y-4">
+                    <!-- Target Vendor Selector -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                            Target Vendor Scope
+                        </label>
+                        <select id="import-vendor-target" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition">
+                            <option value="all">All Vendors (Multi-column: Marvel, Tong, Tina)</option>
+                            <option value="marvel">Marvel Chloe</option>
+                            <option value="tong">Tong Shi Po</option>
+                            <option value="tina">Tina Tianjin Bio</option>
+                        </select>
+                        <p class="text-[11px] text-slate-400 mt-1">Select "All Vendors" for multi-vendor sheets, or pick a specific vendor to map a single price column directly.</p>
+                    </div>
+
+                    <!-- Tabs for Input Method -->
+                    <div>
+                        <div class="flex border-b border-slate-800 mb-3 text-xs font-semibold">
+                            <button id="tab-btn-file" type="button" class="pb-2.5 px-3 border-b-2 border-indigo-500 text-indigo-400 flex items-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Upload CSV/TSV File
+                            </button>
+                            <button id="tab-btn-paste" type="button" class="pb-2.5 px-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5 cursor-pointer">
+                                <i class="fa-solid fa-paste"></i> Paste Text / Table Rows
+                            </button>
+                        </div>
+
+                        <!-- Tab 1: Drop Zone -->
+                        <div id="tab-panel-file" class="space-y-2">
+                            <div id="import-dropzone" class="border-2 border-dashed border-slate-700 hover:border-indigo-500/80 active:border-indigo-400 bg-slate-950/50 hover:bg-slate-950/80 rounded-xl p-6 sm:p-8 text-center transition cursor-pointer flex flex-col items-center justify-center gap-2">
+                                <i class="fa-solid fa-file-csv text-3xl sm:text-4xl text-indigo-400"></i>
+                                <div class="text-xs sm:text-sm font-semibold text-slate-200">
+                                    Drag & drop a <span class="text-indigo-400 font-mono">.csv</span> or <span class="text-indigo-400 font-mono">.tsv</span> file here, or <span class="text-indigo-400 underline">browse</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500">Supports exported spreadsheets, price cards, and tab-delimited text</p>
+                                <input type="file" id="import-file-input" accept=".csv,.tsv,.txt" class="hidden">
+                            </div>
+                            <div id="selected-file-info" class="hidden text-xs text-emerald-400 flex items-center gap-2 bg-emerald-950/30 border border-emerald-800/40 p-2.5 rounded-lg">
+                                <i class="fa-solid fa-check-circle"></i>
+                                <span id="selected-file-name" class="font-medium truncate"></span>
+                            </div>
+                        </div>
+
+                        <!-- Tab 2: Direct Paste Textarea -->
+                        <div id="tab-panel-paste" class="hidden space-y-2">
+                            <textarea id="import-paste-textarea" rows="7" placeholder="Paste tab-separated or comma-separated rows here (e.g. copied from Google Sheets / Excel)...&#10;&#10;Peptide&#9;Spec&#9;Marvel&#9;Tong&#9;Tina&#10;Retatrutide&#9;10mg*10&#9;95&#9;100&#9;82&#10;Semaglutide&#9;10mg*10&#9;68&#9;58&#9;45" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-xs font-mono text-slate-200 placeholder-slate-600 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-950/40 border border-slate-800/60 rounded-xl p-3 text-[11px] text-slate-400 space-y-1">
+                        <div class="font-semibold text-slate-300 flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-info text-indigo-400"></i> Smart Column Auto-Detection & Fuzzy Matching:
+                        </div>
+                        <div>• Automatically detects columns: <code>Peptide / Name</code>, <code>Spec / Dosage</code>, <code>Cat No</code>, <code>Marvel</code>, <code>Tong</code>, <code>Tina</code>, <code>Price</code>.</div>
+                        <div>• Fuzzy matches shorthand & variations (e.g., "Reta 10mg", "BPC157", "Sema") against existing catalog records.</div>
+                        <div>• Unmatched compounds are flagged so you can optionally append them as new catalog items.</div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Parsed Preview & Approval Section -->
+                <div id="import-step-preview" class="hidden space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-slate-950/60 border border-slate-800 rounded-xl text-xs">
+                        <div id="preview-summary-stats" class="text-slate-300 font-medium">
+                            <!-- Stats injected dynamically -->
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button id="toggle-select-all-btn" class="text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded-md border border-slate-700 transition cursor-pointer">
+                                Toggle All
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Preview Table -->
+                    <div class="overflow-x-auto rounded-xl border border-slate-800 max-h-80 touch-scroll">
+                        <table class="w-full text-left text-xs min-w-[640px]">
+                            <thead class="bg-slate-950 sticky top-0 z-10 text-[11px] text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                                <tr>
+                                    <th class="py-2.5 px-3 font-semibold text-center w-12">Include</th>
+                                    <th class="py-2.5 px-3 font-semibold">Imported Name & Spec</th>
+                                    <th class="py-2.5 px-3 font-semibold">Matched Catalog Entry</th>
+                                    <th class="py-2.5 px-3 font-semibold text-right">Marvel</th>
+                                    <th class="py-2.5 px-3 font-semibold text-right">Tong</th>
+                                    <th class="py-2.5 px-3 font-semibold text-right">Tina</th>
+                                    <th class="py-2.5 px-3 font-semibold text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="import-preview-tbody" class="divide-y divide-slate-800/60 text-slate-300 bg-slate-900/60">
+                                <!-- Preview rows injected dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer Actions -->
+            <div class="p-4 sm:p-5 border-t border-slate-800 bg-slate-950/60 flex items-center justify-between gap-3">
+                <button id="import-back-btn" class="hidden px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition cursor-pointer flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Input
+                </button>
+                <div class="flex items-center gap-2 ml-auto">
+                    <button id="cancel-import-btn" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 text-slate-300 rounded-xl text-xs font-semibold transition cursor-pointer">
+                        Cancel
+                    </button>
+                    <button id="parse-data-btn" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white rounded-xl text-xs font-bold transition shadow-lg shadow-indigo-600/20 border border-indigo-500/40 cursor-pointer flex items-center gap-1.5">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Parse & Preview
+                    </button>
+                    <button id="apply-import-btn" class="hidden px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-lg shadow-emerald-600/20 border border-emerald-500/40 cursor-pointer flex items-center gap-1.5">
+                        <i class="fa-solid fa-check"></i> Apply Updates & Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Notification Toast -->
     <div id="toast" class="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-emerald-600 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-emerald-400/30 max-w-[90vw] sm:max-w-md pointer-events-none">
@@ -2159,6 +2303,7 @@
         let peptideData = [];
         let selectedItem = null;
         let cart = []; // Array of { key, id, qty }
+        let currentParsedResults = []; // Parsed items in preview
 
         // DOM Elements
         const searchInput = document.getElementById('peptide-search');
@@ -2176,6 +2321,32 @@
         const overallRecBox = document.getElementById('overall-recommendation-box');
         const clearCartBtn = document.getElementById('clear-cart-btn');
         const copySummaryBtn = document.getElementById('copy-summary-btn');
+
+        // Modal Elements
+        const openImportModalBtn = document.getElementById('open-import-modal-btn');
+        const closeImportModalBtn = document.getElementById('close-import-modal-btn');
+        const cancelImportBtn = document.getElementById('cancel-import-btn');
+        const importModal = document.getElementById('import-modal');
+        const importVendorTarget = document.getElementById('import-vendor-target');
+        const tabBtnFile = document.getElementById('tab-btn-file');
+        const tabBtnPaste = document.getElementById('tab-btn-paste');
+        const tabPanelFile = document.getElementById('tab-panel-file');
+        const tabPanelPaste = document.getElementById('tab-panel-paste');
+        const importDropzone = document.getElementById('import-dropzone');
+        const importFileInput = document.getElementById('import-file-input');
+        const selectedFileInfo = document.getElementById('selected-file-info');
+        const selectedFileName = document.getElementById('selected-file-name');
+        const importPasteTextarea = document.getElementById('import-paste-textarea');
+        const importStepInput = document.getElementById('import-step-input');
+        const importStepPreview = document.getElementById('import-step-preview');
+        const previewSummaryStats = document.getElementById('preview-summary-stats');
+        const importPreviewTbody = document.getElementById('import-preview-tbody');
+        const toggleSelectAllBtn = document.getElementById('toggle-select-all-btn');
+        const parseDataBtn = document.getElementById('parse-data-btn');
+        const importBackBtn = document.getElementById('import-back-btn');
+        const applyImportBtn = document.getElementById('apply-import-btn');
+
+        let stagedFileContent = null;
 
         function showToast(message, iconClass = 'fa-check-circle') {
             const toast = document.getElementById('toast');
@@ -2397,6 +2568,637 @@
             return { peptideData, hasCustomData, loadedFromNetwork };
         }
 
+        // ==========================================
+        // FUZZY MATCHING & PARSING MODULE
+        // ==========================================
+        const COMMON_ALIASES = {
+            'reta': 'retatrutide',
+            'sema': 'semaglutide',
+            'tirz': 'tirzepatide',
+            'cagri': 'cagrilintide',
+            'bpc': 'bpc 157',
+            'tb': 'tb 500',
+            'ghk': 'ghk cu',
+            'ahk': 'ahk cu',
+            'ipa': 'ipamorelin',
+            'sermo': 'sermorelin',
+            'tesa': 'tesamorelin',
+            'epitalon': 'epithalon',
+            'mots': 'mots c',
+            'pt141': 'pt 141',
+            'mt1': 'melanotan 1',
+            'mt2': 'melanotan 2',
+            '5amino': '5 amino 1mq'
+        };
+
+        function normalizeStr(s) {
+            if (!s) return '';
+            return String(s).toLowerCase()
+                .replace(/[^a-z0-9]/g, ' ')
+                .replace(/\s+/g, ' ')
+                .trim();
+        }
+
+        function extractSpec(str) {
+            if (!str) return '';
+            const s = String(str);
+            const m = s.match(/(\d+(?:\.\d+)?\s*(?:mg|ml|iu|mcg)(?:\s*\*\s*\d+)?)/i);
+            return m ? m[1].replace(/\s+/g, '') : '';
+        }
+
+        function cleanCompoundName(name, spec) {
+            let clean = String(name || '');
+            if (spec) {
+                clean = clean.replace(new RegExp(spec.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), '');
+            }
+            clean = clean.replace(/\(\s*\d+.*?\)/g, '');
+            clean = clean.replace(/\[\s*.*?\s*\]/g, '');
+            clean = clean.replace(/\s+/g, ' ').trim();
+            return clean;
+        }
+
+        function calculateSimilarity(s1, s2) {
+            let n1 = normalizeStr(s1);
+            let n2 = normalizeStr(s2);
+            if (!n1 || !n2) return 0;
+
+            Object.entries(COMMON_ALIASES).forEach(([alias, full]) => {
+                const regex = new RegExp(`(^|\\s)${alias}(\\s|$)`, 'g');
+                n1 = n1.replace(regex, `$1${full}$2`).trim();
+                n2 = n2.replace(regex, `$1${full}$2`).trim();
+            });
+
+            if (n1 === n2) return 1.0;
+
+            const c1 = n1.replace(/\s+/g, '');
+            const c2 = n2.replace(/\s+/g, '');
+            if (c1 === c2) return 1.0;
+            if (c1.includes(c2) || c2.includes(c1)) return 0.9;
+
+            if (n1.includes(n2) || n2.includes(n1)) return 0.85;
+
+            const t1 = new Set(n1.split(' ').filter(Boolean));
+            const t2 = new Set(n2.split(' ').filter(Boolean));
+            const intersection = [...t1].filter(x => t2.has(x)).length;
+            const union = new Set([...t1, ...t2]).size;
+            return union > 0 ? intersection / union : 0;
+        }
+
+        function findBestCatalogMatch(rawName, rawSpec, catalogItems) {
+            let extractedSpec = extractSpec(rawSpec) || extractSpec(rawName);
+            if (extractedSpec && !extractedSpec.includes('*')) {
+                extractedSpec = `${extractedSpec}*10`;
+            }
+            const cleanName = cleanCompoundName(rawName, extractedSpec);
+            const cleanNorm = normalizeStr(cleanName);
+
+            let bestItem = null;
+            let highestScore = 0;
+
+            for (const item of catalogItems) {
+                const itemNorm = normalizeStr(item.name);
+                let score = calculateSimilarity(cleanNorm, itemNorm);
+
+                // Spec match bonus
+                if (extractedSpec && item.spec) {
+                    const spec1 = extractSpec(extractedSpec);
+                    const spec2 = extractSpec(item.spec);
+                    if (spec1 === spec2) {
+                        score += 0.35;
+                    } else if (extractedSpec === item.spec) {
+                        score += 0.5;
+                    }
+                }
+
+                // Exact name match boost
+                if (cleanNorm === itemNorm) {
+                    score += 0.4;
+                }
+
+                if (score > highestScore) {
+                    highestScore = score;
+                    bestItem = item;
+                }
+            }
+
+            if (highestScore >= 0.65 && bestItem) {
+                return { item: bestItem, confidence: highestScore, isMatch: true };
+            }
+
+            return { item: null, confidence: highestScore, isMatch: false, suggestedSpec: extractedSpec || '10mg*10' };
+        }
+
+        function parsePriceValue(val) {
+            if (val === null || val === undefined) return null;
+            const s = String(val).replace(/[\$,]/g, '').trim();
+            if (s === '' || s === '-' || s === '—' || s === 'N/A' || s === 'null') return null;
+            const num = parseFloat(s);
+            return isNaN(num) ? null : num;
+        }
+
+        function detectHasHeaders(firstRowArray) {
+            if (!Array.isArray(firstRowArray) || firstRowArray.length === 0) return false;
+            const headerWords = /^(name|peptide|product|compound|item|description|spec|specification|dosage|mg|size|unit|marvel|chloe|tong|shipo|tina|tianjin|bio|price|cost|usd|rate|cat_no|catno|category)$/i;
+            let matchCount = 0;
+            firstRowArray.forEach(cell => {
+                const c = String(cell || '').trim();
+                if (headerWords.test(c)) matchCount++;
+                if (/\b(peptide|marvel|tong|tina|price|specification)\b/i.test(c)) matchCount += 2;
+            });
+            return matchCount >= 1;
+        }
+
+        function parseImportData(rawText, targetVendor, catalogItems) {
+            const rawTrimmed = (rawText || '').trim();
+            if (!rawTrimmed) {
+                return { items: [], stats: { total: 0, updates: 0, newItems: 0, skipped: 0 } };
+            }
+
+            let rawRows = [];
+            if (typeof Papa !== 'undefined') {
+                rawRows = Papa.parse(rawTrimmed, { header: false, skipEmptyLines: true }).data;
+            } else {
+                // Fallback manual CSV/TSV splitter
+                rawRows = rawTrimmed.split('\n').map(line => {
+                    const sep = line.includes('\t') ? '\t' : ',';
+                    return line.split(sep).map(c => c.trim().replace(/^["']|["']$/g, ''));
+                }).filter(r => r.length > 0 && r.some(c => c !== ''));
+            }
+
+            if (!rawRows || rawRows.length === 0) {
+                return { items: [], stats: { total: 0, updates: 0, newItems: 0, skipped: 0 } };
+            }
+
+            const hasHeaders = detectHasHeaders(rawRows[0]);
+            let headers = [];
+            let dataRows = [];
+
+            if (hasHeaders) {
+                headers = rawRows[0].map(h => String(h || '').trim());
+                dataRows = rawRows.slice(1);
+            } else {
+                const colCount = Math.max(...rawRows.map(r => r.length));
+                headers = Array.from({ length: colCount }, (_, i) => `Col_${i + 1}`);
+                dataRows = rawRows;
+            }
+
+            const findColIndex = (regex) => headers.findIndex(h => regex.test(h));
+
+            let nameIdx = findColIndex(/\b(name|peptide|product|compound|description|item)\b/i);
+            let specIdx = findColIndex(/\b(spec|specification|dosage|size|unit|mg|vials?)\b/i);
+            let catNoIdx = findColIndex(/\b(cat_no|catno|cat_num|code|sku)\b|^cat(\.|\s|_)?no/i);
+            let categoryIdx = findColIndex(/\b(category|class|type)\b/i);
+
+            let marvelIdx = findColIndex(/\b(marvel|chloe)\b/i);
+            let tongIdx = findColIndex(/\b(tong|shipo)\b/i);
+            let tinaIdx = findColIndex(/\b(tina|tianjin|bio)\b/i);
+            let genericPriceIdx = findColIndex(/\b(price|cost|usd|rate)\b/i);
+
+            if (nameIdx === -1) nameIdx = 0;
+            if (specIdx === -1 && headers.length > 1) {
+                const sampleCol1 = dataRows[0] ? String(dataRows[0][1] || '') : '';
+                if (extractSpec(sampleCol1)) {
+                    specIdx = 1;
+                }
+            }
+
+            if (marvelIdx === -1 && tongIdx === -1 && tinaIdx === -1) {
+                if (headers.length >= 5) {
+                    marvelIdx = 2;
+                    tongIdx = 3;
+                    tinaIdx = 4;
+                } else if (headers.length === 4) {
+                    marvelIdx = 2;
+                    tongIdx = 3;
+                } else if (headers.length === 3) {
+                    genericPriceIdx = 2;
+                }
+            }
+
+            const results = [];
+            let updateCount = 0;
+            let newCount = 0;
+
+            dataRows.forEach((row, idx) => {
+                const rawName = row[nameIdx];
+                if (!rawName || String(rawName).trim() === '') return;
+
+                const rawSpec = specIdx !== -1 && row[specIdx] ? String(row[specIdx]).trim() : '';
+                const matchResult = findBestCatalogMatch(rawName, rawSpec, catalogItems);
+
+                let marvelPrice = null;
+                let tongPrice = null;
+                let tinaPrice = null;
+
+                if (targetVendor === 'all') {
+                    if (marvelIdx !== -1) marvelPrice = parsePriceValue(row[marvelIdx]);
+                    if (tongIdx !== -1) tongPrice = parsePriceValue(row[tongIdx]);
+                    if (tinaIdx !== -1) tinaPrice = parsePriceValue(row[tinaIdx]);
+                    if (marvelIdx === -1 && tongIdx === -1 && tinaIdx === -1 && genericPriceIdx !== -1) {
+                        const p = parsePriceValue(row[genericPriceIdx]);
+                        marvelPrice = p;
+                        tongPrice = p;
+                        tinaPrice = p;
+                    }
+                } else if (targetVendor === 'marvel') {
+                    const p = parsePriceValue(marvelIdx !== -1 ? row[marvelIdx] : (genericPriceIdx !== -1 ? row[genericPriceIdx] : row[1]));
+                    marvelPrice = p;
+                } else if (targetVendor === 'tong') {
+                    const p = parsePriceValue(tongIdx !== -1 ? row[tongIdx] : (genericPriceIdx !== -1 ? row[genericPriceIdx] : row[1]));
+                    tongPrice = p;
+                } else if (targetVendor === 'tina') {
+                    const p = parsePriceValue(tinaIdx !== -1 ? row[tinaIdx] : (genericPriceIdx !== -1 ? row[genericPriceIdx] : row[1]));
+                    tinaPrice = p;
+                }
+
+                const catNo = catNoIdx !== -1 && row[catNoIdx] ? String(row[catNoIdx]).trim() : '';
+                const category = categoryIdx !== -1 && row[categoryIdx] ? String(row[categoryIdx]).trim() : '';
+
+                if (matchResult.isMatch && matchResult.item) {
+                    const currentItem = matchResult.item;
+                    const hasPriceChange = (marvelPrice !== null && marvelPrice !== currentItem.prices.marvel) ||
+                                          (tongPrice !== null && tongPrice !== currentItem.prices.tong) ||
+                                          (tinaPrice !== null && tinaPrice !== currentItem.prices.tina);
+
+                    results.push({
+                        index: idx,
+                        action: hasPriceChange ? 'update' : 'unchanged',
+                        importedName: rawName,
+                        importedSpec: rawSpec || matchResult.item.spec,
+                        matchedItem: matchResult.item,
+                        targetId: matchResult.item.id,
+                        catNo: catNo || matchResult.item.catNo,
+                        category: category || matchResult.item.category,
+                        prices: {
+                            marvel: marvelPrice !== null ? marvelPrice : currentItem.prices.marvel,
+                            tong: tongPrice !== null ? tongPrice : currentItem.prices.tong,
+                            tina: tinaPrice !== null ? tinaPrice : currentItem.prices.tina
+                        },
+                        oldPrices: { ...currentItem.prices },
+                        confidence: matchResult.confidence,
+                        selected: true
+                    });
+                    if (hasPriceChange) updateCount++;
+                } else {
+                    const spec = rawSpec || matchResult.suggestedSpec || '10mg*10';
+                    results.push({
+                        index: idx,
+                        action: 'new',
+                        importedName: rawName,
+                        importedSpec: spec,
+                        matchedItem: null,
+                        targetId: (rawName + '_' + spec).toLowerCase().replace(/[^a-z0-9]+/g, '_'),
+                        catNo: catNo || '',
+                        category: category || 'Custom & User Imported',
+                        prices: {
+                            marvel: marvelPrice,
+                            tong: tongPrice,
+                            tina: tinaPrice
+                        },
+                        oldPrices: { marvel: null, tong: null, tina: null },
+                        confidence: 0,
+                        selected: true
+                    });
+                    newCount++;
+                }
+            });
+
+            return {
+                items: results,
+                stats: {
+                    total: results.length,
+                    updates: updateCount,
+                    newItems: newCount,
+                    skipped: results.filter(r => r.action === 'unchanged').length
+                }
+            };
+        }
+
+        // Render preview table rows
+        function renderPreviewTable(parsed) {
+            currentParsedResults = parsed.items;
+            const stats = parsed.stats;
+
+            previewSummaryStats.innerHTML = `
+                <span class="text-emerald-400 font-bold">${stats.updates} Updates</span> • 
+                <span class="text-indigo-400 font-bold">${stats.newItems} New Items</span> • 
+                <span class="text-slate-400">${stats.skipped} Unchanged</span> 
+                <span class="text-slate-500 font-normal">(${stats.total} total rows parsed)</span>
+            `;
+
+            if (currentParsedResults.length === 0) {
+                importPreviewTbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-500 text-xs">No valid rows found to import.</td></tr>`;
+                return;
+            }
+
+            importPreviewTbody.innerHTML = currentParsedResults.map((row, i) => {
+                let actionBadge = '';
+                if (row.action === 'update') {
+                    actionBadge = `<span class="px-2 py-0.5 rounded bg-amber-950/80 text-amber-300 border border-amber-700/50 text-[10px] font-bold">Update</span>`;
+                } else if (row.action === 'new') {
+                    actionBadge = `<span class="px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-700/50 text-[10px] font-bold">New Item</span>`;
+                } else {
+                    actionBadge = `<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-400 text-[10px]">Unchanged</span>`;
+                }
+
+                function formatPriceCell(newP, oldP) {
+                    if (newP === null) return '<span class="text-slate-600">—</span>';
+                    if (oldP !== null && oldP !== undefined && oldP !== newP) {
+                        return `<span class="text-slate-500 line-through text-[10px] mr-1">$${oldP.toFixed(2)}</span><span class="text-emerald-400 font-bold">$${newP.toFixed(2)}</span>`;
+                    }
+                    return `<span class="text-slate-300">$${newP.toFixed(2)}</span>`;
+                }
+
+                const matchedLabel = row.matchedItem 
+                    ? `<div class="font-medium text-slate-200">${row.matchedItem.name} <span class="text-slate-400 text-[11px]">(${row.matchedItem.spec})</span></div>`
+                    : `<div class="text-indigo-400 font-medium flex items-center gap-1"><i class="fa-solid fa-plus-circle text-[10px]"></i> Create as New Compound</div>`;
+
+                return `
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <td class="py-2.5 px-3 text-center">
+                            <input type="checkbox" data-index="${i}" class="preview-row-checkbox rounded bg-slate-950 border-slate-700 text-indigo-600 focus:ring-indigo-500 w-4 h-4 cursor-pointer" ${row.selected ? 'checked' : ''}>
+                        </td>
+                        <td class="py-2.5 px-3 whitespace-nowrap">
+                            <div class="font-medium text-white">${row.importedName}</div>
+                            <div class="text-[10px] text-slate-400 font-mono">${row.importedSpec}</div>
+                        </td>
+                        <td class="py-2.5 px-3 whitespace-nowrap">
+                            ${matchedLabel}
+                        </td>
+                        <td class="py-2.5 px-3 text-right whitespace-nowrap">
+                            ${formatPriceCell(row.prices.marvel, row.oldPrices.marvel)}
+                        </td>
+                        <td class="py-2.5 px-3 text-right whitespace-nowrap">
+                            ${formatPriceCell(row.prices.tong, row.oldPrices.tong)}
+                        </td>
+                        <td class="py-2.5 px-3 text-right whitespace-nowrap">
+                            ${formatPriceCell(row.prices.tina, row.oldPrices.tina)}
+                        </td>
+                        <td class="py-2.5 px-3 text-center whitespace-nowrap">
+                            ${actionBadge}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            document.querySelectorAll('.preview-row-checkbox').forEach(cb => {
+                cb.addEventListener('change', (e) => {
+                    const idx = parseInt(e.target.getAttribute('data-index'), 10);
+                    if (currentParsedResults[idx]) {
+                        currentParsedResults[idx].selected = e.target.checked;
+                    }
+                });
+            });
+        }
+
+        // ==========================================
+        // MODAL CONTROLLER & EVENT LISTENERS
+        // ==========================================
+        function openImportModal() {
+            importStepInput.classList.remove('hidden');
+            importStepPreview.classList.add('hidden');
+            parseDataBtn.classList.remove('hidden');
+            importBackBtn.classList.add('hidden');
+            applyImportBtn.classList.add('hidden');
+            importModal.classList.remove('hidden');
+            importModal.classList.add('flex');
+            stagedFileContent = null;
+            selectedFileInfo.classList.add('hidden');
+        }
+
+        function closeImportModal() {
+            importModal.classList.add('hidden');
+            importModal.classList.remove('flex');
+        }
+
+        if (openImportModalBtn) openImportModalBtn.addEventListener('click', openImportModal);
+        if (closeImportModalBtn) closeImportModalBtn.addEventListener('click', closeImportModal);
+        if (cancelImportBtn) cancelImportBtn.addEventListener('click', closeImportModal);
+
+        // Backdrop click to close
+        if (importModal) {
+            importModal.addEventListener('click', (e) => {
+                if (e.target === importModal) closeImportModal();
+            });
+        }
+
+        // ESC key to close
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !importModal.classList.contains('hidden')) {
+                closeImportModal();
+            }
+        });
+
+        // Tab Switching
+        if (tabBtnFile && tabBtnPaste) {
+            tabBtnFile.addEventListener('click', () => {
+                tabBtnFile.className = "pb-2.5 px-3 border-b-2 border-indigo-500 text-indigo-400 flex items-center gap-1.5 cursor-pointer";
+                tabBtnPaste.className = "pb-2.5 px-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5 cursor-pointer";
+                tabPanelFile.classList.remove('hidden');
+                tabPanelPaste.classList.add('hidden');
+            });
+
+            tabBtnPaste.addEventListener('click', () => {
+                tabBtnPaste.className = "pb-2.5 px-3 border-b-2 border-indigo-500 text-indigo-400 flex items-center gap-1.5 cursor-pointer";
+                tabBtnFile.className = "pb-2.5 px-3 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-1.5 cursor-pointer";
+                tabPanelPaste.classList.remove('hidden');
+                tabPanelFile.classList.add('hidden');
+                importPasteTextarea.focus();
+            });
+        }
+
+        // Dropzone & File Input Handlers
+        if (importDropzone && importFileInput) {
+            importDropzone.addEventListener('click', () => importFileInput.click());
+
+            importDropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                importDropzone.classList.add('border-indigo-400', 'bg-indigo-950/40');
+            });
+
+            importDropzone.addEventListener('dragleave', () => {
+                importDropzone.classList.remove('border-indigo-400', 'bg-indigo-950/40');
+            });
+
+            importDropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                importDropzone.classList.remove('border-indigo-400', 'bg-indigo-950/40');
+                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    handleSelectedFile(e.dataTransfer.files[0]);
+                }
+            });
+
+            importFileInput.addEventListener('change', (e) => {
+                if (e.target.files && e.target.files[0]) {
+                    handleSelectedFile(e.target.files[0]);
+                }
+            });
+        }
+
+        function handleSelectedFile(file) {
+            selectedFileName.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+            selectedFileInfo.classList.remove('hidden');
+
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                stagedFileContent = evt.target.result;
+            };
+            reader.readAsText(file);
+        }
+
+        // Parse & Preview button handler
+        if (parseDataBtn) {
+            parseDataBtn.addEventListener('click', () => {
+                let contentToParse = '';
+                if (!tabPanelPaste.classList.contains('hidden') && importPasteTextarea.value.trim() !== '') {
+                    contentToParse = importPasteTextarea.value.trim();
+                } else if (stagedFileContent) {
+                    contentToParse = stagedFileContent;
+                } else if (importPasteTextarea.value.trim() !== '') {
+                    contentToParse = importPasteTextarea.value.trim();
+                }
+
+                if (!contentToParse) {
+                    showToast('Please upload a file or paste price data', 'fa-triangle-exclamation');
+                    return;
+                }
+
+                const targetVendor = importVendorTarget.value;
+                const parsed = parseImportData(contentToParse, targetVendor, peptideData);
+
+                if (parsed.items.length === 0) {
+                    showToast('Could not detect valid rows in the data', 'fa-triangle-exclamation');
+                    return;
+                }
+
+                renderPreviewTable(parsed);
+
+                importStepInput.classList.add('hidden');
+                importStepPreview.classList.remove('hidden');
+                parseDataBtn.classList.add('hidden');
+                importBackBtn.classList.remove('hidden');
+                applyImportBtn.classList.remove('hidden');
+            });
+        }
+
+        // Back to Input handler
+        if (importBackBtn) {
+            importBackBtn.addEventListener('click', () => {
+                importStepInput.classList.remove('hidden');
+                importStepPreview.classList.add('hidden');
+                parseDataBtn.classList.remove('hidden');
+                importBackBtn.classList.add('hidden');
+                applyImportBtn.classList.add('hidden');
+            });
+        }
+
+        // Toggle Select All
+        if (toggleSelectAllBtn) {
+            toggleSelectAllBtn.addEventListener('click', () => {
+                const anyUnselected = currentParsedResults.some(r => !r.selected);
+                const newState = anyUnselected;
+                currentParsedResults.forEach(r => { r.selected = newState; });
+                document.querySelectorAll('.preview-row-checkbox').forEach(cb => { cb.checked = newState; });
+            });
+        }
+
+        // Apply Updates & Save Handler
+        if (applyImportBtn) {
+            applyImportBtn.addEventListener('click', async () => {
+                const selectedRows = currentParsedResults.filter(r => r.selected);
+                if (selectedRows.length === 0) {
+                    showToast('No items selected to import', 'fa-triangle-exclamation');
+                    return;
+                }
+
+                // Gather existing customizations
+                let existingCustom = [];
+                try {
+                    const raw = localStorage.getItem('custom_peptide_data');
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        if (Array.isArray(parsed)) existingCustom = parsed;
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+
+                const customMap = new Map();
+                existingCustom.forEach(c => {
+                    const k = c.id || c.key || `${c.name} (${c.spec})`;
+                    customMap.set(k, c);
+                });
+
+                let updatedCount = 0;
+                let addedCount = 0;
+
+                selectedRows.forEach(row => {
+                    const key = row.targetId || (row.importedName + '_' + row.importedSpec).toLowerCase().replace(/[^a-z0-9]+/g, '_');
+                    const existing = customMap.get(key) || customMap.get(row.targetId);
+
+                    if (existing) {
+                        existing.prices = { ...existing.prices, ...row.prices };
+                        existing.lastUpdated = new Date().toISOString();
+                        existing.isCustom = true;
+                        updatedCount++;
+                    } else if (row.matchedItem) {
+                        const customItem = {
+                            id: row.matchedItem.id,
+                            name: row.matchedItem.name,
+                            spec: row.matchedItem.spec,
+                            category: row.matchedItem.category,
+                            catNo: row.matchedItem.catNo,
+                            prices: {
+                                marvel: row.prices.marvel !== null ? row.prices.marvel : row.matchedItem.prices.marvel,
+                                tong: row.prices.tong !== null ? row.prices.tong : row.matchedItem.prices.tong,
+                                tina: row.prices.tina !== null ? row.prices.tina : row.matchedItem.prices.tina
+                            },
+                            lastUpdated: new Date().toISOString(),
+                            isCustom: true
+                        };
+                        customMap.set(customItem.id, customItem);
+                        updatedCount++;
+                    } else {
+                        // New Item
+                        const newItem = {
+                            id: key,
+                            name: row.importedName,
+                            spec: row.importedSpec || '10mg*10',
+                            category: row.category || 'Custom & User Imported',
+                            catNo: row.catNo || '',
+                            prices: {
+                                marvel: row.prices.marvel,
+                                tong: row.prices.tong,
+                                tina: row.prices.tina
+                            },
+                            lastUpdated: new Date().toISOString(),
+                            isCustom: true
+                        };
+                        customMap.set(key, newItem);
+                        addedCount++;
+                    }
+                });
+
+                const finalCustomList = Array.from(customMap.values());
+                localStorage.setItem('custom_peptide_data', JSON.stringify(finalCustomList));
+
+                await loadPeptideData();
+
+                if (selectedItem) {
+                    const match = peptideData.find(i => i.key === selectedItem.key || i.id === selectedItem.id);
+                    selectedItem = match || peptideData[0];
+                }
+
+                updateSpotlight(selectedItem);
+                renderCatalog(searchInput.value);
+                renderCart();
+                closeImportModal();
+
+                showToast(`Applied ${selectedRows.length} updates (${updatedCount} updated, ${addedCount} added)!`, 'fa-circle-check');
+            });
+        }
+
+        // Price comparison helpers
         function getLowestInfo(item) {
             const prices = [
                 { vendor: "Marvel Chloe", price: item.prices.marvel },
@@ -2689,7 +3491,6 @@
 
             message += `\nPlease let me know the total cost including shipping to my address.\n\nThank you!`;
 
-            // Copy formatted order text to clipboard as fallback (iframe safe)
             try {
                 const tempTextArea = document.createElement('textarea');
                 tempTextArea.value = message;
@@ -2706,7 +3507,6 @@
             const encodedMessage = encodeURIComponent(message);
             const waUrl = `https://wa.me/${vendor.phone}?text=${encodedMessage}`;
 
-            // Create dynamic link element to trigger navigation reliably
             const link = document.createElement('a');
             link.href = waUrl;
             link.target = '_blank';

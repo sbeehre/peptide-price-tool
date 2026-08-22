@@ -429,12 +429,12 @@
 
         <!-- Footer -->
         <footer class="pt-8 pb-4 text-center border-t border-slate-800/80 text-slate-500 text-xs space-y-2">
-            <div id="skool-member-status" class="hidden inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/50 border border-emerald-500/30 text-emerald-300 text-xs">
+            <div id="community-access-badge" class="hidden inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/50 border border-emerald-500/30 text-emerald-300 text-xs">
                 <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                <span class="font-medium">Member Access Active</span>
+                <span class="font-medium">Community Access Active</span>
                 <span class="text-slate-600">•</span>
-                <button id="skool-logout-btn" title="Lock access and log out" class="text-slate-400 hover:text-rose-400 transition underline cursor-pointer text-[11px]">
-                    Lock / Reset
+                <button id="community-logout-btn" title="Lock access and log out" class="text-slate-400 hover:text-rose-400 transition underline cursor-pointer text-[11px]">
+                    Logout / Lock
                 </button>
             </div>
             <p class="font-medium text-slate-400">Peptide Underground Price Tool</p>
@@ -443,52 +443,55 @@
 
     </main>
 
-    <!-- Skool Community Member Access Gate Modal -->
-    <div id="skool-gate-modal" class="fixed inset-0 z-[200] hidden items-center justify-center p-3 sm:p-4 bg-slate-950/95 backdrop-blur-lg">
+    <!-- Skool Community Shared Passphrase Gate Modal Overlay -->
+    <div id="community-gate-modal" class="fixed inset-0 z-[200] hidden items-center justify-center p-3 sm:p-4 bg-slate-950/95 backdrop-blur-lg">
         <div class="bg-slate-900 border border-indigo-500/40 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden relative border-t-4 border-t-indigo-500">
             <!-- Modal Header -->
             <div class="px-6 pt-6 pb-4 bg-slate-950/80 border-b border-slate-800 text-center">
                 <div class="w-12 h-12 rounded-2xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center mx-auto mb-3 border border-indigo-500/30 shadow-inner">
                     <i class="fa-solid fa-users-viewfinder text-xl"></i>
                 </div>
-                <h3 class="text-lg font-extrabold text-white">Community Member Access</h3>
-                <p class="text-xs text-slate-400 mt-1">Please enter the community access key to unlock the price comparison database.</p>
+                <h2 class="text-xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    Peptide Underground Price Tool
+                </h2>
+                <p class="text-xs text-indigo-300 font-semibold mt-1">Skool Community Member Gate</p>
+                <p class="text-xs text-slate-400 mt-1.5">Welcome! Enter the shared community passphrase from the Skool classroom to unlock catalog pricing and the multi-vendor order optimizer.</p>
             </div>
 
             <!-- Form -->
-            <form id="skool-gate-form" class="p-6 space-y-4">
+            <form id="community-gate-form" class="p-6 space-y-4">
                 <div>
-                    <label for="skool-key-input" class="block text-xs font-semibold text-slate-300 mb-1.5">
-                        Community Access Key
+                    <label for="community-passphrase-input" class="block text-xs font-semibold text-slate-300 mb-1.5">
+                        Community Passphrase
                     </label>
                     <div class="relative flex items-center">
                         <i class="fa-solid fa-key absolute left-3.5 text-slate-500 text-sm pointer-events-none"></i>
                         <input 
                             type="password" 
-                            id="skool-key-input" 
-                            placeholder="Enter your member access key..."
+                            id="community-passphrase-input" 
+                            placeholder="Enter community passphrase..."
                             class="w-full bg-slate-950 border border-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 text-white rounded-xl py-2.5 pl-10 pr-10 text-sm transition placeholder-slate-500 min-h-[42px]"
                             autocomplete="off"
                             required
                         >
-                        <button type="button" id="toggle-skool-key-btn" class="absolute right-2 text-slate-400 hover:text-slate-200 p-1.5 rounded cursor-pointer transition">
-                            <i class="fa-solid fa-eye text-sm" id="skool-key-eye"></i>
+                        <button type="button" id="toggle-community-pass-btn" class="absolute right-2 text-slate-400 hover:text-slate-200 p-1.5 rounded cursor-pointer transition" aria-label="Toggle passphrase visibility">
+                            <i class="fa-solid fa-eye text-sm" id="community-pass-eye"></i>
                         </button>
                     </div>
-                    <p id="skool-gate-error" class="hidden text-xs text-rose-400 mt-2 font-medium flex items-center gap-1.5">
-                        <i class="fa-solid fa-circle-exclamation"></i>
-                        <span id="skool-gate-error-msg">Invalid access key. Check the pinned post in the Skool community.</span>
-                    </p>
+                    <div id="community-gate-error" class="hidden text-xs text-rose-400 mt-2 font-medium flex items-center gap-1.5 bg-rose-950/40 border border-rose-500/30 rounded-lg p-2">
+                        <i class="fa-solid fa-circle-exclamation shrink-0"></i>
+                        <span id="community-gate-error-msg">Incorrect passphrase. Please check the pinned post in the Skool community.</span>
+                    </div>
                 </div>
 
                 <div class="bg-indigo-950/40 border border-indigo-500/20 rounded-xl p-3 text-[11px] text-slate-400 flex items-start gap-2">
                     <i class="fa-solid fa-circle-info text-indigo-400 mt-0.5 shrink-0"></i>
-                    <span>This tool is exclusively available for active Skool community members. Access keys are provided in the community classroom.</span>
+                    <span>This tool is exclusive to active Skool community members. Passphrases and direct access links are pinned in the community board.</span>
                 </div>
 
-                <button type="submit" id="skool-gate-submit-btn" class="w-full flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white rounded-xl text-sm font-semibold transition shadow-lg shadow-indigo-600/25 cursor-pointer min-h-[42px]">
+                <button type="submit" id="community-gate-submit-btn" class="w-full flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white rounded-xl text-sm font-semibold transition shadow-lg shadow-indigo-600/25 cursor-pointer min-h-[42px]">
                     <i class="fa-solid fa-lock-open text-xs"></i>
-                    <span>Unlock Catalog Access</span>
+                    <span>Unlock Community Access</span>
                 </button>
             </form>
         </div>
@@ -2744,21 +2747,44 @@
         }
 
         // =========================================================================
-        // SKOOL COMMUNITY MEMBER ACCESS GATE (SHA-256 WebCrypto)
+        // SKOOL COMMUNITY SHARED PASSPHRASE GATE (SHA-256 WebCrypto)
         // =========================================================================
-        // Target SHA-256 Hash for Key: "candied-tremble-coherence-stalemate-mammary"
-        const SKOOL_STORAGE_KEY = 'skool_member_auth';
-        const SKOOL_TARGET_HASH_HEX = 'f08f1e7c194c0f5f20b564e5a68a9aeaf6fb65104f8cbf80b42fdca1e23461a2';
+        // HOW TO CHANGE THE COMMUNITY PASSPHRASE:
+        // 1. Open browser DevTools Console (F12).
+        // 2. Run: await window.generateCommunityHash("YourNewSecretPassphrase")
+        // 3. Replace TARGET_COMMUNITY_HASH_HEX below with the generated 64-character hex hash.
+        const COMMUNITY_STORAGE_KEY = 'pep_community_auth';
+        
+        // Target SHA-256 Hash for Default Passphrase: "pepunderground2026"
+        const TARGET_COMMUNITY_HASH_HEX = 'f851508e7e7cbf8435bc1b8a973fed2d6b1a4ea1af18fff67b0d0e0ff61716af';
+        // Target SHA-256 Hash for Magic Link Key: "candied-tremble-coherence-stalemate-mammary"
+        const MAGIC_LINK_KEY_HASH_HEX = 'f08f1e7c194c0f5f20b564e5a68a9aeaf6fb65104f8cbf80b42fdca1e23461a2';
+        // Alternate legacy/provided hash alias
+        const ALT_COMMUNITY_HASH_HEX = '6c55d045d475ef9c042bc19445214041b65e7144e59ffdc6d61f5f3e970a27e7';
 
-        const skoolGateModal = document.getElementById('skool-gate-modal');
-        const skoolGateForm = document.getElementById('skool-gate-form');
-        const skoolKeyInput = document.getElementById('skool-key-input');
-        const skoolGateError = document.getElementById('skool-gate-error');
-        const skoolGateSubmitBtn = document.getElementById('skool-gate-submit-btn');
-        const toggleSkoolKeyBtn = document.getElementById('toggle-skool-key-btn');
-        const skoolKeyEye = document.getElementById('skool-key-eye');
-        const skoolMemberStatus = document.getElementById('skool-member-status');
-        const skoolLogoutBtn = document.getElementById('skool-logout-btn');
+        const VALID_COMMUNITY_HASHES = new Set([
+            TARGET_COMMUNITY_HASH_HEX,
+            MAGIC_LINK_KEY_HASH_HEX,
+            ALT_COMMUNITY_HASH_HEX
+        ]);
+
+        // Developer console utility for rotating community passphrase
+        window.generateCommunityHash = async function(newPassphrase) {
+            const hash = await deriveSha256Hex(newPassphrase);
+            console.log(`%c[Community Gate] SHA-256 Hash for "\${newPassphrase}":`, 'color: #38bdf8; font-weight: bold;');
+            console.log(hash);
+            return hash;
+        };
+
+        const communityGateModal = document.getElementById('community-gate-modal');
+        const communityGateForm = document.getElementById('community-gate-form');
+        const communityPassInput = document.getElementById('community-passphrase-input');
+        const communityGateError = document.getElementById('community-gate-error');
+        const communityGateSubmitBtn = document.getElementById('community-gate-submit-btn');
+        const toggleCommunityPassBtn = document.getElementById('toggle-community-pass-btn');
+        const communityPassEye = document.getElementById('community-pass-eye');
+        const communityAccessBadge = document.getElementById('community-access-badge');
+        const communityLogoutBtn = document.getElementById('community-logout-btn');
 
         // Derive SHA-256 hex string using Web Crypto API
         async function deriveSha256Hex(text) {
@@ -2776,94 +2802,108 @@
                 .join('');
         }
 
-        function isSkoolMemberAuthenticated() {
-            return localStorage.getItem(SKOOL_STORAGE_KEY) === SKOOL_TARGET_HASH_HEX;
+        function isCommunityAuthenticated() {
+            const stored = localStorage.getItem(COMMUNITY_STORAGE_KEY);
+            return stored === 'authenticated' || VALID_COMMUNITY_HASHES.has(stored);
         }
 
-        function updateSkoolGateUi() {
-            const isAuth = isSkoolMemberAuthenticated();
+        function updateCommunityGateUi() {
+            const isAuth = isCommunityAuthenticated();
             if (isAuth) {
-                if (skoolGateModal) {
-                    skoolGateModal.classList.add('hidden');
-                    skoolGateModal.classList.remove('flex');
+                if (communityGateModal) {
+                    communityGateModal.classList.add('hidden');
+                    communityGateModal.classList.remove('flex');
                 }
-                if (skoolMemberStatus) {
-                    skoolMemberStatus.classList.remove('hidden');
+                if (communityAccessBadge) {
+                    communityAccessBadge.classList.remove('hidden');
                 }
             } else {
-                if (skoolGateModal) {
-                    skoolGateModal.classList.remove('hidden');
-                    skoolGateModal.classList.add('flex');
-                    if (skoolKeyInput) {
-                        setTimeout(() => skoolKeyInput.focus(), 100);
+                if (communityGateModal) {
+                    communityGateModal.classList.remove('hidden');
+                    communityGateModal.classList.add('flex');
+                    if (communityPassInput) {
+                        setTimeout(() => communityPassInput.focus(), 100);
                     }
                 }
-                if (skoolMemberStatus) {
-                    skoolMemberStatus.classList.add('hidden');
+                if (communityAccessBadge) {
+                    communityAccessBadge.classList.add('hidden');
                 }
             }
         }
 
-        async function verifyAndSaveSkoolKey(inputKey) {
-            if (!inputKey) return false;
+        async function verifyAndSaveCommunityKey(inputPassphrase, isMagicLink = false) {
+            if (!inputPassphrase) return false;
             try {
-                const hash = await deriveSha256Hex(inputKey);
-                if (hash === SKOOL_TARGET_HASH_HEX) {
-                    localStorage.setItem(SKOOL_STORAGE_KEY, hash);
-                    updateSkoolGateUi();
-                    showToast('Member access unlocked!', 'fa-circle-check');
+                const hash = await deriveSha256Hex(inputPassphrase);
+                if (VALID_COMMUNITY_HASHES.has(hash)) {
+                    localStorage.setItem(COMMUNITY_STORAGE_KEY, hash);
+                    
+                    // If triggered via magic link in URL, clean up query params using history.replaceState
+                    if (isMagicLink && window.history && window.history.replaceState) {
+                        try {
+                            const url = new URL(window.location.href);
+                            url.searchParams.delete('key');
+                            window.history.replaceState({}, document.title, url.pathname + (url.searchParams.toString() ? '?' + url.searchParams.toString() : '') + url.hash);
+                        } catch (e) {
+                            const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+                            window.history.replaceState({}, document.title, cleanUrl);
+                        }
+                    }
+
+                    updateCommunityGateUi();
+                    showToast('Community access unlocked!', 'fa-circle-check');
                     return true;
                 }
             } catch (err) {
-                console.error('Skool key validation error:', err);
+                console.error('Community key validation error:', err);
             }
             return false;
         }
 
-        if (toggleSkoolKeyBtn && skoolKeyInput && skoolKeyEye) {
-            toggleSkoolKeyBtn.addEventListener('click', () => {
-                const isPass = skoolKeyInput.type === 'password';
-                skoolKeyInput.type = isPass ? 'text' : 'password';
-                skoolKeyEye.className = isPass ? 'fa-solid fa-eye-slash text-sm' : 'fa-solid fa-eye text-sm';
+        if (toggleCommunityPassBtn && communityPassInput && communityPassEye) {
+            toggleCommunityPassBtn.addEventListener('click', () => {
+                const isPass = communityPassInput.type === 'password';
+                communityPassInput.type = isPass ? 'text' : 'password';
+                communityPassEye.className = isPass ? 'fa-solid fa-eye-slash text-sm' : 'fa-solid fa-eye text-sm';
             });
         }
 
-        if (skoolGateForm) {
-            skoolGateForm.addEventListener('submit', async (e) => {
+        if (communityGateForm) {
+            communityGateForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const keyVal = skoolKeyInput ? skoolKeyInput.value : '';
-                if (!keyVal) return;
+                const passVal = communityPassInput ? communityPassInput.value : '';
+                if (!passVal) return;
 
-                if (skoolGateSubmitBtn) {
-                    skoolGateSubmitBtn.disabled = true;
-                    skoolGateSubmitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-xs"></i> <span>Verifying Key...</span>`;
+                if (communityGateSubmitBtn) {
+                    communityGateSubmitBtn.disabled = true;
+                    communityGateSubmitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-xs"></i> <span>Verifying...</span>`;
                 }
 
-                const success = await verifyAndSaveSkoolKey(keyVal);
+                const success = await verifyAndSaveCommunityKey(passVal);
                 if (!success) {
-                    if (skoolGateError) skoolGateError.classList.remove('hidden');
-                    if (skoolKeyInput) {
-                        skoolKeyInput.classList.add('border-rose-500', 'focus:border-rose-500');
+                    if (communityGateError) communityGateError.classList.remove('hidden');
+                    if (communityPassInput) {
+                        communityPassInput.classList.add('border-rose-500', 'focus:border-rose-500');
                         setTimeout(() => {
-                            skoolKeyInput.classList.remove('border-rose-500', 'focus:border-rose-500');
+                            communityPassInput.classList.remove('border-rose-500', 'focus:border-rose-500');
                         }, 2000);
                     }
                 } else {
-                    if (skoolGateError) skoolGateError.classList.add('hidden');
-                    if (skoolKeyInput) skoolKeyInput.value = '';
+                    if (communityGateError) communityGateError.classList.add('hidden');
+                    if (communityPassInput) communityPassInput.value = '';
                 }
 
-                if (skoolGateSubmitBtn) {
-                    skoolGateSubmitBtn.disabled = false;
-                    skoolGateSubmitBtn.innerHTML = `<i class="fa-solid fa-lock-open text-xs"></i> <span>Unlock Catalog Access</span>`;
+                if (communityGateSubmitBtn) {
+                    communityGateSubmitBtn.disabled = false;
+                    communityGateSubmitBtn.innerHTML = `<i class="fa-solid fa-lock-open text-xs"></i> <span>Unlock Community Access</span>`;
                 }
             });
         }
 
-        if (skoolLogoutBtn) {
-            skoolLogoutBtn.addEventListener('click', () => {
-                localStorage.removeItem(SKOOL_STORAGE_KEY);
-                updateSkoolGateUi();
+        if (communityLogoutBtn) {
+            communityLogoutBtn.addEventListener('click', () => {
+                localStorage.removeItem(COMMUNITY_STORAGE_KEY);
+                updateCommunityGateUi();
                 showToast('Community access locked', 'fa-lock');
             });
         }
@@ -4528,11 +4568,11 @@
             const urlParams = new URLSearchParams(window.location.search);
             const urlKey = urlParams.get('key');
             if (urlKey) {
-                await verifyAndSaveSkoolKey(urlKey);
+                await verifyAndSaveCommunityKey(urlKey, true);
             }
 
-            // Update Skool Member Access Gate state
-            updateSkoolGateUi();
+            // Update Community Member Access Gate state
+            updateCommunityGateUi();
 
             // Check existing authenticated session
             if (isAdminAuthenticated()) {

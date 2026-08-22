@@ -55,9 +55,9 @@
     <header class="border-b border-slate-800 bg-slate-950/90 backdrop-blur sticky top-0 z-50 transition-all">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-4">
             <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
-                <div class="p-2 sm:p-2.5 bg-indigo-600/20 text-indigo-400 rounded-xl border border-indigo-500/30 shrink-0">
-                    <i class="fa-solid fa-flask-vial text-xl sm:text-2xl"></i>
-                </div>
+                <button id="header-logo-btn" title="Triple-click for Admin Access" class="p-2 sm:p-2.5 bg-indigo-600/20 hover:bg-indigo-600/30 active:scale-95 text-indigo-400 rounded-xl border border-indigo-500/30 shrink-0 transition cursor-pointer select-none">
+                    <i class="fa-solid fa-flask-vial text-xl sm:text-2xl pointer-events-none"></i>
+                </button>
                 <div class="min-w-0">
                     <div class="flex items-center gap-2">
                         <h1 class="text-base sm:text-xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent truncate">
@@ -70,26 +70,42 @@
             </div>
             
             <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
-                <!-- Export Master Catalog Button -->
-                <button id="export-catalog-btn" title="Export Master Catalog (.json) to commit to GitHub" class="flex items-center gap-1.5 sm:gap-2 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-slate-300 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-slate-800 hover:border-slate-700 cursor-pointer shadow-sm">
-                    <i class="fa-solid fa-download text-indigo-400 text-xs sm:text-sm"></i>
-                    <span class="hidden md:inline">Export Catalog</span>
-                    <span class="md:hidden">Export</span>
-                </button>
+                <!-- Hidden Admin Controls Toolbar (Revealed only upon cryptographic authentication) -->
+                <div id="admin-toolbar-controls" class="hidden flex items-center gap-1.5 sm:gap-2">
+                    <!-- Admin Active Status Indicator -->
+                    <div id="admin-active-badge" class="hidden md:flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-[11px] font-semibold">
+                        <i class="fa-solid fa-shield-check text-emerald-400"></i>
+                        <span>Admin Active</span>
+                    </div>
 
-                <!-- Import Price Sheet Button -->
-                <button id="open-import-modal-btn" title="Import / Update Price Sheet (CSV/TSV/Paste)" class="flex items-center gap-1.5 sm:gap-2 bg-indigo-950/70 hover:bg-indigo-900 active:bg-indigo-950 text-indigo-200 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-indigo-700/50 cursor-pointer shadow-sm">
-                    <i class="fa-solid fa-file-import text-indigo-400 text-xs sm:text-sm"></i>
-                    <span class="hidden sm:inline">Import Rates</span>
-                    <span class="sm:hidden">Import</span>
-                </button>
+                    <!-- Export Master Catalog Button -->
+                    <button id="export-catalog-btn" title="Export Master Catalog (.json) to commit to GitHub" class="flex items-center gap-1.5 sm:gap-2 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-slate-300 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-slate-800 hover:border-slate-700 cursor-pointer shadow-sm">
+                        <i class="fa-solid fa-download text-indigo-400 text-xs sm:text-sm"></i>
+                        <span class="hidden md:inline">Export Catalog</span>
+                        <span class="md:hidden">Export</span>
+                    </button>
 
-                <!-- Reset to Defaults Button -->
-                <button id="reset-defaults-btn" title="Reset to Official Default Rates" class="flex items-center gap-1.5 sm:gap-2 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-slate-300 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-slate-800 hover:border-slate-700 cursor-pointer shadow-sm">
-                    <i class="fa-solid fa-rotate-left text-indigo-400 text-xs sm:text-sm"></i>
-                    <span class="hidden sm:inline">Reset Rates</span>
-                    <span class="sm:hidden">Reset</span>
-                </button>
+                    <!-- Import Price Sheet Button -->
+                    <button id="open-import-modal-btn" title="Import / Update Price Sheet (CSV/TSV/Paste)" class="flex items-center gap-1.5 sm:gap-2 bg-indigo-950/70 hover:bg-indigo-900 active:bg-indigo-950 text-indigo-200 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-indigo-700/50 cursor-pointer shadow-sm">
+                        <i class="fa-solid fa-file-import text-indigo-400 text-xs sm:text-sm"></i>
+                        <span class="hidden sm:inline">Import Rates</span>
+                        <span class="sm:hidden">Import</span>
+                    </button>
+
+                    <!-- Reset to Defaults Button -->
+                    <button id="reset-defaults-btn" title="Reset to Official Default Rates" class="flex items-center gap-1.5 sm:gap-2 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-slate-300 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-slate-800 hover:border-slate-700 cursor-pointer shadow-sm">
+                        <i class="fa-solid fa-rotate-left text-indigo-400 text-xs sm:text-sm"></i>
+                        <span class="hidden sm:inline">Reset Rates</span>
+                        <span class="sm:hidden">Reset</span>
+                    </button>
+
+                    <!-- Lock Admin Session Button -->
+                    <button id="lock-admin-btn" title="Lock Admin Session and Hide Controls" class="flex items-center gap-1.5 sm:gap-2 bg-rose-950/60 hover:bg-rose-900/80 active:bg-rose-950 text-rose-300 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-rose-800/50 cursor-pointer shadow-sm">
+                        <i class="fa-solid fa-lock text-rose-400 text-xs sm:text-sm"></i>
+                        <span class="hidden sm:inline">Lock Session</span>
+                        <span class="sm:hidden">Lock</span>
+                    </button>
+                </div>
 
                 <!-- Order List Cart Button -->
                 <a href="#cart-section" class="flex items-center gap-1.5 sm:gap-2 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm transition shadow-lg shadow-indigo-600/20 border border-indigo-500/50 cursor-pointer">
@@ -163,14 +179,14 @@
                 </div>
                 
                 <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 shrink-0">
-                    <button id="add-spotlight-to-cart" class="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20 border border-emerald-500/50 cursor-pointer min-h-[42px] shrink-0 whitespace-nowrap">
-                        <i class="fa-solid fa-plus-circle text-base"></i>
-                        <span>Add to Order List</span>
-                    </button>
                     <div id="recommended-banner" class="hidden flex items-center justify-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs px-3.5 py-2.5 rounded-xl min-h-[42px] shrink-0 whitespace-nowrap">
                         <i class="fa-solid fa-trophy text-amber-400"></i>
                         <span>Best: <strong id="rec-vendor-name" class="font-semibold text-white">—</strong></span>
                     </div>
+                    <button id="add-spotlight-to-cart" class="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20 border border-emerald-500/50 cursor-pointer min-h-[42px] shrink-0 whitespace-nowrap">
+                        <i class="fa-solid fa-plus-circle text-base"></i>
+                        <span>Add to Order List</span>
+                    </button>
                 </div>
             </div>
 
@@ -405,6 +421,74 @@
         </section>
 
     </main>
+
+    <!-- Admin Authentication Modal (WebCrypto PBKDF2 Gateway) -->
+    <div id="admin-auth-modal" class="fixed inset-0 z-[150] hidden items-center justify-center p-3 sm:p-4 bg-slate-950/85 backdrop-blur-md transition-opacity">
+        <div class="bg-slate-900 border border-indigo-500/40 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden relative border-t-2 border-t-indigo-400">
+            <!-- Modal Header -->
+            <div class="px-5 py-4 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="p-2 bg-indigo-500/20 text-indigo-400 rounded-lg border border-indigo-500/30">
+                        <i class="fa-solid fa-shield-halved text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-white">Admin Authentication</h3>
+                        <p class="text-[11px] text-slate-400">Cryptographic WebCrypto Gateway</p>
+                    </div>
+                </div>
+                <button id="close-admin-auth-btn" class="text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-slate-800 transition cursor-pointer">
+                    <i class="fa-solid fa-times text-base"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <form id="admin-auth-form" class="p-5 space-y-4">
+                <div>
+                    <label for="admin-passphrase-input" class="block text-xs font-semibold text-slate-300 mb-1.5">
+                        Master Admin Passphrase
+                    </label>
+                    <div class="relative flex items-center">
+                        <i class="fa-solid fa-key absolute left-3.5 text-slate-500 text-sm pointer-events-none"></i>
+                        <input 
+                            type="password" 
+                            id="admin-passphrase-input" 
+                            placeholder="Enter master admin passphrase..."
+                            class="w-full bg-slate-950 border border-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 text-white rounded-xl py-2.5 pl-10 pr-10 text-sm transition placeholder-slate-500 min-h-[42px]"
+                            autocomplete="current-password"
+                            required
+                        >
+                        <button type="button" id="toggle-admin-password-btn" class="absolute right-2 text-slate-400 hover:text-slate-200 p-1.5 rounded cursor-pointer transition">
+                            <i class="fa-solid fa-eye text-sm" id="admin-password-eye"></i>
+                        </button>
+                    </div>
+                    <p id="admin-auth-error" class="hidden text-xs text-rose-400 mt-2 font-medium flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <span id="admin-auth-error-msg">Invalid passphrase</span>
+                    </p>
+                </div>
+
+                <div class="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3 text-[11px] text-slate-400 space-y-1">
+                    <div class="flex items-center gap-1.5 text-indigo-300 font-semibold">
+                        <i class="fa-solid fa-lock text-xs"></i>
+                        <span>Client-Side PBKDF2 Protection</span>
+                    </div>
+                    <div>• 100,000 iterations PBKDF2-HMAC-SHA256</div>
+                    <div>• Only cryptographic hash verified in memory</div>
+                </div>
+
+                <!-- Submit / Actions -->
+                <div class="flex items-center justify-end gap-2 pt-2">
+                    <button type="button" id="cancel-admin-auth-btn" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition cursor-pointer">
+                        Cancel
+                    </button>
+                    <button type="submit" id="admin-auth-submit-btn" class="flex items-center gap-2 px-5 py-2 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white rounded-xl text-xs font-semibold transition shadow-lg shadow-indigo-600/20 cursor-pointer min-h-[38px]">
+                        <i class="fa-solid fa-unlock text-xs"></i>
+                        <span id="admin-auth-btn-text">Authenticate</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Price Sheet Importer Modal with Diff Review -->
     <div id="import-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-6 bg-slate-950/85 backdrop-blur-md overflow-y-auto">
@@ -2357,7 +2441,235 @@
         const importBackBtn = document.getElementById('import-back-btn');
         const applyImportBtn = document.getElementById('apply-import-btn');
 
+        // Admin DOM Elements & Controls
+        const headerLogoBtn = document.getElementById('header-logo-btn');
+        const adminToolbarControls = document.getElementById('admin-toolbar-controls');
+        const adminActiveBadge = document.getElementById('admin-active-badge');
+        const lockAdminBtn = document.getElementById('lock-admin-btn');
+        const adminAuthModal = document.getElementById('admin-auth-modal');
+        const adminAuthForm = document.getElementById('admin-auth-form');
+        const adminPassphraseInput = document.getElementById('admin-passphrase-input');
+        const toggleAdminPasswordBtn = document.getElementById('toggle-admin-password-btn');
+        const adminPasswordEye = document.getElementById('admin-password-eye');
+        const adminAuthError = document.getElementById('admin-auth-error');
+        const adminAuthErrorMsg = document.getElementById('admin-auth-error-msg');
+        const adminAuthSubmitBtn = document.getElementById('admin-auth-submit-btn');
+        const closeAdminAuthBtn = document.getElementById('close-admin-auth-btn');
+        const cancelAdminAuthBtn = document.getElementById('cancel-admin-auth-btn');
+
         let stagedFileContent = null;
+
+        // =========================================================================
+        // CLIENT-SIDE CRYPTOGRAPHIC ADMIN GATEWAY (PBKDF2 WebCrypto API)
+        // =========================================================================
+        // HOW TO CHANGE THE ADMIN PASSPHRASE:
+        // 1. Open DevTools Console (F12 or Ctrl+Shift+I) on this webpage.
+        // 2. Run: await window.generateAdminHash("YourNewSecretPassphraseHere")
+        // 3. Copy the returned 64-character hex string and paste it into ADMIN_TARGET_HASH_HEX below.
+        // -------------------------------------------------------------------------
+        // Current Default Passphrase: "peptide2026"
+        const ADMIN_SALT_HEX = '7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c';
+        const ADMIN_TARGET_HASH_HEX = 'edf8e5db3889085140e29ea22cd54af6afbc943887134e29ff9b52c167f16ce2';
+        const ADMIN_SESSION_STORAGE_KEY = 'pep_admin_auth_session';
+
+        // Derive PBKDF2 SHA-256 (100,000 iterations) 256-bit hex hash using Web Crypto API
+        async function deriveAdminPbkdf2Hash(passphrase, saltHex = ADMIN_SALT_HEX) {
+            const saltBytes = new Uint8Array(saltHex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+            const TextEncoderClass = (typeof TextEncoder !== 'undefined') ? TextEncoder : (typeof window !== 'undefined' && window.TextEncoder ? window.TextEncoder : globalThis.TextEncoder);
+            const enc = new TextEncoderClass();
+            
+            const cryptoSubtle = (typeof window !== 'undefined' && window.crypto && window.crypto.subtle) 
+                ? window.crypto.subtle 
+                : (typeof crypto !== 'undefined' && crypto.subtle ? crypto.subtle : (typeof globalThis !== 'undefined' && globalThis.crypto && globalThis.crypto.subtle ? globalThis.crypto.subtle : null));
+            if (!cryptoSubtle) {
+                throw new Error('WebCrypto subtle is not available in this environment');
+            }
+
+            const keyMaterial = await cryptoSubtle.importKey(
+                'raw',
+                enc.encode(passphrase),
+                { name: 'PBKDF2' },
+                false,
+                ['deriveBits']
+            );
+
+            const derivedBits = await cryptoSubtle.deriveBits(
+                {
+                    name: 'PBKDF2',
+                    salt: saltBytes,
+                    iterations: 100000,
+                    hash: 'SHA-256'
+                },
+                keyMaterial,
+                256
+            );
+
+            return Array.from(new Uint8Array(derivedBits))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+        }
+
+        // Developer / Administrator utility to generate a new hash:
+        // Run window.generateAdminHash("my-new-passphrase") in browser console
+        window.generateAdminHash = async function(newPassphrase) {
+            const hash = await deriveAdminPbkdf2Hash(newPassphrase, ADMIN_SALT_HEX);
+            console.log(`[Admin Hash Generator] New Target Hash for "${newPassphrase}":\n${hash}`);
+            return hash;
+        };
+
+        function isAdminAuthenticated() {
+            return sessionStorage.getItem(ADMIN_SESSION_STORAGE_KEY) === ADMIN_TARGET_HASH_HEX;
+        }
+
+        function setAdminSession(hash) {
+            sessionStorage.setItem(ADMIN_SESSION_STORAGE_KEY, hash);
+            updateAdminUiState(true);
+        }
+
+        function lockAdminSession() {
+            sessionStorage.removeItem(ADMIN_SESSION_STORAGE_KEY);
+            updateAdminUiState(false);
+            if (importModal && !importModal.classList.contains('hidden')) {
+                closeImportModal();
+            }
+            showToast('Admin session locked', 'fa-lock');
+        }
+
+        function updateAdminUiState(isAuthenticated) {
+            if (adminToolbarControls) {
+                if (isAuthenticated) {
+                    adminToolbarControls.classList.remove('hidden');
+                } else {
+                    adminToolbarControls.classList.add('hidden');
+                }
+            }
+            if (adminActiveBadge) {
+                if (isAuthenticated) {
+                    adminActiveBadge.classList.remove('hidden');
+                } else {
+                    adminActiveBadge.classList.add('hidden');
+                }
+            }
+        }
+
+        function openAdminAuthModal() {
+            if (isAdminAuthenticated()) {
+                updateAdminUiState(true);
+                showToast('Admin session active', 'fa-shield-check');
+                return;
+            }
+            if (adminAuthModal) {
+                adminAuthModal.classList.remove('hidden');
+                adminAuthModal.classList.add('flex');
+                if (adminPassphraseInput) {
+                    adminPassphraseInput.value = '';
+                    setTimeout(() => adminPassphraseInput.focus(), 100);
+                }
+                if (adminAuthError) adminAuthError.classList.add('hidden');
+            }
+        }
+
+        function closeAdminAuthModal() {
+            if (adminAuthModal) {
+                adminAuthModal.classList.add('hidden');
+                adminAuthModal.classList.remove('flex');
+            }
+            if (adminPassphraseInput) adminPassphraseInput.value = '';
+            if (adminAuthError) adminAuthError.classList.add('hidden');
+        }
+
+        if (closeAdminAuthBtn) closeAdminAuthBtn.addEventListener('click', closeAdminAuthModal);
+        if (cancelAdminAuthBtn) cancelAdminAuthBtn.addEventListener('click', closeAdminAuthModal);
+        if (lockAdminBtn) lockAdminBtn.addEventListener('click', lockAdminSession);
+
+        if (adminAuthModal) {
+            adminAuthModal.addEventListener('click', (e) => {
+                if (e.target === adminAuthModal) closeAdminAuthModal();
+            });
+        }
+
+        // Toggle Password Visibility
+        if (toggleAdminPasswordBtn && adminPassphraseInput && adminPasswordEye) {
+            toggleAdminPasswordBtn.addEventListener('click', () => {
+                const isPassword = adminPassphraseInput.type === 'password';
+                adminPassphraseInput.type = isPassword ? 'text' : 'password';
+                adminPasswordEye.className = isPassword ? 'fa-solid fa-eye-slash text-sm' : 'fa-solid fa-eye text-sm';
+            });
+        }
+
+        // Handle Admin Form Submission
+        if (adminAuthForm) {
+            adminAuthForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const passphrase = adminPassphraseInput ? adminPassphraseInput.value : '';
+                if (!passphrase) return;
+
+                if (adminAuthSubmitBtn) {
+                    adminAuthSubmitBtn.disabled = true;
+                    adminAuthSubmitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-xs"></i> <span>Verifying...</span>`;
+                }
+
+                try {
+                    const derivedHash = await deriveAdminPbkdf2Hash(passphrase);
+                    if (derivedHash === ADMIN_TARGET_HASH_HEX) {
+                        setAdminSession(derivedHash);
+                        closeAdminAuthModal();
+                        showToast('Admin authenticated successfully', 'fa-shield-check');
+                    } else {
+                        if (adminAuthError && adminAuthErrorMsg) {
+                            adminAuthErrorMsg.textContent = 'Invalid admin passphrase. Access denied.';
+                            adminAuthError.classList.remove('hidden');
+                        }
+                        if (adminPassphraseInput) {
+                            adminPassphraseInput.classList.add('border-rose-500', 'focus:border-rose-500');
+                            setTimeout(() => {
+                                adminPassphraseInput.classList.remove('border-rose-500', 'focus:border-rose-500');
+                            }, 2000);
+                        }
+                    }
+                } catch (err) {
+                    console.error('Cryptographic verification failed:', err);
+                    if (adminAuthError && adminAuthErrorMsg) {
+                        adminAuthErrorMsg.textContent = 'Verification error: ' + err.message;
+                        adminAuthError.classList.remove('hidden');
+                    }
+                } finally {
+                    if (adminAuthSubmitBtn) {
+                        adminAuthSubmitBtn.disabled = false;
+                        adminAuthSubmitBtn.innerHTML = `<i class="fa-solid fa-unlock text-xs"></i> <span>Authenticate</span>`;
+                    }
+                }
+            });
+        }
+
+        // Hidden Trigger 1: Keyboard Shortcut Ctrl+Shift+A / Cmd+Shift+A
+        window.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a' || e.code === 'KeyA')) {
+                e.preventDefault();
+                openAdminAuthModal();
+            }
+            if (e.key === 'Escape' && adminAuthModal && !adminAuthModal.classList.contains('hidden')) {
+                closeAdminAuthModal();
+            }
+        });
+
+        // Hidden Trigger 2: Triple-Click Header Logo Flask Icon
+        let logoClickCount = 0;
+        let logoClickTimer = null;
+        if (headerLogoBtn) {
+            headerLogoBtn.addEventListener('click', () => {
+                logoClickCount++;
+                if (logoClickCount === 1) {
+                    logoClickTimer = setTimeout(() => {
+                        logoClickCount = 0;
+                    }, 800);
+                } else if (logoClickCount >= 3) {
+                    clearTimeout(logoClickTimer);
+                    logoClickCount = 0;
+                    openAdminAuthModal();
+                }
+            });
+        }
 
         function showToast(message, iconClass = 'fa-check-circle') {
             const toast = document.getElementById('toast');
@@ -2569,10 +2881,10 @@
             if (rateBadge) {
                 if (hasCustomData) {
                     rateBadge.className = "inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-950/80 text-amber-300 border border-amber-700/50";
-                    rateBadge.innerText = "Custom Rates Active";
+                    rateBadge.textContent = "Custom Rates Active";
                 } else {
                     rateBadge.className = "hidden xs:inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-indigo-950 text-indigo-300 border border-indigo-800/40";
-                    rateBadge.innerText = "Official Rates";
+                    rateBadge.textContent = "Official Rates";
                 }
             }
 
@@ -2583,6 +2895,12 @@
         // EXPORT / BACKUP MASTER CATALOG MODULE
         // ==========================================
         function exportMasterCatalogJson() {
+            if (!isAdminAuthenticated()) {
+                showToast('Admin authentication required', 'fa-lock');
+                openAdminAuthModal();
+                return;
+            }
+
             if (!peptideData || peptideData.length === 0) {
                 showToast('No catalog data available to export', 'fa-triangle-exclamation');
                 return;
@@ -3135,6 +3453,12 @@
         // MODAL CONTROLLER & EVENT LISTENERS
         // ==========================================
         function openImportModal() {
+            if (!isAdminAuthenticated()) {
+                showToast('Admin authentication required', 'fa-lock');
+                openAdminAuthModal();
+                return;
+            }
+
             importStepInput.classList.remove('hidden');
             importStepPreview.classList.add('hidden');
             parseDataBtn.classList.remove('hidden');
@@ -3964,6 +4288,12 @@
 
         // Reset to Official Default Rates
         resetDefaultsBtn.addEventListener('click', async () => {
+            if (!isAdminAuthenticated()) {
+                showToast('Admin authentication required', 'fa-lock');
+                openAdminAuthModal();
+                return;
+            }
+
             const hadCustom = !!localStorage.getItem('custom_peptide_data');
             localStorage.removeItem('custom_peptide_data');
             
@@ -3997,6 +4327,23 @@
 
         // Initialize state on page load
         async function initApp() {
+            // Check existing authenticated session
+            if (isAdminAuthenticated()) {
+                updateAdminUiState(true);
+            } else {
+                updateAdminUiState(false);
+            }
+
+            // Hidden Trigger 3: Check URL query param ?mode=admin
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('mode') === 'admin') {
+                if (isAdminAuthenticated()) {
+                    updateAdminUiState(true);
+                } else {
+                    openAdminAuthModal();
+                }
+            }
+
             await loadPeptideData();
             selectedItem = peptideData.find(i => i.key === "Semaglutide (10mg*10)" || i.id === "semaglutide_10mg") || peptideData[0];
             updateSpotlight(selectedItem);

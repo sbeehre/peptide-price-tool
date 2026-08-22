@@ -1,0 +1,19 @@
+services:
+  peptide-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: peptide-compare-app
+    restart: unless-stopped
+    networks:
+      - traefik_default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.peptide.rule=Host(`peptides.yourdomain.com`)"
+      - "traefik.http.routers.peptide.entrypoints=websecure"
+      - "traefik.http.routers.peptide.tls.certresolver=myresolver"
+      - "traefik.http.services.peptide.loadbalancer.server.port=80"
+
+networks:
+  traefik_default:
+    external: true

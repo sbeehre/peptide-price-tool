@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-    <title>Peptide Vendor Price Comparison & Order Planner</title>
+    <title>Peptide Underground Price Tool</title>
+    <meta name="description" content="Peptide Underground Price Tool — Real-time price comparison, order optimizer, and vendor catalog rate cards for research peptides.">
+    <meta property="og:title" content="Peptide Underground Price Tool">
+    <meta property="og:description" content="Real-time price comparison, order optimizer, and vendor catalog rate cards for research peptides.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Peptide Underground Price Tool">
+    <meta name="twitter:description" content="Real-time price comparison, order optimizer, and vendor catalog rate cards for research peptides.">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -61,7 +68,7 @@
                 <div class="min-w-0">
                     <div class="flex items-center gap-2">
                         <h1 class="text-base sm:text-xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent truncate">
-                            Peptide Price Tool
+                            Peptide Underground Price Tool
                         </h1>
                         <span id="rate-badge" class="hidden xs:inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-indigo-950 text-indigo-300 border border-indigo-800/40">Official Rates</span>
                     </div>
@@ -419,6 +426,12 @@
                 <i class="fa-solid fa-arrows-left-right text-xs mr-1"></i> Swipe horizontally to view full rate card
             </div>
         </section>
+
+        <!-- Footer -->
+        <footer class="pt-8 pb-4 text-center border-t border-slate-800/80 text-slate-500 text-xs space-y-1">
+            <p class="font-medium text-slate-400">Peptide Underground Price Tool</p>
+            <p>Vendor rate comparison and order optimizer for research peptides.</p>
+        </footer>
 
     </main>
 
@@ -4262,7 +4275,7 @@
         copySummaryBtn.addEventListener('click', () => {
             if (cart.length === 0) return;
 
-            let summaryText = `PEPTIDE ORDER SELECTION LIST:\n`;
+            let summaryText = `PEPTIDE UNDERGROUND PRICE TOOL - ORDER SELECTION LIST:\n`;
             summaryText += `------------------------------------\n`;
             cart.forEach(item => {
                 const itemData = peptideData.find(i => i.key === item.key || i.id === item.key);

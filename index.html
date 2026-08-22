@@ -4005,17 +4005,19 @@
         // Price comparison helpers
         function getLowestInfo(item) {
             const prices = [
-                { vendor: "Marvel Chloe", price: item.prices.marvel },
-                { vendor: "Tong Shi Po", price: item.prices.tong },
-                { vendor: "Tina Tianjin Bio", price: item.prices.tina }
-            ].filter(p => p.price !== null && !isNaN(p.price));
+                { vendor: "Marvel Chloe", id: "marvel", price: item.prices.marvel },
+                { vendor: "Tong Shi Po", id: "tong", price: item.prices.tong },
+                { vendor: "Tina Tianjin Bio", id: "tina", price: item.prices.tina }
+            ].filter(p => p.price !== null && p.price !== undefined && !isNaN(p.price) && p.price > 0);
 
-            if (prices.length === 0) return { min: null, winners: [] };
+            if (prices.length === 0) return { min: null, winners: [], winnerIds: [] };
             
             const minPrice = Math.min(...prices.map(p => p.price));
-            const winners = prices.filter(p => p.price === minPrice).map(p => p.vendor);
+            const winnerObjs = prices.filter(p => p.price === minPrice);
+            const winners = winnerObjs.map(p => p.vendor);
+            const winnerIds = winnerObjs.map(p => p.id);
 
-            return { min: minPrice, winners };
+            return { min: minPrice, winners, winnerIds };
         }
 
         function updateSpotlight(item) {
@@ -4062,8 +4064,8 @@
                     if (v.price === min) {
                         badgeEl.classList.remove('hidden');
                         diffEl.textContent = "🏆 Best Unit Price";
-                        diffEl.className = "block text-xs font-semibold text-amber-400 mt-1";
-                        cardEl.className = "bg-slate-900/95 border-2 border-amber-500/60 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-lg shadow-amber-500/5";
+                        diffEl.className = "block text-xs font-semibold text-emerald-400 mt-1";
+                        cardEl.className = "bg-slate-900/95 border-2 border-emerald-500/60 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-lg shadow-emerald-500/5";
                     } else {
                         badgeEl.classList.add('hidden');
                         const diff = v.price - min;
@@ -4107,62 +4109,45 @@
             );
 
             if (matches.length === 0) {
-                dropdown.innerHTML = `<div class="p-4 text-xs text-slate-400 text-center bg-slate-900 rounded-xl">No peptide found matching "${term}"</div>`;
+                dropdown.innerHTML = '<div class="p-3 text-xs text-slate-400 text-center">No matching compounds found</div>';
                 dropdown.classList.remove('hidden');
                 return;
             }
 
-            dropdown.innerHTML = matches.map(item => {
+            dropdown.innerHTML = matches.slice(0, 10).map(item => {
                 const info = getLowestInfo(item);
-                const lowestTxt = info.min ? `$${info.min.toFixed(2)}` : 'N/A';
-                const catCode = item.catNo ? `<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800/50 mr-1.5">${item.catNo}</span>` : '';
-
                 return `
-                    <div class="dropdown-item p-3 sm:p-3.5 hover:bg-slate-800/90 active:bg-slate-800 cursor-pointer flex justify-between items-center transition bg-slate-900 gap-2 min-h-[48px]" data-key="${item.key}">
-                        <div class="min-w-0 flex-1">
-                            <div class="font-medium text-xs sm:text-sm text-slate-100 truncate flex items-center">
-                                ${catCode}
-                                <span class="truncate">${item.key}</span>
+                    <div class="dropdown-item p-2.5 sm:p-3 hover:bg-slate-800/80 cursor-pointer border-b border-slate-800/60 last:border-0 transition flex items-center justify-between" data-key="${item.key}">
+                        <div class="space-y-0.5">
+                            <div class="text-xs sm:text-sm font-semibold text-white flex items-center gap-1.5">
+                                ${item.catNo ? `<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800/40">${item.catNo}</span>` : ''}
+                                <span>${item.name}</span>
                             </div>
-                            <div class="text-[11px] text-slate-400 flex items-center gap-2 mt-0.5">
-                                <span>Spec: ${item.spec}</span>
-                                <span>•</span>
-                                <span class="text-slate-500">${item.category}</span>
-                            </div>
+                            <div class="text-[11px] text-slate-400 font-mono">${item.spec}</div>
                         </div>
-                        <div class="flex items-center gap-2 sm:gap-3 shrink-0">
-                            <span class="text-xs font-bold text-emerald-400">${lowestTxt}</span>
-                            <button class="add-btn-dropdown bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white shadow-md border border-emerald-500/40 px-3 py-1.5 sm:px-3 sm:py-1.5 rounded-lg text-xs font-bold transition min-h-[38px] flex items-center justify-center cursor-pointer" data-key="${item.key}">
-                                <i class="fa-solid fa-plus mr-1"></i> Add
-                            </button>
+                        <div class="text-right">
+                            <div class="text-xs sm:text-sm font-bold text-emerald-400">${info.min ? '$' + info.min.toFixed(2) : '—'}</div>
+                            <div class="text-[10px] text-slate-500">${info.winners.join(', ') || 'N/A'}</div>
                         </div>
                     </div>
                 `;
             }).join('');
 
-            dropdown.classList.remove('hidden');
-
-            document.querySelectorAll('.dropdown-item').forEach(el => {
-                el.addEventListener('click', (e) => {
-                    if (e.target.closest('.add-btn-dropdown')) return;
+            dropdown.querySelectorAll('.dropdown-item').forEach(el => {
+                el.addEventListener('click', () => {
                     const key = el.getAttribute('data-key');
                     const item = peptideData.find(i => i.key === key || i.id === key);
                     if (item) {
                         updateSpotlight(item);
-                        dropdown.classList.add('hidden');
+                        searchInput.value = item.name;
                         clearBtn.classList.remove('hidden');
+                        dropdown.classList.add('hidden');
                         renderCatalog(searchInput.value);
                     }
                 });
             });
 
-            document.querySelectorAll('.add-btn-dropdown').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const key = btn.getAttribute('data-key');
-                    addToCart(key);
-                });
-            });
+            dropdown.classList.remove('hidden');
         }
 
         function renderCatalog(filterTerm = '') {
@@ -4191,6 +4176,10 @@
                 const tongPrice = item.prices.tong;
                 const tinaPrice = item.prices.tina;
 
+                const isMarvelLowest = info.min !== null && marvelPrice !== null && marvelPrice === info.min;
+                const isTongLowest = info.min !== null && tongPrice !== null && tongPrice === info.min;
+                const isTinaLowest = info.min !== null && tinaPrice !== null && tinaPrice === info.min;
+
                 return `
                     <tr class="catalog-row border-b border-slate-800/50 hover:bg-slate-800/40 active:bg-slate-800/60 cursor-pointer transition ${isSelected ? 'bg-indigo-950/30' : ''}" data-key="${item.key}">
                         <td class="py-3 px-3.5 sm:py-3.5 sm:px-4 font-medium text-white whitespace-nowrap">
@@ -4200,10 +4189,33 @@
                             </div>
                         </td>
                         <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-slate-400 font-mono text-xs whitespace-nowrap">${item.spec}</td>
-                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right whitespace-nowrap ${marvelPrice === info.min && info.min ? 'text-amber-300 font-bold' : 'text-slate-300'}">${marvelPrice !== null ? '$' + marvelPrice.toFixed(2) : '—'}</td>
-                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right whitespace-nowrap ${tongPrice === info.min && info.min ? 'text-amber-300 font-bold' : 'text-slate-300'}">${tongPrice !== null ? '$' + tongPrice.toFixed(2) : '—'}</td>
-                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right whitespace-nowrap ${tinaPrice === info.min && info.min ? 'text-amber-300 font-bold' : 'text-slate-300'}">${tinaPrice !== null ? '$' + tinaPrice.toFixed(2) : '—'}</td>
-                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right font-semibold text-emerald-400 whitespace-nowrap">${info.min ? '$' + info.min.toFixed(2) : '—'}</td>
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right whitespace-nowrap ${isMarvelLowest ? 'bg-emerald-950/20' : ''}">
+                            ${marvelPrice !== null ? `
+                                <span class="inline-flex items-center justify-end gap-1.5 font-mono ${isMarvelLowest ? 'text-emerald-400 font-bold' : 'text-slate-300'}">
+                                    <span>$${marvelPrice.toFixed(2)}</span>
+                                    ${isMarvelLowest ? '<span class="text-[9px] px-1 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-sans uppercase font-bold tracking-tight border border-emerald-500/30">Best</span>' : ''}
+                                </span>
+                            ` : '<span class="text-slate-600 font-mono">—</span>'}
+                        </td>
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right whitespace-nowrap ${isTongLowest ? 'bg-emerald-950/20' : ''}">
+                            ${tongPrice !== null ? `
+                                <span class="inline-flex items-center justify-end gap-1.5 font-mono ${isTongLowest ? 'text-emerald-400 font-bold' : 'text-slate-300'}">
+                                    <span>$${tongPrice.toFixed(2)}</span>
+                                    ${isTongLowest ? '<span class="text-[9px] px-1 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-sans uppercase font-bold tracking-tight border border-emerald-500/30">Best</span>' : ''}
+                                </span>
+                            ` : '<span class="text-slate-600 font-mono">—</span>'}
+                        </td>
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right whitespace-nowrap ${isTinaLowest ? 'bg-emerald-950/20' : ''}">
+                            ${tinaPrice !== null ? `
+                                <span class="inline-flex items-center justify-end gap-1.5 font-mono ${isTinaLowest ? 'text-emerald-400 font-bold' : 'text-slate-300'}">
+                                    <span>$${tinaPrice.toFixed(2)}</span>
+                                    ${isTinaLowest ? '<span class="text-[9px] px-1 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-sans uppercase font-bold tracking-tight border border-emerald-500/30">Best</span>' : ''}
+                                </span>
+                            ` : '<span class="text-slate-600 font-mono">—</span>'}
+                        </td>
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right font-semibold text-emerald-400 whitespace-nowrap">
+                            <span class="font-mono font-bold">${info.min ? '$' + info.min.toFixed(2) : '—'}</span>
+                        </td>
                         <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-center whitespace-nowrap">
                             <span class="text-[11px] sm:text-xs px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-slate-300 inline-block">
                                 ${info.winners.join(', ') || 'N/A'}

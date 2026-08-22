@@ -428,12 +428,71 @@
         </section>
 
         <!-- Footer -->
-        <footer class="pt-8 pb-4 text-center border-t border-slate-800/80 text-slate-500 text-xs space-y-1">
+        <footer class="pt-8 pb-4 text-center border-t border-slate-800/80 text-slate-500 text-xs space-y-2">
+            <div id="skool-member-status" class="hidden inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/50 border border-emerald-500/30 text-emerald-300 text-xs">
+                <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                <span class="font-medium">Member Access Active</span>
+                <span class="text-slate-600">•</span>
+                <button id="skool-logout-btn" title="Lock access and log out" class="text-slate-400 hover:text-rose-400 transition underline cursor-pointer text-[11px]">
+                    Lock / Reset
+                </button>
+            </div>
             <p class="font-medium text-slate-400">Peptide Underground Price Tool</p>
             <p>Vendor rate comparison and order optimizer for research peptides.</p>
         </footer>
 
     </main>
+
+    <!-- Skool Community Member Access Gate Modal -->
+    <div id="skool-gate-modal" class="fixed inset-0 z-[200] hidden items-center justify-center p-3 sm:p-4 bg-slate-950/95 backdrop-blur-lg">
+        <div class="bg-slate-900 border border-indigo-500/40 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden relative border-t-4 border-t-indigo-500">
+            <!-- Modal Header -->
+            <div class="px-6 pt-6 pb-4 bg-slate-950/80 border-b border-slate-800 text-center">
+                <div class="w-12 h-12 rounded-2xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center mx-auto mb-3 border border-indigo-500/30 shadow-inner">
+                    <i class="fa-solid fa-users-viewfinder text-xl"></i>
+                </div>
+                <h3 class="text-lg font-extrabold text-white">Community Member Access</h3>
+                <p class="text-xs text-slate-400 mt-1">Please enter the community access key to unlock the price comparison database.</p>
+            </div>
+
+            <!-- Form -->
+            <form id="skool-gate-form" class="p-6 space-y-4">
+                <div>
+                    <label for="skool-key-input" class="block text-xs font-semibold text-slate-300 mb-1.5">
+                        Community Access Key
+                    </label>
+                    <div class="relative flex items-center">
+                        <i class="fa-solid fa-key absolute left-3.5 text-slate-500 text-sm pointer-events-none"></i>
+                        <input 
+                            type="password" 
+                            id="skool-key-input" 
+                            placeholder="Enter your member access key..."
+                            class="w-full bg-slate-950 border border-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 text-white rounded-xl py-2.5 pl-10 pr-10 text-sm transition placeholder-slate-500 min-h-[42px]"
+                            autocomplete="off"
+                            required
+                        >
+                        <button type="button" id="toggle-skool-key-btn" class="absolute right-2 text-slate-400 hover:text-slate-200 p-1.5 rounded cursor-pointer transition">
+                            <i class="fa-solid fa-eye text-sm" id="skool-key-eye"></i>
+                        </button>
+                    </div>
+                    <p id="skool-gate-error" class="hidden text-xs text-rose-400 mt-2 font-medium flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <span id="skool-gate-error-msg">Invalid access key. Check the pinned post in the Skool community.</span>
+                    </p>
+                </div>
+
+                <div class="bg-indigo-950/40 border border-indigo-500/20 rounded-xl p-3 text-[11px] text-slate-400 flex items-start gap-2">
+                    <i class="fa-solid fa-circle-info text-indigo-400 mt-0.5 shrink-0"></i>
+                    <span>This tool is exclusively available for active Skool community members. Access keys are provided in the community classroom.</span>
+                </div>
+
+                <button type="submit" id="skool-gate-submit-btn" class="w-full flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white rounded-xl text-sm font-semibold transition shadow-lg shadow-indigo-600/25 cursor-pointer min-h-[42px]">
+                    <i class="fa-solid fa-lock-open text-xs"></i>
+                    <span>Unlock Catalog Access</span>
+                </button>
+            </form>
+        </div>
+    </div>
 
     <!-- Admin Authentication Modal (WebCrypto PBKDF2 Gateway) -->
     <div id="admin-auth-modal" class="fixed inset-0 z-[150] hidden items-center justify-center p-3 sm:p-4 bg-slate-950/85 backdrop-blur-md transition-opacity">
@@ -2684,6 +2743,131 @@
             });
         }
 
+        // =========================================================================
+        // SKOOL COMMUNITY MEMBER ACCESS GATE (SHA-256 WebCrypto)
+        // =========================================================================
+        // Target SHA-256 Hash for Key: "candied-tremble-coherence-stalemate-mammary"
+        const SKOOL_STORAGE_KEY = 'skool_member_auth';
+        const SKOOL_TARGET_HASH_HEX = 'f08f1e7c194c0f5f20b564e5a68a9aeaf6fb65104f8cbf80b42fdca1e23461a2';
+
+        const skoolGateModal = document.getElementById('skool-gate-modal');
+        const skoolGateForm = document.getElementById('skool-gate-form');
+        const skoolKeyInput = document.getElementById('skool-key-input');
+        const skoolGateError = document.getElementById('skool-gate-error');
+        const skoolGateSubmitBtn = document.getElementById('skool-gate-submit-btn');
+        const toggleSkoolKeyBtn = document.getElementById('toggle-skool-key-btn');
+        const skoolKeyEye = document.getElementById('skool-key-eye');
+        const skoolMemberStatus = document.getElementById('skool-member-status');
+        const skoolLogoutBtn = document.getElementById('skool-logout-btn');
+
+        // Derive SHA-256 hex string using Web Crypto API
+        async function deriveSha256Hex(text) {
+            const TextEncoderClass = (typeof TextEncoder !== 'undefined') ? TextEncoder : (typeof window !== 'undefined' && window.TextEncoder ? window.TextEncoder : globalThis.TextEncoder);
+            const enc = new TextEncoderClass();
+            const cryptoSubtle = (typeof window !== 'undefined' && window.crypto && window.crypto.subtle) 
+                ? window.crypto.subtle 
+                : (typeof crypto !== 'undefined' && crypto.subtle ? crypto.subtle : (typeof globalThis !== 'undefined' && globalThis.crypto && globalThis.crypto.subtle ? globalThis.crypto.subtle : null));
+            if (!cryptoSubtle) {
+                throw new Error('WebCrypto subtle is not available in this environment');
+            }
+            const buf = await cryptoSubtle.digest('SHA-256', enc.encode(text.trim()));
+            return Array.from(new Uint8Array(buf))
+                .map(b => b.toString(16).padStart(2, '0'))
+                .join('');
+        }
+
+        function isSkoolMemberAuthenticated() {
+            return localStorage.getItem(SKOOL_STORAGE_KEY) === SKOOL_TARGET_HASH_HEX;
+        }
+
+        function updateSkoolGateUi() {
+            const isAuth = isSkoolMemberAuthenticated();
+            if (isAuth) {
+                if (skoolGateModal) {
+                    skoolGateModal.classList.add('hidden');
+                    skoolGateModal.classList.remove('flex');
+                }
+                if (skoolMemberStatus) {
+                    skoolMemberStatus.classList.remove('hidden');
+                }
+            } else {
+                if (skoolGateModal) {
+                    skoolGateModal.classList.remove('hidden');
+                    skoolGateModal.classList.add('flex');
+                    if (skoolKeyInput) {
+                        setTimeout(() => skoolKeyInput.focus(), 100);
+                    }
+                }
+                if (skoolMemberStatus) {
+                    skoolMemberStatus.classList.add('hidden');
+                }
+            }
+        }
+
+        async function verifyAndSaveSkoolKey(inputKey) {
+            if (!inputKey) return false;
+            try {
+                const hash = await deriveSha256Hex(inputKey);
+                if (hash === SKOOL_TARGET_HASH_HEX) {
+                    localStorage.setItem(SKOOL_STORAGE_KEY, hash);
+                    updateSkoolGateUi();
+                    showToast('Member access unlocked!', 'fa-circle-check');
+                    return true;
+                }
+            } catch (err) {
+                console.error('Skool key validation error:', err);
+            }
+            return false;
+        }
+
+        if (toggleSkoolKeyBtn && skoolKeyInput && skoolKeyEye) {
+            toggleSkoolKeyBtn.addEventListener('click', () => {
+                const isPass = skoolKeyInput.type === 'password';
+                skoolKeyInput.type = isPass ? 'text' : 'password';
+                skoolKeyEye.className = isPass ? 'fa-solid fa-eye-slash text-sm' : 'fa-solid fa-eye text-sm';
+            });
+        }
+
+        if (skoolGateForm) {
+            skoolGateForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const keyVal = skoolKeyInput ? skoolKeyInput.value : '';
+                if (!keyVal) return;
+
+                if (skoolGateSubmitBtn) {
+                    skoolGateSubmitBtn.disabled = true;
+                    skoolGateSubmitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin text-xs"></i> <span>Verifying Key...</span>`;
+                }
+
+                const success = await verifyAndSaveSkoolKey(keyVal);
+                if (!success) {
+                    if (skoolGateError) skoolGateError.classList.remove('hidden');
+                    if (skoolKeyInput) {
+                        skoolKeyInput.classList.add('border-rose-500', 'focus:border-rose-500');
+                        setTimeout(() => {
+                            skoolKeyInput.classList.remove('border-rose-500', 'focus:border-rose-500');
+                        }, 2000);
+                    }
+                } else {
+                    if (skoolGateError) skoolGateError.classList.add('hidden');
+                    if (skoolKeyInput) skoolKeyInput.value = '';
+                }
+
+                if (skoolGateSubmitBtn) {
+                    skoolGateSubmitBtn.disabled = false;
+                    skoolGateSubmitBtn.innerHTML = `<i class="fa-solid fa-lock-open text-xs"></i> <span>Unlock Catalog Access</span>`;
+                }
+            });
+        }
+
+        if (skoolLogoutBtn) {
+            skoolLogoutBtn.addEventListener('click', () => {
+                localStorage.removeItem(SKOOL_STORAGE_KEY);
+                updateSkoolGateUi();
+                showToast('Community access locked', 'fa-lock');
+            });
+        }
+
         function showToast(message, iconClass = 'fa-check-circle') {
             const toast = document.getElementById('toast');
             const toastMsg = document.getElementById('toast-msg');
@@ -4340,6 +4524,16 @@
 
         // Initialize state on page load
         async function initApp() {
+            // Check URL query param ?key=... for one-click Skool member access
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlKey = urlParams.get('key');
+            if (urlKey) {
+                await verifyAndSaveSkoolKey(urlKey);
+            }
+
+            // Update Skool Member Access Gate state
+            updateSkoolGateUi();
+
             // Check existing authenticated session
             if (isAdminAuthenticated()) {
                 updateAdminUiState(true);
@@ -4348,7 +4542,6 @@
             }
 
             // Hidden Trigger 3: Check URL query param ?mode=admin
-            const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('mode') === 'admin') {
                 if (isAdminAuthenticated()) {
                     updateAdminUiState(true);

@@ -11,6 +11,7 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Peptide Underground Price Tool">
     <meta name="twitter:description" content="Real-time price comparison, order optimizer, and vendor catalog rate cards for research peptides.">
+    <script defer src="https://analytics.thinkcraft.info/script.js" data-website-id="21f4a0bf-2913-4c2d-a365-3dad144421b9" data-domains="pepcomp.thinkcraft.info"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -86,7 +87,7 @@
                     </div>
 
                     <!-- Export Master Catalog Button -->
-                    <button id="export-catalog-btn" title="Export Master Catalog (.json) to commit to GitHub" class="flex items-center gap-1.5 sm:gap-2 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-slate-300 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-slate-800 hover:border-slate-700 cursor-pointer shadow-sm">
+                    <button id="export-catalog-btn" data-umami-event="export-summary" title="Export Master Catalog (.json) to commit to GitHub" class="flex items-center gap-1.5 sm:gap-2 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-slate-300 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-slate-800 hover:border-slate-700 cursor-pointer shadow-sm">
                         <i class="fa-solid fa-download text-indigo-400 text-xs sm:text-sm"></i>
                         <span class="hidden md:inline">Export Catalog</span>
                         <span class="md:hidden">Export</span>
@@ -190,7 +191,7 @@
                         <i class="fa-solid fa-trophy text-amber-400"></i>
                         <span>Best: <strong id="rec-vendor-name" class="font-semibold text-white">—</strong></span>
                     </div>
-                    <button id="add-spotlight-to-cart" class="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20 border border-emerald-500/50 cursor-pointer min-h-[42px] shrink-0 whitespace-nowrap">
+                    <button id="add-spotlight-to-cart" data-umami-event="add-to-order" class="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20 border border-emerald-500/50 cursor-pointer min-h-[42px] shrink-0 whitespace-nowrap">
                         <i class="fa-solid fa-plus-circle text-base"></i>
                         <span>Add to Order List</span>
                     </button>
@@ -200,7 +201,7 @@
             <!-- Vendor Price Cards Grid (Stacks to 1 col on mobile, 3 cols on tablet/desktop) -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-5">
                 <!-- Marvel Chloe Card -->
-                <div id="card-marvel" class="bg-slate-900/80 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700">
+                <div id="card-marvel" data-umami-event="vendor-click" data-umami-event-vendor="marvel" class="bg-slate-900/80 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700">
                     <div>
                         <div class="flex justify-between items-start mb-2 sm:mb-3">
                             <div>
@@ -223,7 +224,7 @@
                 </div>
 
                 <!-- Tong Shi Po Card -->
-                <div id="card-tong" class="bg-slate-900/80 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700">
+                <div id="card-tong" data-umami-event="vendor-click" data-umami-event-vendor="tong" class="bg-slate-900/80 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700">
                     <div>
                         <div class="flex justify-between items-start mb-2 sm:mb-3">
                             <div>
@@ -246,7 +247,7 @@
                 </div>
 
                 <!-- Tina Tianjin Bio Card -->
-                <div id="card-tina" class="bg-slate-900/80 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700">
+                <div id="card-tina" data-umami-event="vendor-click" data-umami-event-vendor="tina" class="bg-slate-900/80 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700">
                     <div>
                         <div class="flex justify-between items-start mb-2 sm:mb-3">
                             <div>
@@ -283,7 +284,7 @@
                 </div>
                 
                 <div class="flex items-center gap-2 shrink-0">
-                    <button id="copy-summary-btn" class="flex-1 sm:flex-none bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200 border border-slate-700 px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer min-h-[40px]">
+                    <button id="copy-summary-btn" data-umami-event="export-summary" class="flex-1 sm:flex-none bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200 border border-slate-700 px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer min-h-[40px]">
                         <i class="fa-solid fa-copy"></i>
                         <span>Copy Order</span>
                     </button>
@@ -304,6 +305,26 @@
 
                 <!-- Cart Table & Analysis (Hidden when empty) -->
                 <div id="cart-content" class="hidden space-y-4 sm:space-y-6">
+                    <!-- Optimizer Mode Selector -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 sm:p-4 bg-slate-900/90 border border-slate-800 rounded-xl">
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-sliders text-indigo-400"></i> Mode:
+                            </span>
+                            <div class="inline-flex p-1 bg-slate-950 rounded-lg border border-slate-800/80" role="group" aria-label="Optimization Strategy">
+                                <button type="button" id="opt-mode-single" class="px-3 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer bg-indigo-600 text-white shadow-sm" onclick="setOptimizerMode('single-vendor')">
+                                    Single Vendor
+                                </button>
+                                <button type="button" id="opt-mode-split" class="px-3 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer text-slate-400 hover:text-white" onclick="setOptimizerMode('split-order')">
+                                    Split Order (Best per Item)
+                                </button>
+                            </div>
+                        </div>
+                        <div class="text-[11px] text-slate-400" id="opt-mode-hint">
+                            Comparing total order cost when placed with a single vendor.
+                        </div>
+                    </div>
+
                     <div class="overflow-x-auto rounded-xl border border-slate-800 touch-scroll">
                         <table class="w-full text-left text-xs sm:text-sm min-w-[620px]">
                             <thead class="bg-slate-900/90 text-[11px] sm:text-xs text-slate-400 uppercase tracking-wider border-b border-slate-800">
@@ -343,7 +364,7 @@
                         
                         <!-- Vendor WhatsApp Buttons (Stacks vertically full-width on mobile, 3 cols on tablet+) -->
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
-                            <button onclick="sendWhatsApp('marvel')" class="w-full bg-emerald-950/40 hover:bg-emerald-900/70 active:bg-emerald-900 border border-emerald-500/40 text-emerald-200 p-3.5 sm:p-4 rounded-xl flex items-center justify-between transition cursor-pointer group min-h-[52px]">
+                            <button onclick="sendWhatsApp('marvel')" data-umami-event="vendor-click" data-umami-event-vendor="marvel" class="w-full bg-emerald-950/40 hover:bg-emerald-900/70 active:bg-emerald-900 border border-emerald-500/40 text-emerald-200 p-3.5 sm:p-4 rounded-xl flex items-center justify-between transition cursor-pointer group min-h-[52px]">
                                 <div class="text-left flex items-center gap-3">
                                     <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm shrink-0">
                                         <i class="fa-brands fa-whatsapp"></i>
@@ -356,7 +377,7 @@
                                 <i class="fa-solid fa-paper-plane text-xs text-emerald-400 group-hover:translate-x-1 transition-transform ml-2"></i>
                             </button>
 
-                            <button onclick="sendWhatsApp('tong')" class="w-full bg-emerald-950/40 hover:bg-emerald-900/70 active:bg-emerald-900 border border-emerald-500/40 text-emerald-200 p-3.5 sm:p-4 rounded-xl flex items-center justify-between transition cursor-pointer group min-h-[52px]">
+                            <button onclick="sendWhatsApp('tong')" data-umami-event="vendor-click" data-umami-event-vendor="tong" class="w-full bg-emerald-950/40 hover:bg-emerald-900/70 active:bg-emerald-900 border border-emerald-500/40 text-emerald-200 p-3.5 sm:p-4 rounded-xl flex items-center justify-between transition cursor-pointer group min-h-[52px]">
                                 <div class="text-left flex items-center gap-3">
                                     <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm shrink-0">
                                         <i class="fa-brands fa-whatsapp"></i>
@@ -369,7 +390,7 @@
                                 <i class="fa-solid fa-paper-plane text-xs text-emerald-400 group-hover:translate-x-1 transition-transform ml-2"></i>
                             </button>
 
-                            <button onclick="sendWhatsApp('tina')" class="w-full bg-emerald-950/40 hover:bg-emerald-900/70 active:bg-emerald-900 border border-emerald-500/40 text-emerald-200 p-3.5 sm:p-4 rounded-xl flex items-center justify-between transition cursor-pointer group min-h-[52px]">
+                            <button onclick="sendWhatsApp('tina')" data-umami-event="vendor-click" data-umami-event-vendor="tina" class="w-full bg-emerald-950/40 hover:bg-emerald-900/70 active:bg-emerald-900 border border-emerald-500/40 text-emerald-200 p-3.5 sm:p-4 rounded-xl flex items-center justify-between transition cursor-pointer group min-h-[52px]">
                                 <div class="text-left flex items-center gap-3">
                                     <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm shrink-0">
                                         <i class="fa-brands fa-whatsapp"></i>
@@ -2852,6 +2873,12 @@
 
                     updateCommunityGateUi();
                     showToast('Community access unlocked!', 'fa-circle-check');
+
+                    // Umami Telemetry: Member Unlocked
+                    if (typeof window !== 'undefined' && window.umami) {
+                        window.umami.track('member-unlocked');
+                    }
+
                     return true;
                 }
             } catch (err) {
@@ -4183,7 +4210,7 @@
                             </span>
                         </td>
                         <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-center whitespace-nowrap">
-                            <button class="add-to-cart-table-btn bg-indigo-600/30 hover:bg-indigo-600 active:bg-indigo-700 text-indigo-300 hover:text-white border border-indigo-500/40 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer min-h-[36px] flex items-center justify-center mx-auto" data-key="${item.key}">
+                            <button data-umami-event="add-to-order" class="add-to-cart-table-btn bg-indigo-600/30 hover:bg-indigo-600 active:bg-indigo-700 text-indigo-300 hover:text-white border border-indigo-500/40 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer min-h-[36px] flex items-center justify-center mx-auto" data-key="${item.key}">
                                 <i class="fa-solid fa-plus mr-1"></i> Add
                             </button>
                         </td>
@@ -4295,6 +4322,35 @@
             showToast(`Opening WhatsApp for ${vendor.repName}...`, 'fa-brands fa-whatsapp');
         };
 
+        let currentOptimizerMode = 'single-vendor';
+
+        function setOptimizerMode(mode) {
+            if (currentOptimizerMode === mode) return;
+            currentOptimizerMode = mode;
+
+            const btnSingle = document.getElementById('opt-mode-single');
+            const btnSplit = document.getElementById('opt-mode-split');
+            const hint = document.getElementById('opt-mode-hint');
+
+            if (mode === 'single-vendor') {
+                if (btnSingle) btnSingle.className = 'px-3 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer bg-indigo-600 text-white shadow-sm';
+                if (btnSplit) btnSplit.className = 'px-3 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer text-slate-400 hover:text-white';
+                if (hint) hint.innerText = 'Comparing total order cost when placed with a single vendor.';
+            } else {
+                if (btnSingle) btnSingle.className = 'px-3 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer text-slate-400 hover:text-white';
+                if (btnSplit) btnSplit.className = 'px-3 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer bg-indigo-600 text-white shadow-sm';
+                if (hint) hint.innerText = 'Maximizing savings by sourcing each item from the cheapest vendor.';
+            }
+
+            // Umami Telemetry: Optimizer Mode Toggled
+            if (typeof window !== 'undefined' && window.umami) {
+                window.umami.track('optimizer-toggle', { mode: mode });
+            }
+
+            renderCart();
+        }
+        window.setOptimizerMode = setOptimizerMode;
+
         function renderCart() {
             const totalItemsCount = cart.reduce((acc, curr) => acc + curr.qty, 0);
             cartBadgeCount.innerText = totalItemsCount;
@@ -4316,6 +4372,13 @@
             let tongMissing = false;
             let tinaMissing = false;
 
+            let splitGrandTotal = 0;
+            const splitBreakdown = {
+                marvel: { count: 0, total: 0 },
+                tong: { count: 0, total: 0 },
+                tina: { count: 0, total: 0 }
+            };
+
             cartTbody.innerHTML = cart.map(cartItem => {
                 const itemData = peptideData.find(i => i.key === cartItem.key || i.id === cartItem.key);
                 if (!itemData) return '';
@@ -4331,6 +4394,20 @@
                 if (marvelSub !== null) marvelGrandTotal += marvelSub; else marvelMissing = true;
                 if (tongSub !== null) tongGrandTotal += tongSub; else tongMissing = true;
                 if (tinaSub !== null) tinaGrandTotal += tinaSub; else tinaMissing = true;
+
+                // Split order best pricing
+                const available = [];
+                if (marvelPrice !== null) available.push({ vendor: 'marvel', price: marvelPrice });
+                if (tongPrice !== null) available.push({ vendor: 'tong', price: tongPrice });
+                if (tinaPrice !== null) available.push({ vendor: 'tina', price: tinaPrice });
+                if (available.length > 0) {
+                    available.sort((a, b) => a.price - b.price);
+                    const best = available[0];
+                    const itemTotal = best.price * cartItem.qty;
+                    splitGrandTotal += itemTotal;
+                    splitBreakdown[best.vendor].count += cartItem.qty;
+                    splitBreakdown[best.vendor].total += itemTotal;
+                }
 
                 return `
                     <tr class="border-b border-slate-800/50 hover:bg-slate-900/50 transition">
@@ -4366,7 +4443,7 @@
                 `;
             }).join('');
 
-            // Evaluate Overall Best Vendor for Cart
+            // Evaluate Overall Best Single Vendor for Cart
             const validVendors = [];
             if (!marvelMissing) validVendors.push({ name: 'Marvel Chloe', total: marvelGrandTotal, note: 'Direct Express Shipping' });
             if (!tongMissing) validVendors.push({ name: 'Tong Shi Po', total: tongGrandTotal, note: 'Wholesale Export' });
@@ -4385,7 +4462,41 @@
                 bestVendor = validVendors[0];
             }
 
-            if (bestVendor) {
+            if (currentOptimizerMode === 'split-order') {
+                const savings = bestVendor ? (bestVendor.total - splitGrandTotal) : 0;
+                overallRecBox.className = "bg-gradient-to-r from-purple-950/40 via-slate-900 to-slate-900 border-2 border-purple-500/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl";
+                overallRecBox.innerHTML = `
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 sm:gap-6">
+                        <div class="space-y-2">
+                            <div class="inline-flex items-center gap-1.5 sm:gap-2 bg-purple-500/20 text-purple-300 border border-purple-500/30 px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold">
+                                <i class="fa-solid fa-layer-group"></i> SPLIT ORDER (BEST PER ITEM) OPTIMIZER
+                            </div>
+                            <h4 class="text-xl sm:text-2xl font-extrabold text-white">
+                                Maximum Savings Basket: <span class="text-purple-400">$${splitGrandTotal.toFixed(2)}</span>
+                            </h4>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Sourcing each item from the vendor with the lowest unit rate saves ${savings > 0 ? `<strong class="text-emerald-400">$${savings.toFixed(2)}</strong> compared to the best single vendor order` : 'the absolute maximum on individual kit prices'}.
+                            </p>
+                        </div>
+
+                        <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 sm:p-4 w-full lg:w-auto min-w-full lg:min-w-[280px] space-y-2 shrink-0">
+                            <div class="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 border-b border-slate-800 pb-1.5">Split Vendor Allocation</div>
+                            <div class="flex justify-between items-center text-xs sm:text-sm">
+                                <span class="text-slate-300">Marvel Chloe:</span>
+                                <span class="font-bold ${splitBreakdown.marvel.count > 0 ? 'text-purple-300' : 'text-slate-600'}">${splitBreakdown.marvel.count} kits ($${splitBreakdown.marvel.total.toFixed(2)})</span>
+                            </div>
+                            <div class="flex justify-between items-center text-xs sm:text-sm">
+                                <span class="text-slate-300">Tong Shi Po:</span>
+                                <span class="font-bold ${splitBreakdown.tong.count > 0 ? 'text-purple-300' : 'text-slate-600'}">${splitBreakdown.tong.count} kits ($${splitBreakdown.tong.total.toFixed(2)})</span>
+                            </div>
+                            <div class="flex justify-between items-center text-xs sm:text-sm">
+                                <span class="text-slate-300">Tina Tianjin Bio:</span>
+                                <span class="font-bold ${splitBreakdown.tina.count > 0 ? 'text-purple-300' : 'text-slate-600'}">${splitBreakdown.tina.count} kits ($${splitBreakdown.tina.total.toFixed(2)})</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (bestVendor) {
                 overallRecBox.className = "bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-900 border-2 border-emerald-500/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl";
                 
                 let missingNotice = '';
@@ -4446,7 +4557,7 @@
                         <i class="fa-solid fa-circle-info text-amber-400 text-lg sm:text-xl shrink-0 mt-0.5 sm:mt-0"></i>
                         <div>
                             <strong>No single vendor stocks every item in your current selection list.</strong>
-                            <p class="text-xs text-slate-500 mt-0.5">Try splitting your order or adjusting items to see overall vendor recommendations.</p>
+                            <p class="text-xs text-slate-500 mt-0.5">Try switching to "Split Order" mode or adjusting items to see recommendations.</p>
                         </div>
                     </div>
                 `;

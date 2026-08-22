@@ -4322,10 +4322,18 @@
             showToast(`Opening WhatsApp for ${vendor.repName}...`, 'fa-brands fa-whatsapp');
         };
 
-        let currentOptimizerMode = 'single-vendor';
+        // =========================================================================
+        // ORDER OPTIMIZER & SHIPPING CALCULATION ENGINE
+        // =========================================================================
+        const VENDOR_SHIPPING = {
+            marvel: { name: 'Marvel Chloe', fee: 35, freeThreshold: null, note: 'Direct Express Courier ($35)' },
+            tong: { name: 'Tong Shi Po', fee: 40, freeThreshold: null, note: 'Wholesale Export Courier ($40)' },
+            tina: { name: 'Tina Tianjin Bio', fee: 45, freeThreshold: 700, note: 'Courier ($45), Free on orders ≥ $700' }
+        };
+
+        let currentOptimizerMode = 'all'; // 'all' (side-by-side), 'single-vendor', or 'split-order'
 
         function setOptimizerMode(mode) {
-            if (currentOptimizerMode === mode) return;
             currentOptimizerMode = mode;
 
             const btnSingle = document.getElementById('opt-mode-single');
@@ -4335,11 +4343,15 @@
             if (mode === 'single-vendor') {
                 if (btnSingle) btnSingle.className = 'px-3 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer bg-indigo-600 text-white shadow-sm';
                 if (btnSplit) btnSplit.className = 'px-3 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer text-slate-400 hover:text-white';
-                if (hint) hint.innerText = 'Comparing total order cost when placed with a single vendor.';
-            } else {
+                if (hint) hint.innerText = 'Comparing total order cost when placed with a single vendor (including shipping).';
+            } else if (mode === 'split-order') {
                 if (btnSingle) btnSingle.className = 'px-3 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer text-slate-400 hover:text-white';
                 if (btnSplit) btnSplit.className = 'px-3 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer bg-indigo-600 text-white shadow-sm';
-                if (hint) hint.innerText = 'Maximizing savings by sourcing each item from the cheapest vendor.';
+                if (hint) hint.innerText = 'Maximizing savings by sourcing each compound from its cheapest vendor.';
+            } else {
+                if (btnSingle) btnSingle.className = 'px-3 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer text-slate-400 hover:text-white';
+                if (btnSplit) btnSplit.className = 'px-3 py-1.5 rounded-md text-xs font-semibold transition cursor-pointer text-slate-400 hover:text-white';
+                if (hint) hint.innerText = 'Side-by-side comparison of Split-Order vs Single-Vendor options.';
             }
 
             // Umami Telemetry: Optimizer Mode Toggled
@@ -4350,6 +4362,152 @@
             renderCart();
         }
         window.setOptimizerMode = setOptimizerMode;
+
+        // Core Optimizer Analysis Function
+        function calculateOptimizerAnalysis(cartItems, catalog) {
+            const totalItemsCount = cartItems.reduce((acc, curr) => acc + curr.qty, 0);
+
+            // 1. Single Vendor Calculations
+            const singleVendors = {
+                marvel: { key: 'marvel', name: 'Marvel Chloe', subtotal: 0, missing: false, unstocked: [] },
+                tong: { key: 'tong', name: 'Tong Shi Po', subtotal: 0, missing: false, unstocked: [] },
+                tina: { key: 'tina', name: 'Tina Tianjin Bio', subtotal: 0, missing: false, unstocked: [] }
+            };
+
+            // 2. Split Order Calculations
+            let splitSubtotal = 0;
+            const splitAllocation = {
+                marvel: { count: 0, subtotal: 0, items: [] },
+                tong: { count: 0, subtotal: 0, items: [] },
+                tina: { count: 0, subtotal: 0, items: [] }
+            };
+
+            cartItems.forEach(cartItem => {
+                const itemData = catalog.find(i => i.key === cartItem.key || i.id === cartItem.key);
+                if (!itemData) return;
+
+                ['marvel', 'tong', 'tina'].forEach(vKey => {
+                    const price = itemData.prices[vKey];
+                    if (price !== null && price !== undefined) {
+                        singleVendors[vKey].subtotal += price * cartItem.qty;
+                    } else {
+                        singleVendors[vKey].missing = true;
+                        singleVendors[vKey].unstocked.push(itemData.name);
+                    }
+                });
+
+                // Determine lowest price vendor for split-order
+                const available = [];
+                if (itemData.prices.marvel !== null) available.push({ vendor: 'marvel', name: 'Marvel Chloe', price: itemData.prices.marvel });
+                if (itemData.prices.tong !== null) available.push({ vendor: 'tong', name: 'Tong Shi Po', price: itemData.prices.tong });
+                if (itemData.prices.tina !== null) available.push({ vendor: 'tina', name: 'Tina Tianjin Bio', price: itemData.prices.tina });
+
+                if (available.length > 0) {
+                    available.sort((a, b) => a.price - b.price);
+                    const best = available[0];
+                    const itemTotal = best.price * cartItem.qty;
+                    splitSubtotal += itemTotal;
+                    splitAllocation[best.vendor].count += cartItem.qty;
+                    splitAllocation[best.vendor].subtotal += itemTotal;
+                    splitAllocation[best.vendor].items.push({
+                        name: itemData.name,
+                        spec: itemData.spec,
+                        qty: cartItem.qty,
+                        unitPrice: best.price,
+                        total: itemTotal
+                    });
+                }
+            });
+
+            // Calculate Shipping & Grand Totals for Single Vendors
+            const validSingleVendors = [];
+            Object.keys(singleVendors).forEach(vKey => {
+                const v = singleVendors[vKey];
+                const config = VENDOR_SHIPPING[vKey];
+                let shippingFee = 0;
+                let isFreeShipping = false;
+
+                if (v.subtotal > 0) {
+                    if (config.freeThreshold && v.subtotal >= config.freeThreshold) {
+                        shippingFee = 0;
+                        isFreeShipping = true;
+                    } else {
+                        shippingFee = config.fee;
+                    }
+                }
+                v.shipping = shippingFee;
+                v.isFreeShipping = isFreeShipping;
+                v.grandTotal = v.subtotal + shippingFee;
+                v.note = isFreeShipping ? '🎉 Free Shipping Applied (Over $700)' : config.note;
+
+                if (!v.missing && v.subtotal > 0) {
+                    validSingleVendors.push(v);
+                }
+            });
+
+            validSingleVendors.sort((a, b) => a.grandTotal - b.grandTotal);
+            const lowestSingleVendor = validSingleVendors[0] || null;
+
+            // Calculate Shipping & Grand Total for Split Order
+            let splitShippingTotal = 0;
+            const splitShippingBreakdown = [];
+            Object.keys(splitAllocation).forEach(vKey => {
+                const alloc = splitAllocation[vKey];
+                if (alloc.count > 0) {
+                    const config = VENDOR_SHIPPING[vKey];
+                    let fee = config.fee;
+                    let isFree = false;
+                    if (config.freeThreshold && alloc.subtotal >= config.freeThreshold) {
+                        fee = 0;
+                        isFree = true;
+                    }
+                    alloc.shipping = fee;
+                    alloc.isFreeShipping = isFree;
+                    splitShippingTotal += fee;
+                    splitShippingBreakdown.push({
+                        vendorKey: vKey,
+                        name: config.name,
+                        count: alloc.count,
+                        fee: fee,
+                        isFree: isFree
+                    });
+                }
+            });
+
+            const splitGrandTotal = splitSubtotal + splitShippingTotal;
+
+            // Comparative Strategy
+            let bestOverallStrategy = 'single';
+            let savingsVsOther = 0;
+
+            if (lowestSingleVendor) {
+                if (splitGrandTotal < lowestSingleVendor.grandTotal) {
+                    bestOverallStrategy = 'split';
+                    savingsVsOther = lowestSingleVendor.grandTotal - splitGrandTotal;
+                } else {
+                    bestOverallStrategy = 'single';
+                    savingsVsOther = splitGrandTotal - lowestSingleVendor.grandTotal;
+                }
+            } else {
+                bestOverallStrategy = 'split';
+            }
+
+            return {
+                totalItemsCount,
+                singleVendors,
+                validSingleVendors,
+                lowestSingleVendor,
+                splitSubtotal,
+                splitShippingTotal,
+                splitShippingBreakdown,
+                splitGrandTotal,
+                splitAllocation,
+                bestOverallStrategy,
+                savingsVsOther
+            };
+        }
+
+        window.calculateOptimizerAnalysis = calculateOptimizerAnalysis;
 
         function renderCart() {
             const totalItemsCount = cart.reduce((acc, curr) => acc + curr.qty, 0);
@@ -4364,21 +4522,9 @@
             cartEmptyState.classList.add('hidden');
             cartContent.classList.remove('hidden');
 
-            let marvelGrandTotal = 0;
-            let tongGrandTotal = 0;
-            let tinaGrandTotal = 0;
+            const analysis = calculateOptimizerAnalysis(cart, peptideData);
 
-            let marvelMissing = false;
-            let tongMissing = false;
-            let tinaMissing = false;
-
-            let splitGrandTotal = 0;
-            const splitBreakdown = {
-                marvel: { count: 0, total: 0 },
-                tong: { count: 0, total: 0 },
-                tina: { count: 0, total: 0 }
-            };
-
+            // Render Cart Table Rows
             cartTbody.innerHTML = cart.map(cartItem => {
                 const itemData = peptideData.find(i => i.key === cartItem.key || i.id === cartItem.key);
                 if (!itemData) return '';
@@ -4390,24 +4536,6 @@
                 const marvelSub = marvelPrice !== null ? marvelPrice * cartItem.qty : null;
                 const tongSub = tongPrice !== null ? tongPrice * cartItem.qty : null;
                 const tinaSub = tinaPrice !== null ? tinaPrice * cartItem.qty : null;
-
-                if (marvelSub !== null) marvelGrandTotal += marvelSub; else marvelMissing = true;
-                if (tongSub !== null) tongGrandTotal += tongSub; else tongMissing = true;
-                if (tinaSub !== null) tinaGrandTotal += tinaSub; else tinaMissing = true;
-
-                // Split order best pricing
-                const available = [];
-                if (marvelPrice !== null) available.push({ vendor: 'marvel', price: marvelPrice });
-                if (tongPrice !== null) available.push({ vendor: 'tong', price: tongPrice });
-                if (tinaPrice !== null) available.push({ vendor: 'tina', price: tinaPrice });
-                if (available.length > 0) {
-                    available.sort((a, b) => a.price - b.price);
-                    const best = available[0];
-                    const itemTotal = best.price * cartItem.qty;
-                    splitGrandTotal += itemTotal;
-                    splitBreakdown[best.vendor].count += cartItem.qty;
-                    splitBreakdown[best.vendor].total += itemTotal;
-                }
 
                 return `
                     <tr class="border-b border-slate-800/50 hover:bg-slate-900/50 transition">
@@ -4443,88 +4571,58 @@
                 `;
             }).join('');
 
-            // Evaluate Overall Best Single Vendor for Cart
-            const validVendors = [];
-            if (!marvelMissing) validVendors.push({ name: 'Marvel Chloe', total: marvelGrandTotal, note: 'Direct Express Shipping' });
-            if (!tongMissing) validVendors.push({ name: 'Tong Shi Po', total: tongGrandTotal, note: 'Wholesale Export' });
-            if (!tinaMissing) {
-                const freeShipping = tinaGrandTotal >= 700;
-                validVendors.push({ 
-                    name: 'Tina Tianjin Bio', 
-                    total: tinaGrandTotal, 
-                    note: freeShipping ? '🎉 Free Shipping Applied (Over $700)' : 'Standard Courier Shipping' 
-                });
-            }
+            // Render Overall Recommendation Box with Side-by-Side Breakdown
+            const bestSingle = analysis.lowestSingleVendor;
+            const split = analysis.splitAllocation;
+            const single = analysis.singleVendors;
 
-            let bestVendor = null;
-            if (validVendors.length > 0) {
-                validVendors.sort((a, b) => a.total - b.total);
-                bestVendor = validVendors[0];
-            }
+            if (bestSingle || analysis.splitSubtotal > 0) {
+                overallRecBox.className = "bg-gradient-to-r from-slate-900 via-indigo-950/30 to-slate-900 border-2 border-indigo-500/40 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-2xl space-y-5";
 
-            if (currentOptimizerMode === 'split-order') {
-                const savings = bestVendor ? (bestVendor.total - splitGrandTotal) : 0;
-                overallRecBox.className = "bg-gradient-to-r from-purple-950/40 via-slate-900 to-slate-900 border-2 border-purple-500/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl";
-                overallRecBox.innerHTML = `
-                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 sm:gap-6">
-                        <div class="space-y-2">
-                            <div class="inline-flex items-center gap-1.5 sm:gap-2 bg-purple-500/20 text-purple-300 border border-purple-500/30 px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold">
-                                <i class="fa-solid fa-layer-group"></i> SPLIT ORDER (BEST PER ITEM) OPTIMIZER
-                            </div>
-                            <h4 class="text-xl sm:text-2xl font-extrabold text-white">
-                                Maximum Savings Basket: <span class="text-purple-400">$${splitGrandTotal.toFixed(2)}</span>
-                            </h4>
-                            <p class="text-xs text-slate-300 leading-relaxed">
-                                Sourcing each item from the vendor with the lowest unit rate saves ${savings > 0 ? `<strong class="text-emerald-400">$${savings.toFixed(2)}</strong> compared to the best single vendor order` : 'the absolute maximum on individual kit prices'}.
-                            </p>
-                        </div>
-
-                        <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 sm:p-4 w-full lg:w-auto min-w-full lg:min-w-[280px] space-y-2 shrink-0">
-                            <div class="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 border-b border-slate-800 pb-1.5">Split Vendor Allocation</div>
-                            <div class="flex justify-between items-center text-xs sm:text-sm">
-                                <span class="text-slate-300">Marvel Chloe:</span>
-                                <span class="font-bold ${splitBreakdown.marvel.count > 0 ? 'text-purple-300' : 'text-slate-600'}">${splitBreakdown.marvel.count} kits ($${splitBreakdown.marvel.total.toFixed(2)})</span>
-                            </div>
-                            <div class="flex justify-between items-center text-xs sm:text-sm">
-                                <span class="text-slate-300">Tong Shi Po:</span>
-                                <span class="font-bold ${splitBreakdown.tong.count > 0 ? 'text-purple-300' : 'text-slate-600'}">${splitBreakdown.tong.count} kits ($${splitBreakdown.tong.total.toFixed(2)})</span>
-                            </div>
-                            <div class="flex justify-between items-center text-xs sm:text-sm">
-                                <span class="text-slate-300">Tina Tianjin Bio:</span>
-                                <span class="font-bold ${splitBreakdown.tina.count > 0 ? 'text-purple-300' : 'text-slate-600'}">${splitBreakdown.tina.count} kits ($${splitBreakdown.tina.total.toFixed(2)})</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else if (bestVendor) {
-                overallRecBox.className = "bg-gradient-to-r from-emerald-950/40 via-slate-900 to-slate-900 border-2 border-emerald-500/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl";
-                
                 let missingNotice = '';
-                const unstocked = [];
-                if (marvelMissing) unstocked.push('Marvel Chloe');
-                if (tongMissing) unstocked.push('Tong Shi Po');
-                if (tinaMissing) unstocked.push('Tina Tianjin Bio');
-
-                if (unstocked.length > 0) {
+                const unstockedVendors = Object.values(single).filter(v => v.missing).map(v => v.name);
+                if (unstockedVendors.length > 0) {
                     missingNotice = `
-                        <div class="text-[11px] sm:text-xs text-amber-400/90 bg-amber-950/30 border border-amber-800/40 px-3 py-2 rounded-lg mt-3">
+                        <div class="text-[11px] sm:text-xs text-amber-400/90 bg-amber-950/30 border border-amber-800/40 px-3 py-2 rounded-lg">
                             <i class="fa-solid fa-triangle-exclamation mr-1"></i>
-                            <strong>Note:</strong> ${unstocked.join(', ')} does not stock all items in your cart. Calculations exclude incomplete vendors.
+                            <strong>Note:</strong> ${unstockedVendors.join(', ')} does not stock all items in your cart. Single-vendor calculations exclude incomplete vendors.
                         </div>
                     `;
                 }
 
+                // Strategy Recommendation Header
+                let strategyBadge = '';
+                let strategyHeadline = '';
+                let strategyDesc = '';
+
+                if (bestSingle) {
+                    strategyBadge = `
+                        <div class="inline-flex items-center gap-1.5 sm:gap-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold">
+                            <i class="fa-solid fa-trophy"></i> OVERALL CHEAPEST VENDOR RECOMMENDATION
+                        </div>
+                    `;
+                    strategyHeadline = `${bestSingle.name} <span class="text-emerald-400">($${bestSingle.subtotal.toFixed(2)})</span>`;
+                    strategyDesc = `Ordering all ${totalItemsCount} kit(s) from <strong>${bestSingle.name}</strong> provides the lowest combined price for your custom order. ${bestSingle.note}.`;
+                } else {
+                    strategyBadge = `
+                        <div class="inline-flex items-center gap-1.5 sm:gap-2 bg-purple-500/20 text-purple-300 border border-purple-500/30 px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold">
+                            <i class="fa-solid fa-layer-group"></i> SPLIT ORDER (BEST PER ITEM) OPTIMIZER
+                        </div>
+                    `;
+                    strategyHeadline = `Maximum Savings Basket: <span class="text-purple-400">$${analysis.splitSubtotal.toFixed(2)}</span>`;
+                    strategyDesc = `No single vendor carries every item. Sourcing each item from the vendor with the lowest unit rate gives you the best price.`;
+                }
+
                 overallRecBox.innerHTML = `
-                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 sm:gap-6">
-                        <div class="space-y-2">
-                            <div class="inline-flex items-center gap-1.5 sm:gap-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold">
-                                <i class="fa-solid fa-trophy"></i> OVERALL CHEAPEST VENDOR RECOMMENDATION
-                            </div>
+                    <!-- Header Section -->
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+                        <div class="space-y-1.5">
+                            ${strategyBadge}
                             <h4 class="text-xl sm:text-2xl font-extrabold text-white">
-                                ${bestVendor.name} <span class="text-emerald-400">($${bestVendor.total.toFixed(2)})</span>
+                                ${strategyHeadline}
                             </h4>
-                            <p class="text-xs text-slate-300 leading-relaxed">
-                                Ordering all ${totalItemsCount} kit(s) from <strong>${bestVendor.name}</strong> provides the lowest combined price for your custom order. ${bestVendor.note}.
+                            <p class="text-xs text-slate-300 leading-relaxed max-w-2xl">
+                                ${strategyDesc}
                             </p>
                             ${missingNotice}
                         </div>
@@ -4534,18 +4632,131 @@
                             <div class="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 border-b border-slate-800 pb-1.5">Vendor Total Comparison</div>
                             
                             <div class="flex justify-between items-center text-xs sm:text-sm">
-                                <span class="${!marvelMissing && bestVendor.name === 'Marvel Chloe' ? 'text-emerald-400 font-bold' : 'text-slate-300'}">Marvel Chloe:</span>
-                                <span class="font-bold ${!marvelMissing ? 'text-white' : 'text-slate-600'}">${!marvelMissing ? '$' + marvelGrandTotal.toFixed(2) : 'Incomplete'}</span>
+                                <span class="${!single.marvel.missing && bestSingle && bestSingle.name === 'Marvel Chloe' ? 'text-emerald-400 font-bold' : 'text-slate-300'}">Marvel Chloe:</span>
+                                <span class="font-bold ${!single.marvel.missing ? 'text-white' : 'text-slate-600'}">${!single.marvel.missing ? '$' + single.marvel.subtotal.toFixed(2) : 'Incomplete'}</span>
                             </div>
 
                             <div class="flex justify-between items-center text-xs sm:text-sm">
-                                <span class="${!tongMissing && bestVendor.name === 'Tong Shi Po' ? 'text-emerald-400 font-bold' : 'text-slate-300'}">Tong Shi Po:</span>
-                                <span class="font-bold ${!tongMissing ? 'text-white' : 'text-slate-600'}">${!tongMissing ? '$' + tongGrandTotal.toFixed(2) : 'Incomplete'}</span>
+                                <span class="${!single.tong.missing && bestSingle && bestSingle.name === 'Tong Shi Po' ? 'text-emerald-400 font-bold' : 'text-slate-300'}">Tong Shi Po:</span>
+                                <span class="font-bold ${!single.tong.missing ? 'text-white' : 'text-slate-600'}">${!single.tong.missing ? '$' + single.tong.subtotal.toFixed(2) : 'Incomplete'}</span>
                             </div>
 
                             <div class="flex justify-between items-center text-xs sm:text-sm">
-                                <span class="${!tinaMissing && bestVendor.name === 'Tina Tianjin Bio' ? 'text-emerald-400 font-bold' : 'text-slate-300'}">Tina Tianjin Bio:</span>
-                                <span class="font-bold ${!tinaMissing ? 'text-white' : 'text-slate-600'}">${!tinaMissing ? '$' + tinaGrandTotal.toFixed(2) : 'Incomplete'}</span>
+                                <span class="${!single.tina.missing && bestSingle && bestSingle.name === 'Tina Tianjin Bio' ? 'text-emerald-400 font-bold' : 'text-slate-300'}">Tina Tianjin Bio:</span>
+                                <span class="font-bold ${!single.tina.missing ? 'text-white' : 'text-slate-600'}">${!single.tina.missing ? '$' + single.tina.subtotal.toFixed(2) : 'Incomplete'}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dual Side-by-Side Panels: Split-Order vs Single-Vendor with Shipping -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+                        <!-- Panel 1: Split-Order Breakdown -->
+                        <div class="bg-slate-950/70 border border-purple-500/30 rounded-xl p-4 space-y-3">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                                <div class="flex items-center gap-1.5 text-xs font-bold text-purple-300 uppercase tracking-wider">
+                                    <i class="fa-solid fa-layer-group text-purple-400"></i>
+                                    <span>Optimal Split-Order Allocation</span>
+                                </div>
+                                <span class="text-xs font-extrabold text-purple-300">$${analysis.splitSubtotal.toFixed(2)} Items</span>
+                            </div>
+
+                            <div class="space-y-2 text-xs">
+                                <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                                        <span class="text-slate-300 font-medium">Marvel Chloe:</span>
+                                    </div>
+                                    <span class="font-mono ${split.marvel.count > 0 ? 'text-white font-bold' : 'text-slate-500'}">
+                                        ${split.marvel.count} kits ($${split.marvel.subtotal.toFixed(2)})
+                                    </span>
+                                </div>
+
+                                <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                                        <span class="text-slate-300 font-medium">Tong Shi Po:</span>
+                                    </div>
+                                    <span class="font-mono ${split.tong.count > 0 ? 'text-white font-bold' : 'text-slate-500'}">
+                                        ${split.tong.count} kits ($${split.tong.subtotal.toFixed(2)})
+                                    </span>
+                                </div>
+
+                                <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                        <span class="text-slate-300 font-medium">Tina Tianjin Bio:</span>
+                                    </div>
+                                    <span class="font-mono ${split.tina.count > 0 ? 'text-white font-bold' : 'text-slate-500'}">
+                                        ${split.tina.count} kits ($${split.tina.subtotal.toFixed(2)})
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-400 flex justify-between items-center">
+                                <span>Combined Split Shipping:</span>
+                                <span class="font-bold text-slate-300">+$${analysis.splitShippingTotal.toFixed(2)}</span>
+                            </div>
+                            <div class="flex justify-between items-center text-xs font-bold text-purple-300 bg-purple-950/40 border border-purple-500/20 p-2 rounded-lg">
+                                <span>Split Total (with Shipping):</span>
+                                <span class="text-sm">$${analysis.splitGrandTotal.toFixed(2)}</span>
+                            </div>
+                        </div>
+
+                        <!-- Panel 2: Single-Vendor Comparison with Shipping -->
+                        <div class="bg-slate-950/70 border border-indigo-500/30 rounded-xl p-4 space-y-3">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                                <div class="flex items-center gap-1.5 text-xs font-bold text-indigo-300 uppercase tracking-wider">
+                                    <i class="fa-solid fa-boxes-stacked text-indigo-400"></i>
+                                    <span>Single-Vendor Consolidated</span>
+                                </div>
+                                <span class="text-xs font-extrabold text-indigo-300">${bestSingle ? '$' + bestSingle.grandTotal.toFixed(2) + ' Total' : 'N/A'}</span>
+                            </div>
+
+                            <div class="space-y-2 text-xs">
+                                <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
+                                    <div>
+                                        <span class="text-slate-300 font-medium">Marvel Chloe</span>
+                                        <span class="text-[10px] text-slate-500 block">+$35.00 express ship</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="font-mono ${!single.marvel.missing ? 'text-white font-bold' : 'text-slate-600'}">
+                                            ${!single.marvel.missing ? '$' + single.marvel.grandTotal.toFixed(2) : 'Incomplete'}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
+                                    <div>
+                                        <span class="text-slate-300 font-medium">Tong Shi Po</span>
+                                        <span class="text-[10px] text-slate-500 block">+$40.00 wholesale ship</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="font-mono ${!single.tong.missing ? 'text-white font-bold' : 'text-slate-600'}">
+                                            ${!single.tong.missing ? '$' + single.tong.grandTotal.toFixed(2) : 'Incomplete'}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
+                                    <div>
+                                        <span class="text-slate-300 font-medium">Tina Tianjin Bio</span>
+                                        <span class="text-[10px] text-slate-500 block">${single.tina.isFreeShipping ? '🎉 Free Shipping (≥$700)' : '+$45.00 courier ship'}</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="font-mono ${!single.tina.missing ? 'text-white font-bold' : 'text-slate-600'}">
+                                            ${!single.tina.missing ? '$' + single.tina.grandTotal.toFixed(2) : 'Incomplete'}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-400 flex justify-between items-center">
+                                <span>Lowest Consolidated Vendor:</span>
+                                <span class="font-bold text-emerald-400">${bestSingle ? bestSingle.name : 'None complete'}</span>
+                            </div>
+                            <div class="flex justify-between items-center text-xs font-bold text-emerald-300 bg-emerald-950/40 border border-emerald-500/20 p-2 rounded-lg">
+                                <span>Lowest Single Total (with Shipping):</span>
+                                <span class="text-sm">${bestSingle ? '$' + bestSingle.grandTotal.toFixed(2) : 'N/A'}</span>
                             </div>
                         </div>
                     </div>
@@ -4557,7 +4768,7 @@
                         <i class="fa-solid fa-circle-info text-amber-400 text-lg sm:text-xl shrink-0 mt-0.5 sm:mt-0"></i>
                         <div>
                             <strong>No single vendor stocks every item in your current selection list.</strong>
-                            <p class="text-xs text-slate-500 mt-0.5">Try switching to "Split Order" mode or adjusting items to see recommendations.</p>
+                            <p class="text-xs text-slate-500 mt-0.5">Check the Split-Order breakdown above to see optimal multi-vendor allocations.</p>
                         </div>
                     </div>
                 `;

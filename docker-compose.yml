@@ -9,10 +9,10 @@ services:
       - traefik_default
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.peptide.rule=Host(`peptides.yourdomain.com`)"
-      - "traefik.http.routers.peptide.entrypoints=websecure"
-      - "traefik.http.routers.peptide.tls.certresolver=myresolver"
-      - "traefik.http.services.peptide.loadbalancer.server.port=80"
+      - "traefik.http.routers.pepcomp.rule=Host(`pepcomp.thinkcraft.info`)"
+      - "traefik.http.routers.pepcomp.entrypoints=websecure"
+      - "traefik.http.routers.pepcomp.tls.certresolver=myresolver"
+      - "traefik.http.services.pepcomp.loadbalancer.server.port=80"
 
 networks:
   traefik_default:

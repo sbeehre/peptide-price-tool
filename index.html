@@ -5027,9 +5027,13 @@
             const isGroupBuy = groupBuyToggle ? groupBuyToggle.checked : false;
             const batchNum = groupBuyBatchInput ? groupBuyBatchInput.value.trim() : '';
 
-            let message = `Hi ${vendor.repName},\n\nI would like to place an order for the following:\n\n`;
+            let message = '';
             if (isGroupBuy) {
-                message += `🏷️ GROUP BUY BATCH: ${batchNum || 'GB-UNSPECIFIED'}\n------------------------------------\n`;
+                message += `Hi ${vendor.repName},\n\nI am a member of the Peptide Underground community and would like to place an order under our group buy:\n\n`;
+                message += `🏷️ GROUP BUY BATCH: ${batchNum || 'GB-ACTIVE'}\n`;
+                message += `------------------------------------\n`;
+            } else {
+                message += `Hi ${vendor.repName},\n\nI am a member of the Peptide Underground community and would like to place an order for the following:\n\n`;
             }
             
             cart.forEach(item => {
@@ -5642,7 +5646,10 @@
 
             let summaryText = `PEPTIDE UNDERGROUND PRICE TOOL - ORDER SELECTION LIST:\n`;
             if (isGroupBuy) {
-                summaryText += `🏷️ GROUP BUY BATCH: ${batchNum || 'GB-UNSPECIFIED'}\n`;
+                summaryText += `I am a member of the Peptide Underground community and would like to place an order under our group buy:\n\n`;
+                summaryText += `🏷️ GROUP BUY BATCH: ${batchNum || 'GB-ACTIVE'}\n`;
+            } else {
+                summaryText += `I am a member of the Peptide Underground community and would like to place an order for the following:\n`;
             }
             summaryText += `------------------------------------\n`;
             cart.forEach(item => {

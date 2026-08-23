@@ -296,15 +296,37 @@
                     <p class="text-[11px] sm:text-xs text-slate-400 mt-1">Add items to calculate total basket costs, pinpoint cheapest vendors, and contact reps via WhatsApp.</p>
                 </div>
                 
-                <div class="flex items-center gap-2 shrink-0">
-                    <button id="copy-summary-btn" data-umami-event="export-summary" class="flex-1 sm:flex-none bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200 border border-slate-700 px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer min-h-[40px]">
-                        <i class="fa-solid fa-copy"></i>
-                        <span>Copy Order</span>
-                    </button>
-                    <button id="clear-cart-btn" class="bg-rose-950/40 hover:bg-rose-900/60 active:bg-rose-900 text-rose-300 border border-rose-800/50 px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer min-h-[40px]">
-                        <i class="fa-solid fa-trash-can"></i>
-                        <span>Clear All</span>
-                    </button>
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 shrink-0">
+                    <!-- Group Buy Toggle & Batch Input Widget -->
+                    <div class="flex flex-wrap items-center gap-2 bg-slate-900/90 border border-slate-700/80 rounded-xl px-3 py-1.5 shadow-sm">
+                        <label for="group-buy-toggle" class="flex items-center gap-2 cursor-pointer select-none text-xs font-semibold text-slate-300">
+                            <input type="checkbox" id="group-buy-toggle" class="sr-only peer">
+                            <div class="w-8 h-4.5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-indigo-600 relative"></div>
+                            <span class="flex items-center gap-1.5">
+                                <i class="fa-solid fa-tag text-indigo-400 text-[11px]"></i>
+                                Group Buy Order
+                            </span>
+                        </label>
+                        <div id="group-buy-input-container" class="hidden items-center gap-1.5 pl-2 border-l border-slate-700/60 transition-all duration-200">
+                            <input 
+                                type="text" 
+                                id="group-buy-batch-input" 
+                                placeholder="Enter Group Buy Batch # (e.g. GB-2026-08)" 
+                                class="bg-slate-950 border border-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-white text-xs rounded-lg px-2.5 py-1 w-56 sm:w-64 placeholder-slate-500 transition font-mono"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <button id="copy-summary-btn" data-umami-event="export-summary" class="flex-1 sm:flex-none bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200 border border-slate-700 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer min-h-[38px]">
+                            <i class="fa-solid fa-copy"></i>
+                            <span>Copy Order</span>
+                        </button>
+                        <button id="clear-cart-btn" class="bg-rose-950/40 hover:bg-rose-900/60 active:bg-rose-900 text-rose-300 border border-rose-800/50 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer min-h-[38px]">
+                            <i class="fa-solid fa-trash-can"></i>
+                            <span>Clear All</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -3060,6 +3082,11 @@
         const overallRecBox = document.getElementById('overall-recommendation-box');
         const clearCartBtn = document.getElementById('clear-cart-btn');
         const copySummaryBtn = document.getElementById('copy-summary-btn');
+        const GROUP_BUY_ACTIVE_KEY = 'pep_group_buy_active';
+        const GROUP_BUY_BATCH_KEY = 'pep_group_buy_batch';
+        const groupBuyToggle = document.getElementById('group-buy-toggle');
+        const groupBuyContainer = document.getElementById('group-buy-input-container');
+        const groupBuyBatchInput = document.getElementById('group-buy-batch-input');
 
         // Modal Elements
         const openImportModalBtn = document.getElementById('open-import-modal-btn');
@@ -4938,7 +4965,13 @@
             const vendor = vendors[vendorId];
             if (!vendor) return;
 
+            const isGroupBuy = groupBuyToggle ? groupBuyToggle.checked : false;
+            const batchNum = groupBuyBatchInput ? groupBuyBatchInput.value.trim() : '';
+
             let message = `Hi ${vendor.repName},\n\nI would like to place an order for the following:\n\n`;
+            if (isGroupBuy) {
+                message += `🏷️ GROUP BUY BATCH: ${batchNum || 'GB-UNSPECIFIED'}\n------------------------------------\n`;
+            }
             
             cart.forEach(item => {
                 const itemData = peptideData.find(i => i.key === item.key || i.id === item.key);
@@ -5474,11 +5507,58 @@
             showToast('Cleared order list', 'fa-trash-can');
         });
 
+        // ==========================================
+        // GROUP BUY TOGGLE & BATCH NUMBER MODULE
+        // ==========================================
+        function initGroupBuyControls() {
+            if (!groupBuyToggle || !groupBuyContainer || !groupBuyBatchInput) return;
+
+            const isGroupBuy = localStorage.getItem(GROUP_BUY_ACTIVE_KEY) === 'true';
+            const savedBatch = localStorage.getItem(GROUP_BUY_BATCH_KEY) || '';
+
+            groupBuyToggle.checked = isGroupBuy;
+            groupBuyBatchInput.value = savedBatch;
+
+            if (isGroupBuy) {
+                groupBuyContainer.classList.remove('hidden');
+                groupBuyContainer.classList.add('flex');
+            } else {
+                groupBuyContainer.classList.add('hidden');
+                groupBuyContainer.classList.remove('flex');
+            }
+
+            groupBuyToggle.addEventListener('change', () => {
+                const active = groupBuyToggle.checked;
+                localStorage.setItem(GROUP_BUY_ACTIVE_KEY, active ? 'true' : 'false');
+                if (active) {
+                    groupBuyContainer.classList.remove('hidden');
+                    groupBuyContainer.classList.add('flex');
+                    groupBuyBatchInput.focus();
+                } else {
+                    groupBuyContainer.classList.add('hidden');
+                    groupBuyContainer.classList.remove('flex');
+                }
+            });
+
+            groupBuyBatchInput.addEventListener('input', (e) => {
+                localStorage.setItem(GROUP_BUY_BATCH_KEY, e.target.value.trim());
+            });
+        }
+
         // Copy Order Summary Text
         copySummaryBtn.addEventListener('click', () => {
-            if (cart.length === 0) return;
+            if (cart.length === 0) {
+                showToast('Your order list is empty', 'fa-triangle-exclamation');
+                return;
+            }
+
+            const isGroupBuy = groupBuyToggle ? groupBuyToggle.checked : false;
+            let batchNum = groupBuyBatchInput ? groupBuyBatchInput.value.trim() : '';
 
             let summaryText = `PEPTIDE UNDERGROUND PRICE TOOL - ORDER SELECTION LIST:\n`;
+            if (isGroupBuy) {
+                summaryText += `🏷️ GROUP BUY BATCH: ${batchNum || 'GB-UNSPECIFIED'}\n`;
+            }
             summaryText += `------------------------------------\n`;
             cart.forEach(item => {
                 const itemData = peptideData.find(i => i.key === item.key || i.id === item.key);
@@ -5495,7 +5575,7 @@
             el.select();
             try {
                 document.execCommand('copy');
-                showToast('Order summary copied to clipboard!', 'fa-copy');
+                showToast(isGroupBuy ? 'Group buy order copied!' : 'Order summary copied to clipboard!', 'fa-copy');
             } catch (e) {
                 showToast('Failed to copy', 'fa-triangle-exclamation');
             }
@@ -5574,6 +5654,7 @@
             updateSpotlight(selectedItem);
             renderCatalog();
             renderCart();
+            initGroupBuyControls();
         }
 
         initApp();

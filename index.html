@@ -321,6 +321,26 @@
                         </div>
                     </div>
 
+                    <!-- Configurable Shipping Fee Widget -->
+                    <div class="border border-slate-700/80 bg-slate-900/90 hover:border-slate-600 rounded-xl p-2 px-3 flex items-center gap-2 transition-colors shadow-sm">
+                        <label for="shipping-fee-input" class="text-xs font-semibold text-slate-300 flex items-center gap-1.5 cursor-pointer select-none">
+                            <i class="fa-solid fa-truck-fast text-indigo-400 text-xs"></i>
+                            <span class="whitespace-nowrap">Shipping / Vendor:</span>
+                        </label>
+                        <div class="relative flex items-center">
+                            <span class="absolute left-2.5 text-xs text-slate-400 pointer-events-none font-mono">$</span>
+                            <input 
+                                type="number" 
+                                id="shipping-fee-input" 
+                                min="0" 
+                                max="500" 
+                                step="1" 
+                                value="50" 
+                                class="w-16 bg-slate-950 border border-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-white text-xs rounded-lg pl-5 pr-1.5 py-1 text-center font-mono outline-none"
+                            >
+                        </div>
+                    </div>
+
                     <!-- Action Buttons -->
                     <div class="flex items-center gap-2">
                         <button id="copy-summary-btn" data-umami-event="export-summary" class="bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200 border border-slate-700 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer min-h-[38px]">
@@ -3092,6 +3112,31 @@
         const groupBuyToggle = document.getElementById('group-buy-toggle');
         const groupBuyContainer = document.getElementById('group-buy-input-container');
         const groupBuyBatchInput = document.getElementById('group-buy-batch-input');
+        const SHIPPING_FEE_KEY = 'pep_shipping_fee_per_vendor';
+        const DEFAULT_SHIPPING_FEE = 50;
+        const shippingFeeInput = document.getElementById('shipping-fee-input');
+
+        function getShippingFeePerVendor() {
+            const saved = localStorage.getItem(SHIPPING_FEE_KEY);
+            if (saved !== null && saved !== '') {
+                const parsed = parseFloat(saved);
+                if (!isNaN(parsed) && parsed >= 0) return parsed;
+            }
+            return DEFAULT_SHIPPING_FEE;
+        }
+
+        function initShippingFeeControl() {
+            if (!shippingFeeInput) return;
+            const currentFee = getShippingFeePerVendor();
+            shippingFeeInput.value = currentFee;
+
+            shippingFeeInput.addEventListener('input', (e) => {
+                let val = parseFloat(e.target.value);
+                if (isNaN(val) || val < 0) val = 0;
+                localStorage.setItem(SHIPPING_FEE_KEY, val.toString());
+                renderCart();
+            });
+        }
 
         // Modal Elements
         const openImportModalBtn = document.getElementById('open-import-modal-btn');
@@ -3720,6 +3765,7 @@
 
             // Normalize every record in memory
             peptideData = baseCatalog.map(normalizePeptideItem);
+            window.peptideData = peptideData;
 
             // Update Category Filter Pills
             if (typeof renderCategoryPills === 'function') {
@@ -5057,26 +5103,30 @@
         window.setOptimizerMode = setOptimizerMode;
 
         // Core Optimizer Analysis Function
-        function calculateOptimizerAnalysis(cartItems, catalog) {
+        function calculateOptimizerAnalysis(cartItems, catalog, customShippingFee) {
+            const dataCatalog = (catalog && Array.isArray(catalog)) ? catalog : peptideData;
             const totalItemsCount = cartItems.reduce((acc, curr) => acc + curr.qty, 0);
+            const baseShippingFee = typeof customShippingFee === 'number' && !isNaN(customShippingFee) 
+                ? customShippingFee 
+                : getShippingFeePerVendor();
 
             // 1. Single Vendor Calculations
             const singleVendors = {
-                marvel: { key: 'marvel', name: 'Marvel Chloe', subtotal: 0, missing: false, unstocked: [] },
-                tong: { key: 'tong', name: 'Tong Shi Po', subtotal: 0, missing: false, unstocked: [] },
-                tina: { key: 'tina', name: 'Tina Tianjin Bio', subtotal: 0, missing: false, unstocked: [] }
+                marvel: { key: 'marvel', name: 'Marvel Chloe', subtotal: 0, missing: false, unstocked: [], freeThreshold: null },
+                tong: { key: 'tong', name: 'Tong Shi Po', subtotal: 0, missing: false, unstocked: [], freeThreshold: null },
+                tina: { key: 'tina', name: 'Tina Tianjin Bio', subtotal: 0, missing: false, unstocked: [], freeThreshold: 700 }
             };
 
             // 2. Split Order Calculations
             let splitSubtotal = 0;
             const splitAllocation = {
-                marvel: { count: 0, subtotal: 0, items: [] },
-                tong: { count: 0, subtotal: 0, items: [] },
-                tina: { count: 0, subtotal: 0, items: [] }
+                marvel: { count: 0, subtotal: 0, items: [], freeThreshold: null },
+                tong: { count: 0, subtotal: 0, items: [], freeThreshold: null },
+                tina: { count: 0, subtotal: 0, items: [], freeThreshold: 700 }
             };
 
             cartItems.forEach(cartItem => {
-                const itemData = catalog.find(i => i.key === cartItem.key || i.id === cartItem.key);
+                const itemData = dataCatalog.find(i => i.key === cartItem.key || i.id === cartItem.key);
                 if (!itemData) return;
 
                 ['marvel', 'tong', 'tina'].forEach(vKey => {
@@ -5116,22 +5166,21 @@
             const validSingleVendors = [];
             Object.keys(singleVendors).forEach(vKey => {
                 const v = singleVendors[vKey];
-                const config = VENDOR_SHIPPING[vKey];
                 let shippingFee = 0;
                 let isFreeShipping = false;
 
                 if (v.subtotal > 0) {
-                    if (config.freeThreshold && v.subtotal >= config.freeThreshold) {
+                    if (v.freeThreshold && v.subtotal >= v.freeThreshold) {
                         shippingFee = 0;
                         isFreeShipping = true;
                     } else {
-                        shippingFee = config.fee;
+                        shippingFee = baseShippingFee;
                     }
                 }
                 v.shipping = shippingFee;
                 v.isFreeShipping = isFreeShipping;
                 v.grandTotal = v.subtotal + shippingFee;
-                v.note = isFreeShipping ? '🎉 Free Shipping Applied (Over $700)' : config.note;
+                v.note = isFreeShipping ? '🎉 Free Shipping Applied (≥$700)' : `+$${baseShippingFee.toFixed(2)} standard ship`;
 
                 if (!v.missing && v.subtotal > 0) {
                     validSingleVendors.push(v);
@@ -5144,13 +5193,20 @@
             // Calculate Shipping & Grand Total for Split Order
             let splitShippingTotal = 0;
             const splitShippingBreakdown = [];
+            let activeVendorsCount = 0;
+            const vendorNames = {
+                marvel: 'Marvel Chloe',
+                tong: 'Tong Shi Po',
+                tina: 'Tina Tianjin Bio'
+            };
+
             Object.keys(splitAllocation).forEach(vKey => {
                 const alloc = splitAllocation[vKey];
                 if (alloc.count > 0) {
-                    const config = VENDOR_SHIPPING[vKey];
-                    let fee = config.fee;
+                    activeVendorsCount++;
+                    let fee = baseShippingFee;
                     let isFree = false;
-                    if (config.freeThreshold && alloc.subtotal >= config.freeThreshold) {
+                    if (alloc.freeThreshold && alloc.subtotal >= alloc.freeThreshold) {
                         fee = 0;
                         isFree = true;
                     }
@@ -5159,8 +5215,9 @@
                     splitShippingTotal += fee;
                     splitShippingBreakdown.push({
                         vendorKey: vKey,
-                        name: config.name,
+                        name: vendorNames[vKey],
                         count: alloc.count,
+                        subtotal: alloc.subtotal,
                         fee: fee,
                         isFree: isFree
                     });
@@ -5195,6 +5252,8 @@
                 splitShippingBreakdown,
                 splitGrandTotal,
                 splitAllocation,
+                activeVendorsCount,
+                baseShippingFee,
                 bestOverallStrategy,
                 savingsVsOther
             };
@@ -5288,14 +5347,22 @@
                 let strategyHeadline = '';
                 let strategyDesc = '';
 
-                if (bestSingle) {
+                if (analysis.bestOverallStrategy === 'single' && bestSingle) {
                     strategyBadge = `
                         <div class="inline-flex items-center gap-1.5 sm:gap-2 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold">
                             <i class="fa-solid fa-trophy"></i> OVERALL CHEAPEST VENDOR RECOMMENDATION
                         </div>
                     `;
-                    strategyHeadline = `${bestSingle.name} <span class="text-emerald-400">($${bestSingle.subtotal.toFixed(2)})</span>`;
-                    strategyDesc = `Ordering all ${totalItemsCount} kit(s) from <strong>${bestSingle.name}</strong> provides the lowest combined price for your custom order. ${bestSingle.note}.`;
+                    strategyHeadline = `${bestSingle.name} <span class="text-emerald-400">($${bestSingle.grandTotal.toFixed(2)} Total)</span>`;
+                    strategyDesc = `Ordering all ${totalItemsCount} kit(s) from <strong>${bestSingle.name}</strong> provides the lowest combined price ($${bestSingle.grandTotal.toFixed(2)} with shipping vs $${analysis.splitGrandTotal.toFixed(2)} split order). Sourcing from a single vendor saves <strong class="text-emerald-400">$${analysis.savingsVsOther.toFixed(2)}</strong> by avoiding duplicate shipping fees across ${analysis.activeVendorsCount} separate vendors.`;
+                } else if (analysis.bestOverallStrategy === 'split') {
+                    strategyBadge = `
+                        <div class="inline-flex items-center gap-1.5 sm:gap-2 bg-purple-500/20 text-purple-300 border border-purple-500/30 px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold">
+                            <i class="fa-solid fa-layer-group"></i> OPTIMAL SPLIT-ORDER RECOMMENDATION
+                        </div>
+                    `;
+                    strategyHeadline = `Optimal Split Order: <span class="text-purple-400">$${analysis.splitGrandTotal.toFixed(2)} Total</span>`;
+                    strategyDesc = `Splitting your order across <strong>${analysis.activeVendorsCount} vendors</strong> provides the lowest combined price ($${analysis.splitGrandTotal.toFixed(2)} total including $${analysis.splitShippingTotal.toFixed(2)} shipping across ${analysis.activeVendorsCount} vendors vs ${bestSingle ? '$' + bestSingle.grandTotal.toFixed(2) : 'N/A'} single vendor), saving you <strong class="text-purple-400">$${analysis.savingsVsOther.toFixed(2)}</strong>!`;
                 } else {
                     strategyBadge = `
                         <div class="inline-flex items-center gap-1.5 sm:gap-2 bg-purple-500/20 text-purple-300 border border-purple-500/30 px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold">
@@ -5387,7 +5454,7 @@
 
                             <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-400 flex justify-between items-center">
                                 <span>Combined Split Shipping:</span>
-                                <span class="font-bold text-slate-300">+$${analysis.splitShippingTotal.toFixed(2)}</span>
+                                <span class="font-bold text-slate-300">+$${analysis.splitShippingTotal.toFixed(2)} <span class="text-[10px] text-slate-500 font-normal">(${analysis.activeVendorsCount} vendor${analysis.activeVendorsCount === 1 ? '' : 's'} @ $${analysis.baseShippingFee.toFixed(2)})</span></span>
                             </div>
                             <div class="flex justify-between items-center text-xs font-bold text-purple-300 bg-purple-950/40 border border-purple-500/20 p-2 rounded-lg">
                                 <span>Split Total (with Shipping):</span>
@@ -5409,7 +5476,7 @@
                                 <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
                                     <div>
                                         <span class="text-slate-300 font-medium">Marvel Chloe</span>
-                                        <span class="text-[10px] text-slate-500 block">+$35.00 express ship</span>
+                                        <span class="text-[10px] text-slate-500 block">+$${single.marvel.shipping.toFixed(2)} standard ship</span>
                                     </div>
                                     <div class="text-right">
                                         <span class="font-mono ${!single.marvel.missing ? 'text-white font-bold' : 'text-slate-600'}">
@@ -5421,7 +5488,7 @@
                                 <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
                                     <div>
                                         <span class="text-slate-300 font-medium">Tong Shi Po</span>
-                                        <span class="text-[10px] text-slate-500 block">+$40.00 wholesale ship</span>
+                                        <span class="text-[10px] text-slate-500 block">+$${single.tong.shipping.toFixed(2)} standard ship</span>
                                     </div>
                                     <div class="text-right">
                                         <span class="font-mono ${!single.tong.missing ? 'text-white font-bold' : 'text-slate-600'}">
@@ -5433,7 +5500,7 @@
                                 <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
                                     <div>
                                         <span class="text-slate-300 font-medium">Tina Tianjin Bio</span>
-                                        <span class="text-[10px] text-slate-500 block">${single.tina.isFreeShipping ? '🎉 Free Shipping (≥$700)' : '+$45.00 courier ship'}</span>
+                                        <span class="text-[10px] text-slate-500 block">${single.tina.isFreeShipping ? '🎉 Free Shipping (≥$700)' : '+$' + single.tina.shipping.toFixed(2) + ' standard ship'}</span>
                                     </div>
                                     <div class="text-right">
                                         <span class="font-mono ${!single.tina.missing ? 'text-white font-bold' : 'text-slate-600'}">
@@ -5578,6 +5645,28 @@
                 summaryText += `• ${item.qty}x ${catStr}${item.key}\n`;
             });
             summaryText += `------------------------------------\n`;
+
+            // Append Optimizer Cost Breakdown
+            const analysis = calculateOptimizerAnalysis(cart, peptideData);
+            summaryText += `ESTIMATED COST BREAKDOWN:\n`;
+            if (analysis.bestOverallStrategy === 'single' && analysis.lowestSingleVendor) {
+                summaryText += `• Strategy: Single Vendor (${analysis.lowestSingleVendor.name})\n`;
+                summaryText += `• Items Subtotal: $${analysis.lowestSingleVendor.subtotal.toFixed(2)}\n`;
+                summaryText += `• Est. Shipping: +$${analysis.lowestSingleVendor.shipping.toFixed(2)}${analysis.lowestSingleVendor.isFreeShipping ? ' (Free Shipping ≥$700)' : ' ($' + analysis.baseShippingFee.toFixed(2) + '/vendor)'}\n`;
+                summaryText += `• Est. Total: $${analysis.lowestSingleVendor.grandTotal.toFixed(2)}\n`;
+                if (analysis.splitGrandTotal) {
+                    summaryText += `• Split-Order Alternative: $${analysis.splitGrandTotal.toFixed(2)} (${analysis.activeVendorsCount} vendors @ $${analysis.baseShippingFee.toFixed(2)}/ea shipping)\n`;
+                }
+            } else {
+                summaryText += `• Strategy: Split Order (${analysis.activeVendorsCount} Vendors)\n`;
+                summaryText += `• Items Subtotal: $${analysis.splitSubtotal.toFixed(2)}\n`;
+                summaryText += `• Est. Shipping: +$${analysis.splitShippingTotal.toFixed(2)} (${analysis.activeVendorsCount} vendors @ $${analysis.baseShippingFee.toFixed(2)}/ea)\n`;
+                summaryText += `• Est. Total: $${analysis.splitGrandTotal.toFixed(2)}\n`;
+                if (analysis.lowestSingleVendor) {
+                    summaryText += `• Single Vendor Alternative (${analysis.lowestSingleVendor.name}): $${analysis.lowestSingleVendor.grandTotal.toFixed(2)}\n`;
+                }
+            }
+            summaryText += `------------------------------------\n`;
             
             const el = document.createElement('textarea');
             el.value = summaryText;
@@ -5665,6 +5754,7 @@
             renderCatalog();
             renderCart();
             initGroupBuyControls();
+            initShippingFeeControl();
         }
 
         initApp();

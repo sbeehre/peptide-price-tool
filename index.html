@@ -286,19 +286,19 @@
 
         <!-- Cart & Overall Vendor Recommendation Section -->
         <section id="cart-section" class="bg-slate-950/90 border-2 border-indigo-500/30 rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl relative">
-            <div class="p-4 sm:p-6 border-b border-slate-800/80 bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 flex flex-col md:flex-row md:items-center justify-between gap-3.5 sm:gap-4">
-                <div>
+            <div class="p-4 sm:p-6 border-b border-slate-800/80 bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4">
+                <div class="min-w-0 flex-1">
                     <div class="flex items-center gap-2 text-indigo-400 text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-1">
                         <i class="fa-solid fa-basket-shopping"></i>
-                        Order List & Multi-Item Optimizer
+                        <span class="whitespace-nowrap">Order List & Multi-Item Optimizer</span>
                     </div>
-                    <h3 class="text-xl sm:text-2xl font-bold text-white">Your Selection List</h3>
-                    <p class="text-[11px] sm:text-xs text-slate-400 mt-1">Add items to calculate total basket costs, pinpoint cheapest vendors, and contact reps via WhatsApp.</p>
+                    <h3 class="text-xl sm:text-2xl font-bold text-white whitespace-nowrap">Your Selection List</h3>
+                    <p class="text-[11px] sm:text-xs text-slate-400 mt-1 max-w-xl">Add items to calculate total basket costs, pinpoint cheapest vendors, and contact reps via WhatsApp.</p>
                 </div>
                 
-                <div class="flex flex-wrap items-center justify-start lg:justify-end gap-3 shrink-0">
+                <div class="flex flex-wrap items-center justify-start xl:justify-end gap-2.5 shrink-0 w-full xl:w-auto">
                     <!-- Group Buy Toggle Widget -->
-                    <div class="border border-indigo-500/40 bg-indigo-950/30 hover:border-indigo-400/60 rounded-xl p-2 px-3 flex flex-wrap items-center gap-3 transition-colors shadow-sm">
+                    <div class="border border-indigo-500/40 bg-indigo-950/30 hover:border-indigo-400/60 rounded-xl p-2 px-3 flex items-center gap-2.5 transition-colors shadow-sm">
                         <label for="group-buy-toggle" class="flex items-center gap-2.5 cursor-pointer select-none">
                             <div class="relative inline-flex items-center shrink-0">
                                 <input type="checkbox" id="group-buy-toggle" class="sr-only peer">
@@ -306,17 +306,17 @@
                                     <span class="inline-block h-3.5 w-3.5 transform rounded-full bg-white transition duration-200 ease-in-out translate-x-0.5 peer-checked:translate-x-4.5 absolute top-[2px] left-0 shadow-sm pointer-events-none"></span>
                                 </div>
                             </div>
-                            <span class="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+                            <span class="text-xs font-bold text-slate-200 flex items-center gap-1.5 whitespace-nowrap">
                                 <span>👥 Group Buy Mode</span>
                                 <span id="group-buy-badge" class="hidden text-[10px] font-bold px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-mono">Active</span>
                             </span>
                         </label>
-                        <div id="group-buy-input-container" class="hidden items-center gap-1.5 border-t sm:border-t-0 sm:border-l border-indigo-500/30 pt-1.5 sm:pt-0 sm:pl-2.5 transition-all duration-200">
+                        <div id="group-buy-input-container" class="hidden items-center border-l border-indigo-500/30 pl-2.5 transition-all duration-200">
                             <input 
                                 type="text" 
                                 id="group-buy-batch-input" 
                                 placeholder="Batch # (e.g. GB-2026-08)" 
-                                class="w-48 sm:w-56 bg-slate-900 border border-indigo-500/50 rounded-lg px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition font-mono"
+                                class="w-40 sm:w-48 bg-slate-900 border border-indigo-500/50 rounded-lg px-2.5 py-1 text-xs text-white placeholder-slate-500 focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition font-mono"
                             >
                         </div>
                     </div>
@@ -336,18 +336,18 @@
                                 max="500" 
                                 step="1" 
                                 value="50" 
-                                class="w-16 bg-slate-950 border border-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-white text-xs rounded-lg pl-5 pr-1.5 py-1 text-center font-mono outline-none"
+                                class="w-28 sm:w-32 bg-slate-950 border border-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-white text-xs rounded-lg pl-6 pr-2 py-1 text-center font-mono outline-none"
                             >
                         </div>
                     </div>
 
                     <!-- Action Buttons -->
                     <div class="flex items-center gap-2">
-                        <button id="copy-summary-btn" data-umami-event="export-summary" class="bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200 border border-slate-700 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer min-h-[38px]">
+                        <button id="copy-summary-btn" data-umami-event="export-summary" class="bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-slate-200 border border-slate-700 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer min-h-[38px] whitespace-nowrap">
                             <i class="fa-solid fa-copy"></i>
                             <span>Copy Order</span>
                         </button>
-                        <button id="clear-cart-btn" class="bg-rose-950/40 hover:bg-rose-900/60 active:bg-rose-900 text-rose-300 border border-rose-800/50 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer min-h-[38px]">
+                        <button id="clear-cart-btn" class="bg-rose-950/40 hover:bg-rose-900/60 active:bg-rose-900 text-rose-300 border border-rose-800/50 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition cursor-pointer min-h-[38px] whitespace-nowrap">
                             <i class="fa-solid fa-trash-can"></i>
                             <span>Clear All</span>
                         </button>

@@ -871,6 +871,45 @@
     "lastUpdated": "2026-08-23T00:00:00.000Z"
   },
   {
+    "id": "tesamorelin_10mg_10",
+    "name": "Tesamorelin",
+    "spec": "10mg*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "TSM10",
+    "prices": {
+      "marvel": 180,
+      "tong": 227,
+      "tina": 197
+    },
+    "lastUpdated": "2026-08-23T00:00:00.000Z"
+  },
+  {
+    "id": "tesamorelin_20mg_10",
+    "name": "Tesamorelin",
+    "spec": "20mg*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "TSM20",
+    "prices": {
+      "marvel": null,
+      "tong": null,
+      "tina": 280
+    },
+    "lastUpdated": "2026-08-23T00:00:00.000Z"
+  },
+  {
+    "id": "tesamorelin_5mg_10",
+    "name": "Tesamorelin",
+    "spec": "5mg*10",
+    "category": "Growth Hormone & Anti-Aging",
+    "catNo": "TSM5",
+    "prices": {
+      "marvel": 95,
+      "tong": 130,
+      "tina": 115
+    },
+    "lastUpdated": "2026-08-23T00:00:00.000Z"
+  },
+  {
     "id": "ahk_cu_100mg_10",
     "name": "AHK-Cu",
     "spec": "100mg*10",

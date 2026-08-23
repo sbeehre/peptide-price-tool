@@ -156,8 +156,21 @@
                     </div>
                 </div>
 
-                <!-- Popular Search Quick Chips -->
+                <!-- Category Filter Pills Bar -->
                 <div class="pt-1">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <span class="text-[11px] sm:text-xs text-slate-400 font-medium flex items-center gap-1.5">
+                            <i class="fa-solid fa-layer-group text-indigo-400 text-[11px]"></i>
+                            Filter by Category:
+                        </span>
+                    </div>
+                    <div id="category-pills-bar" class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1.5 pt-0.5 touch-scroll no-scrollbar -mx-1 px-1 scroll-smooth">
+                        <!-- Category pills injected dynamically -->
+                    </div>
+                </div>
+
+                <!-- Popular Search Quick Chips -->
+                <div class="pt-0.5">
                     <div class="text-[11px] sm:text-xs text-slate-400 font-medium mb-2">Popular searches:</div>
                     <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
                         <button class="quick-chip text-xs bg-slate-900 hover:bg-indigo-950/80 active:bg-indigo-900 text-indigo-300 hover:text-indigo-200 border border-slate-800 hover:border-indigo-800/50 px-3 py-1.5 rounded-lg transition min-h-[36px] flex items-center justify-center cursor-pointer">Retatrutide</button>
@@ -3025,6 +3038,7 @@
         // Global State
         let peptideData = [];
         let selectedItem = null;
+        let selectedCategory = 'All';
         let cart = []; // Array of { key, id, qty }
         let currentParsedResults = []; // Parsed items in preview
 
@@ -3032,6 +3046,7 @@
         const searchInput = document.getElementById('peptide-search');
         const clearBtn = document.getElementById('clear-search');
         const dropdown = document.getElementById('dropdown-results');
+        const categoryPillsBar = document.getElementById('category-pills-bar');
         const catalogTbody = document.getElementById('catalog-tbody');
         const catalogCount = document.getElementById('catalog-count');
         const rateBadge = document.getElementById('rate-badge');
@@ -3673,6 +3688,11 @@
 
             // Normalize every record in memory
             peptideData = baseCatalog.map(normalizePeptideItem);
+
+            // Update Category Filter Pills
+            if (typeof renderCategoryPills === 'function') {
+                renderCategoryPills();
+            }
 
             // Update UI status badge
             if (rateBadge) {
@@ -4626,6 +4646,74 @@
             }
         }
 
+        // ==========================================
+        // CATEGORY PILL FILTER BAR MODULE
+        // ==========================================
+        function renderCategoryPills() {
+            if (!categoryPillsBar) return;
+
+            const standardOrder = [
+                'All',
+                'GLP-1 & Metabolic',
+                'Growth Hormone & Anti-Aging',
+                'Healing & Recovery',
+                'Nootropics & Cognitive',
+                'Longevity & Cellular Health',
+                'Muscle & Body Composition',
+                'Hormones & Sexual Health',
+                'Reconstitution & Supplies',
+                'General Peptides'
+            ];
+
+            const presentCats = new Set(peptideData.map(i => i.category).filter(Boolean));
+            const categories = [];
+
+            standardOrder.forEach(cat => {
+                if (cat === 'All' || presentCats.has(cat)) {
+                    categories.push(cat);
+                    presentCats.delete(cat);
+                }
+            });
+
+            // Append any custom or user-imported categories
+            presentCats.forEach(cat => categories.push(cat));
+
+            if (!categories.includes(selectedCategory)) {
+                selectedCategory = 'All';
+            }
+
+            categoryPillsBar.innerHTML = categories.map(cat => {
+                const isActive = cat === selectedCategory;
+                const count = cat === 'All' 
+                    ? peptideData.length 
+                    : peptideData.filter(i => i.category === cat).length;
+
+                const activeClasses = "bg-indigo-600 text-white font-bold border-indigo-500 shadow-md shadow-indigo-600/25";
+                const inactiveClasses = "bg-slate-900/90 text-slate-400 font-medium hover:text-slate-200 border-slate-800 hover:border-slate-700 active:bg-slate-800";
+                const pillClass = isActive ? activeClasses : inactiveClasses;
+                const badgeClass = isActive ? "bg-indigo-950/70 text-indigo-200 border border-indigo-400/30" : "bg-slate-800/80 text-slate-500 group-hover:text-slate-400";
+
+                return '<button type="button" class="category-pill group px-3 py-1.5 sm:px-3.5 sm:py-1.5 rounded-full text-xs whitespace-nowrap transition cursor-pointer border shrink-0 flex items-center gap-1.5 ' + pillClass + '" data-category="' + cat + '" data-umami-event="category-filter" data-umami-event-category="' + cat + '"><span>' + cat + '</span><span class="text-[10px] px-1.5 py-0.5 rounded-full ' + badgeClass + ' font-mono">' + count + '</span></button>';
+            }).join('');
+
+            categoryPillsBar.querySelectorAll('.category-pill').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const cat = btn.getAttribute('data-category');
+                    setCategoryFilter(cat);
+                });
+            });
+        }
+
+        function setCategoryFilter(category) {
+            selectedCategory = category;
+            renderCategoryPills();
+            renderCatalog(searchInput.value);
+            if (typeof window !== 'undefined' && window.umami) {
+                window.umami.track('category-filter', { category: category });
+            }
+        }
+        window.setCategoryFilter = setCategoryFilter;
+
         function renderDropdownResults(term) {
             if (!term || term.trim() === '') {
                 dropdown.classList.add('hidden');
@@ -4633,13 +4721,21 @@
             }
 
             const cleanTerm = term.toLowerCase().trim();
-            const matches = peptideData.filter(i => 
-                i.key.toLowerCase().includes(cleanTerm) || 
-                i.name.toLowerCase().includes(cleanTerm) ||
-                i.id.toLowerCase().includes(cleanTerm) ||
-                (i.catNo && i.catNo.toLowerCase().includes(cleanTerm)) ||
-                (i.category && i.category.toLowerCase().includes(cleanTerm))
-            );
+            const matches = peptideData.filter(i => {
+                const matchesCategory = (!selectedCategory || selectedCategory === 'All') 
+                    ? true 
+                    : (i.category && i.category.toLowerCase() === selectedCategory.toLowerCase());
+
+                if (!matchesCategory && selectedCategory !== 'All') return false;
+
+                return (
+                    i.key.toLowerCase().includes(cleanTerm) || 
+                    i.name.toLowerCase().includes(cleanTerm) || 
+                    i.id.toLowerCase().includes(cleanTerm) ||
+                    (i.catNo && i.catNo.toLowerCase().includes(cleanTerm)) ||
+                    (i.category && i.category.toLowerCase().includes(cleanTerm))
+                );
+            });
 
             if (matches.length === 0) {
                 dropdown.innerHTML = '<div class="p-3 text-xs text-slate-400 text-center">No matching compounds found</div>';
@@ -4685,15 +4781,29 @@
 
         function renderCatalog(filterTerm = '') {
             const clean = filterTerm.toLowerCase().trim();
-            const filtered = peptideData.filter(i => 
-                i.key.toLowerCase().includes(clean) || 
-                i.name.toLowerCase().includes(clean) ||
-                i.id.toLowerCase().includes(clean) ||
-                (i.catNo && i.catNo.toLowerCase().includes(clean)) ||
-                (i.category && i.category.toLowerCase().includes(clean))
-            );
+            const filtered = peptideData.filter(i => {
+                const matchesCategory = (!selectedCategory || selectedCategory === 'All') 
+                    ? true 
+                    : (i.category && i.category.toLowerCase() === selectedCategory.toLowerCase());
+
+                if (!matchesCategory) return false;
+
+                if (!clean) return true;
+                return (
+                    i.key.toLowerCase().includes(clean) || 
+                    i.name.toLowerCase().includes(clean) ||
+                    i.id.toLowerCase().includes(clean) ||
+                    (i.catNo && i.catNo.toLowerCase().includes(clean)) ||
+                    (i.category && i.category.toLowerCase().includes(clean))
+                );
+            });
 
             if (clean !== '' && filtered.length > 0) {
+                const matchInFiltered = filtered.find(i => selectedItem && (i.key === selectedItem.key || i.id === selectedItem.id));
+                if (!matchInFiltered) {
+                    updateSpotlight(filtered[0]);
+                }
+            } else if (selectedCategory !== 'All' && filtered.length > 0) {
                 const matchInFiltered = filtered.find(i => selectedItem && (i.key === selectedItem.key || i.id === selectedItem.id));
                 if (!matchInFiltered) {
                     updateSpotlight(filtered[0]);
@@ -5341,6 +5451,8 @@
         document.querySelectorAll('.quick-chip').forEach(btn => {
             btn.addEventListener('click', () => {
                 const text = (btn.innerText || btn.textContent || '').trim();
+                selectedCategory = 'All';
+                renderCategoryPills();
                 searchInput.value = text;
                 clearBtn.classList.remove('hidden');
                 renderDropdownResults(text);

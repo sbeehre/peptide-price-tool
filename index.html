@@ -5010,6 +5010,11 @@
             showToast(`Removed item from order list`, 'fa-trash-can');
         }
 
+        window.addToCart = addToCart;
+        window.updateCartQty = updateCartQty;
+        window.removeFromCart = removeFromCart;
+        window.renderCart = renderCart;
+
         window.sendWhatsApp = function(vendorId) {
             if (!cart || cart.length === 0) {
                 showToast('Your order list is empty!', 'fa-triangle-exclamation');
@@ -5254,6 +5259,12 @@
                 bestOverallStrategy = 'split';
             }
 
+            const tinaSubtotal = singleVendors.tina.subtotal;
+            const tinaThreshold = 700;
+            const tinaProgressPct = Math.min(100, Math.round((tinaSubtotal / tinaThreshold) * 100));
+            const tinaRemaining = Math.max(0, tinaThreshold - tinaSubtotal);
+            const isTinaQualified = tinaSubtotal >= tinaThreshold;
+
             return {
                 totalItemsCount,
                 singleVendors,
@@ -5267,7 +5278,14 @@
                 activeVendorsCount,
                 baseShippingFee,
                 bestOverallStrategy,
-                savingsVsOther
+                savingsVsOther,
+                tinaShippingProgress: {
+                    subtotal: tinaSubtotal,
+                    threshold: tinaThreshold,
+                    percentage: tinaProgressPct,
+                    remaining: tinaRemaining,
+                    isQualified: isTinaQualified
+                }
             };
         }
 
@@ -5339,6 +5357,11 @@
             const bestSingle = analysis.lowestSingleVendor;
             const split = analysis.splitAllocation;
             const single = analysis.singleVendors;
+            const tinaProgress = analysis.tinaShippingProgress;
+            const isTinaQualified = tinaProgress.isQualified;
+            const tinaSubtotal = tinaProgress.subtotal;
+            const tinaRemaining = tinaProgress.remaining;
+            const tinaPercentage = tinaProgress.percentage;
 
             if (bestSingle || analysis.splitSubtotal > 0) {
                 overallRecBox.className = "bg-gradient-to-r from-slate-900 via-indigo-950/30 to-slate-900 border-2 border-indigo-500/40 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-2xl space-y-5";
@@ -5417,6 +5440,27 @@
                                 <span class="${!single.tina.missing && bestSingle && bestSingle.name === 'Tina Tianjin Bio' ? 'text-emerald-400 font-bold' : 'text-slate-300'}">Tina Tianjin Bio:</span>
                                 <span class="font-bold ${!single.tina.missing ? 'text-white' : 'text-slate-600'}">${!single.tina.missing ? '$' + single.tina.subtotal.toFixed(2) : 'Incomplete'}</span>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Tina Tianjin Bio Free Shipping Progress Bar Widget -->
+                    <div id="tina-free-shipping-card" class="${isTinaQualified ? 'bg-emerald-950/40 border-emerald-500/40 shadow-emerald-950/50' : 'bg-slate-950/80 border-slate-800'} border rounded-xl p-3.5 space-y-2.5 transition-all duration-300 shadow-lg">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs">
+                            <div class="flex items-center gap-2 font-semibold ${isTinaQualified ? 'text-emerald-300' : 'text-slate-200'}">
+                                <span class="leading-relaxed">${isTinaQualified 
+                                    ? '🎉 QUALIFIED: Free Shipping with Tina Tianjin Bio ($700+ met!)' 
+                                    : '🚚 Tina Tianjin Bio Free Shipping: $' + tinaSubtotal.toFixed(2) + ' / $700 ($' + tinaRemaining.toFixed(2) + ' away from free shipping)'}
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
+                                ${isTinaQualified 
+                                    ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">FREE SHIPPING UNLOCKED</span>' 
+                                    : ''}
+                                <span class="font-mono text-xs font-extrabold ${isTinaQualified ? 'text-emerald-400' : 'text-indigo-400'}">${tinaPercentage}%</span>
+                            </div>
+                        </div>
+                        <div class="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden border border-slate-800">
+                            <div class="h-full rounded-full transition-all duration-500 ${isTinaQualified ? 'bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-300 shadow-sm shadow-emerald-500/50' : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-400'}" style="width: ${tinaPercentage}%"></div>
                         </div>
                     </div>
 

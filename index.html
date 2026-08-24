@@ -5049,6 +5049,17 @@
                 message += `• ${item.qty}x ${catStr}${item.key}\n`;
             });
 
+            if (vendorId === 'tong') {
+                const tongAnalysis = calculateOptimizerAnalysis(cart, peptideData);
+                const tongVendor = tongAnalysis.singleVendors.tong;
+                if (tongVendor && tongVendor.isDiscounted) {
+                    message += `\n------------------------------------\n`;
+                    message += `Items Subtotal: $${tongVendor.subtotal.toFixed(2)}\n`;
+                    message += `🏷️ 10% Community Discount (≥$700): -$${tongVendor.discount.toFixed(2)}\n`;
+                    message += `Adjusted Subtotal: $${tongVendor.adjustedSubtotal.toFixed(2)}\n`;
+                }
+            }
+
             message += `\nPlease let me know the total cost including shipping to my address.\n\nThank you!`;
 
             try {
@@ -5129,17 +5140,17 @@
 
             // 1. Single Vendor Calculations
             const singleVendors = {
-                marvel: { key: 'marvel', name: 'Marvel Chloe', subtotal: 0, missing: false, unstocked: [], freeThreshold: null },
-                tong: { key: 'tong', name: 'Tong Shi Po', subtotal: 0, missing: false, unstocked: [], freeThreshold: null },
-                tina: { key: 'tina', name: 'Tina Tianjin Bio', subtotal: 0, missing: false, unstocked: [], freeThreshold: 700 }
+                marvel: { key: 'marvel', name: 'Marvel Chloe', subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, missing: false, unstocked: [], freeThreshold: null, isDiscounted: false },
+                tong: { key: 'tong', name: 'Tong Shi Po', subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, missing: false, unstocked: [], freeThreshold: null, isDiscounted: false },
+                tina: { key: 'tina', name: 'Tina Tianjin Bio', subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, missing: false, unstocked: [], freeThreshold: 700, isDiscounted: false }
             };
 
             // 2. Split Order Calculations
-            let splitSubtotal = 0;
+            let splitRawSubtotal = 0;
             const splitAllocation = {
-                marvel: { count: 0, subtotal: 0, items: [], freeThreshold: null },
-                tong: { count: 0, subtotal: 0, items: [], freeThreshold: null },
-                tina: { count: 0, subtotal: 0, items: [], freeThreshold: 700 }
+                marvel: { count: 0, subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, items: [], freeThreshold: null, isDiscounted: false },
+                tong: { count: 0, subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, items: [], freeThreshold: null, isDiscounted: false },
+                tina: { count: 0, subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, items: [], freeThreshold: 700, isDiscounted: false }
             };
 
             cartItems.forEach(cartItem => {
@@ -5150,6 +5161,7 @@
                     const price = itemData.prices[vKey];
                     if (price !== null && price !== undefined) {
                         singleVendors[vKey].subtotal += price * cartItem.qty;
+                        singleVendors[vKey].rawSubtotal += price * cartItem.qty;
                     } else {
                         singleVendors[vKey].missing = true;
                         singleVendors[vKey].unstocked.push(itemData.name);
@@ -5166,9 +5178,10 @@
                     available.sort((a, b) => a.price - b.price);
                     const best = available[0];
                     const itemTotal = best.price * cartItem.qty;
-                    splitSubtotal += itemTotal;
+                    splitRawSubtotal += itemTotal;
                     splitAllocation[best.vendor].count += cartItem.qty;
                     splitAllocation[best.vendor].subtotal += itemTotal;
+                    splitAllocation[best.vendor].rawSubtotal += itemTotal;
                     splitAllocation[best.vendor].items.push({
                         name: itemData.name,
                         spec: itemData.spec,
@@ -5179,12 +5192,30 @@
                 }
             });
 
+            // Tong Shi Po 10% Community Discount on Single Vendor Basket (Threshold >= $700)
+            const tongThreshold = 700;
+            const tongRawSubtotal = singleVendors.tong.subtotal;
+            let tongDiscount = 0;
+            let isTongQualified = false;
+            if (tongRawSubtotal >= tongThreshold) {
+                tongDiscount = Math.round(tongRawSubtotal * 0.10 * 100) / 100;
+                isTongQualified = true;
+            }
+            singleVendors.tong.discount = tongDiscount;
+            singleVendors.tong.adjustedSubtotal = Math.round((tongRawSubtotal - tongDiscount) * 100) / 100;
+            singleVendors.tong.isDiscounted = isTongQualified;
+
+            singleVendors.marvel.adjustedSubtotal = singleVendors.marvel.subtotal;
+            singleVendors.tina.adjustedSubtotal = singleVendors.tina.subtotal;
+
             // Calculate Shipping & Grand Totals for Single Vendors
             const validSingleVendors = [];
             Object.keys(singleVendors).forEach(vKey => {
                 const v = singleVendors[vKey];
                 let shippingFee = 0;
                 let isFreeShipping = false;
+
+                const effectiveSubtotal = v.isDiscounted ? v.adjustedSubtotal : v.subtotal;
 
                 if (v.subtotal > 0) {
                     if (v.freeThreshold && v.subtotal >= v.freeThreshold) {
@@ -5196,8 +5227,13 @@
                 }
                 v.shipping = shippingFee;
                 v.isFreeShipping = isFreeShipping;
-                v.grandTotal = v.subtotal + shippingFee;
-                v.note = isFreeShipping ? '🎉 Free Shipping Applied (≥$700)' : `+$${baseShippingFee.toFixed(2)} standard ship`;
+                v.grandTotal = Math.round((effectiveSubtotal + shippingFee) * 100) / 100;
+
+                let noteParts = [];
+                if (v.isDiscounted) noteParts.push(`🎉 10% Community Discount (-$${v.discount.toFixed(2)})`);
+                if (isFreeShipping) noteParts.push(`🎉 Free Shipping (≥$700)`);
+                else if (v.subtotal > 0) noteParts.push(`+$${baseShippingFee.toFixed(2)} standard ship`);
+                v.note = noteParts.join(' | ');
 
                 if (!v.missing && v.subtotal > 0) {
                     validSingleVendors.push(v);
@@ -5207,7 +5243,23 @@
             validSingleVendors.sort((a, b) => a.grandTotal - b.grandTotal);
             const lowestSingleVendor = validSingleVendors[0] || null;
 
-            // Calculate Shipping & Grand Total for Split Order
+            // Calculate Shipping & Grand Total for Split Order (factoring Tong 10% discount if Tong split >= $700)
+            let splitTongDiscount = 0;
+            let isSplitTongQualified = false;
+            if (splitAllocation.tong.subtotal >= tongThreshold) {
+                splitTongDiscount = Math.round(splitAllocation.tong.subtotal * 0.10 * 100) / 100;
+                isSplitTongQualified = true;
+            }
+            splitAllocation.tong.discount = splitTongDiscount;
+            splitAllocation.tong.adjustedSubtotal = Math.round((splitAllocation.tong.subtotal - splitTongDiscount) * 100) / 100;
+            splitAllocation.tong.isDiscounted = isSplitTongQualified;
+
+            splitAllocation.marvel.adjustedSubtotal = splitAllocation.marvel.subtotal;
+            splitAllocation.tina.adjustedSubtotal = splitAllocation.tina.subtotal;
+
+            const splitTotalDiscount = splitTongDiscount;
+            const splitSubtotal = Math.round((splitRawSubtotal - splitTotalDiscount) * 100) / 100;
+
             let splitShippingTotal = 0;
             const splitShippingBreakdown = [];
             let activeVendorsCount = 0;
@@ -5235,6 +5287,8 @@
                         name: vendorNames[vKey],
                         count: alloc.count,
                         subtotal: alloc.subtotal,
+                        discount: alloc.discount || 0,
+                        adjustedSubtotal: alloc.adjustedSubtotal,
                         fee: fee,
                         isFree: isFree
                     });
@@ -5259,17 +5313,25 @@
                 bestOverallStrategy = 'split';
             }
 
+            // Tina Shipping Progress
             const tinaSubtotal = singleVendors.tina.subtotal;
             const tinaThreshold = 700;
             const tinaProgressPct = Math.min(100, Math.round((tinaSubtotal / tinaThreshold) * 100));
             const tinaRemaining = Math.max(0, tinaThreshold - tinaSubtotal);
             const isTinaQualified = tinaSubtotal >= tinaThreshold;
 
+            // Tong Discount Progress
+            const tongSubtotal = singleVendors.tong.subtotal;
+            const tongProgressPct = Math.min(100, Math.round((tongSubtotal / tongThreshold) * 100));
+            const tongRemaining = Math.max(0, tongThreshold - tongSubtotal);
+
             return {
                 totalItemsCount,
                 singleVendors,
                 validSingleVendors,
                 lowestSingleVendor,
+                splitRawSubtotal,
+                splitDiscount: splitTotalDiscount,
                 splitSubtotal,
                 splitShippingTotal,
                 splitShippingBreakdown,
@@ -5285,6 +5347,15 @@
                     percentage: tinaProgressPct,
                     remaining: tinaRemaining,
                     isQualified: isTinaQualified
+                },
+                tongDiscountProgress: {
+                    subtotal: tongSubtotal,
+                    threshold: tongThreshold,
+                    percentage: tongProgressPct,
+                    remaining: tongRemaining,
+                    isQualified: isTongQualified,
+                    discount: tongDiscount,
+                    adjustedSubtotal: singleVendors.tong.adjustedSubtotal
                 }
             };
         }
@@ -5363,6 +5434,13 @@
             const tinaRemaining = tinaProgress.remaining;
             const tinaPercentage = tinaProgress.percentage;
 
+            const tongProgress = analysis.tongDiscountProgress;
+            const isTongQualified = tongProgress.isQualified;
+            const tongSubtotal = tongProgress.subtotal;
+            const tongRemaining = tongProgress.remaining;
+            const tongPercentage = tongProgress.percentage;
+            const tongDiscount = tongProgress.discount;
+
             if (bestSingle || analysis.splitSubtotal > 0) {
                 overallRecBox.className = "bg-gradient-to-r from-slate-900 via-indigo-950/30 to-slate-900 border-2 border-indigo-500/40 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-2xl space-y-5";
 
@@ -5433,7 +5511,7 @@
 
                             <div class="flex justify-between items-center text-xs sm:text-sm">
                                 <span class="${!single.tong.missing && bestSingle && bestSingle.name === 'Tong Shi Po' ? 'text-emerald-400 font-bold' : 'text-slate-300'}">Tong Shi Po:</span>
-                                <span class="font-bold ${!single.tong.missing ? 'text-white' : 'text-slate-600'}">${!single.tong.missing ? '$' + single.tong.subtotal.toFixed(2) : 'Incomplete'}</span>
+                                <span class="font-bold ${!single.tong.missing ? 'text-white' : 'text-slate-600'}">${!single.tong.missing ? (single.tong.isDiscounted ? '$' + single.tong.adjustedSubtotal.toFixed(2) + ' <span class="text-[10px] text-amber-400 font-normal">(-10%)</span>' : '$' + single.tong.subtotal.toFixed(2)) : 'Incomplete'}</span>
                             </div>
 
                             <div class="flex justify-between items-center text-xs sm:text-sm">
@@ -5443,24 +5521,48 @@
                         </div>
                     </div>
 
-                    <!-- Tina Tianjin Bio Free Shipping Progress Bar Widget -->
-                    <div id="tina-free-shipping-card" class="${isTinaQualified ? 'bg-emerald-950/40 border-emerald-500/40 shadow-emerald-950/50' : 'bg-slate-950/80 border-slate-800'} border rounded-xl p-3.5 space-y-2.5 transition-all duration-300 shadow-lg">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs">
-                            <div class="flex items-center gap-2 font-semibold ${isTinaQualified ? 'text-emerald-300' : 'text-slate-200'}">
-                                <span class="leading-relaxed">${isTinaQualified 
-                                    ? '🎉 QUALIFIED: Free Shipping with Tina Tianjin Bio ($700+ met!)' 
-                                    : '🚚 Tina Tianjin Bio Free Shipping: $' + tinaSubtotal.toFixed(2) + ' / $700 ($' + tinaRemaining.toFixed(2) + ' away from free shipping)'}
-                                </span>
+                    <!-- Vendor Incentive Progress Trackers (Tina Free Shipping & Tong 10% Discount) -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <!-- Tina Tianjin Bio Free Shipping Progress Bar Widget -->
+                        <div id="tina-free-shipping-card" class="${isTinaQualified ? 'bg-emerald-950/40 border-emerald-500/40 shadow-emerald-950/50' : 'bg-slate-950/80 border-slate-800'} border rounded-xl p-3.5 space-y-2.5 transition-all duration-300 shadow-lg">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs">
+                                <div class="flex items-center gap-2 font-semibold ${isTinaQualified ? 'text-emerald-300' : 'text-slate-200'}">
+                                    <span class="leading-relaxed">${isTinaQualified 
+                                        ? '🎉 QUALIFIED: Free Shipping with Tina Tianjin Bio ($700+ met!)' 
+                                        : '🚚 Tina Tianjin Bio Free Shipping: $' + tinaSubtotal.toFixed(2) + ' / $700 ($' + tinaRemaining.toFixed(2) + ' away from free shipping)'}
+                                    </span>
+                                </div>
+                                <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
+                                    ${isTinaQualified 
+                                        ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">FREE SHIPPING UNLOCKED</span>' 
+                                        : ''}
+                                    <span class="font-mono text-xs font-extrabold ${isTinaQualified ? 'text-emerald-400' : 'text-indigo-400'}">${tinaPercentage}%</span>
+                                </div>
                             </div>
-                            <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
-                                ${isTinaQualified 
-                                    ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">FREE SHIPPING UNLOCKED</span>' 
-                                    : ''}
-                                <span class="font-mono text-xs font-extrabold ${isTinaQualified ? 'text-emerald-400' : 'text-indigo-400'}">${tinaPercentage}%</span>
+                            <div class="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden border border-slate-800">
+                                <div class="h-full rounded-full transition-all duration-500 ${isTinaQualified ? 'bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-300 shadow-sm shadow-emerald-500/50' : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-400'}" style="width: ${tinaPercentage}%"></div>
                             </div>
                         </div>
-                        <div class="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden border border-slate-800">
-                            <div class="h-full rounded-full transition-all duration-500 ${isTinaQualified ? 'bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-300 shadow-sm shadow-emerald-500/50' : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-400'}" style="width: ${tinaPercentage}%"></div>
+
+                        <!-- Tong Shi Po 10% Community Discount Progress Bar Widget -->
+                        <div id="tong-discount-card" class="${isTongQualified ? 'bg-amber-950/40 border-amber-500/40 shadow-amber-950/50' : 'bg-slate-950/80 border-slate-800'} border rounded-xl p-3.5 space-y-2.5 transition-all duration-300 shadow-lg">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs">
+                                <div class="flex items-center gap-2 font-semibold ${isTongQualified ? 'text-amber-300' : 'text-slate-200'}">
+                                    <span class="leading-relaxed">${isTongQualified 
+                                        ? '🎉 QUALIFIED: 10% Peptide Underground Discount Applied (-$' + tongDiscount.toFixed(2) + ' saved!)' 
+                                        : '🏷️ Tong Shi Po 10% Group Discount: $' + tongSubtotal.toFixed(2) + ' / $700 ($' + tongRemaining.toFixed(2) + ' away from 10% OFF)'}
+                                    </span>
+                                </div>
+                                <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
+                                    ${isTongQualified 
+                                        ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono">10% OFF UNLOCKED</span>' 
+                                        : ''}
+                                    <span class="font-mono text-xs font-extrabold ${isTongQualified ? 'text-amber-400' : 'text-indigo-400'}">${tongPercentage}%</span>
+                                </div>
+                            </div>
+                            <div class="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden border border-slate-800">
+                                <div class="h-full rounded-full transition-all duration-500 ${isTongQualified ? 'bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-300 shadow-sm shadow-amber-500/50' : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-400'}" style="width: ${tongPercentage}%"></div>
+                            </div>
                         </div>
                     </div>
 
@@ -5493,7 +5595,7 @@
                                         <span class="text-slate-300 font-medium">Tong Shi Po:</span>
                                     </div>
                                     <span class="font-mono ${split.tong.count > 0 ? 'text-white font-bold' : 'text-slate-500'}">
-                                        ${split.tong.count} kits ($${split.tong.subtotal.toFixed(2)})
+                                        ${split.tong.count} kits ($${split.tong.adjustedSubtotal.toFixed(2)}${split.tong.isDiscounted ? ' [-10%]' : ''})
                                     </span>
                                 </div>
 
@@ -5544,7 +5646,11 @@
                                 <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
                                     <div>
                                         <span class="text-slate-300 font-medium">Tong Shi Po</span>
-                                        <span class="text-[10px] text-slate-500 block">+$${single.tong.shipping.toFixed(2)} standard ship</span>
+                                        <span class="text-[10px] ${single.tong.isDiscounted ? 'text-amber-400 font-semibold' : 'text-slate-500'} block">
+                                            ${single.tong.isDiscounted 
+                                                ? '🎉 10% Discount (-$' + single.tong.discount.toFixed(2) + ') | +$' + single.tong.shipping.toFixed(2) + ' ship' 
+                                                : '+$' + single.tong.shipping.toFixed(2) + ' standard ship'}
+                                        </span>
                                     </div>
                                     <div class="text-right">
                                         <span class="font-mono ${!single.tong.missing ? 'text-white font-bold' : 'text-slate-600'}">
@@ -5556,7 +5662,7 @@
                                 <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
                                     <div>
                                         <span class="text-slate-300 font-medium">Tina Tianjin Bio</span>
-                                        <span class="text-[10px] text-slate-500 block">${single.tina.isFreeShipping ? '🎉 Free Shipping (≥$700)' : '+$' + single.tina.shipping.toFixed(2) + ' standard ship'}</span>
+                                        <span class="text-[10px] ${single.tina.isFreeShipping ? 'text-emerald-400 font-semibold' : 'text-slate-500'} block">${single.tina.isFreeShipping ? '🎉 Free Shipping (≥$700)' : '+$' + single.tina.shipping.toFixed(2) + ' standard ship'}</span>
                                     </div>
                                     <div class="text-right">
                                         <span class="font-mono ${!single.tina.missing ? 'text-white font-bold' : 'text-slate-600'}">
@@ -5709,16 +5815,29 @@
             const analysis = calculateOptimizerAnalysis(cart, peptideData);
             summaryText += `ESTIMATED COST BREAKDOWN:\n`;
             if (analysis.bestOverallStrategy === 'single' && analysis.lowestSingleVendor) {
-                summaryText += `• Strategy: Single Vendor (${analysis.lowestSingleVendor.name})\n`;
-                summaryText += `• Items Subtotal: $${analysis.lowestSingleVendor.subtotal.toFixed(2)}\n`;
-                summaryText += `• Est. Shipping: +$${analysis.lowestSingleVendor.shipping.toFixed(2)}${analysis.lowestSingleVendor.isFreeShipping ? ' (Free Shipping ≥$700)' : ' ($' + analysis.baseShippingFee.toFixed(2) + '/vendor)'}\n`;
-                summaryText += `• Est. Total: $${analysis.lowestSingleVendor.grandTotal.toFixed(2)}\n`;
+                const best = analysis.lowestSingleVendor;
+                summaryText += `• Strategy: Single Vendor (${best.name})\n`;
+                if (best.isDiscounted) {
+                    summaryText += `• Items Subtotal: $${best.subtotal.toFixed(2)}\n`;
+                    summaryText += `• Community Discount (10% on $700+): -$${best.discount.toFixed(2)}\n`;
+                    summaryText += `• Adjusted Items Subtotal: $${best.adjustedSubtotal.toFixed(2)}\n`;
+                } else {
+                    summaryText += `• Items Subtotal: $${best.subtotal.toFixed(2)}\n`;
+                }
+                summaryText += `• Est. Shipping: +$${best.shipping.toFixed(2)}${best.isFreeShipping ? ' (Free Shipping ≥$700)' : ' ($' + analysis.baseShippingFee.toFixed(2) + '/vendor)'}\n`;
+                summaryText += `• Est. Total: $${best.grandTotal.toFixed(2)}\n`;
                 if (analysis.splitGrandTotal) {
                     summaryText += `• Split-Order Alternative: $${analysis.splitGrandTotal.toFixed(2)} (${analysis.activeVendorsCount} vendors @ $${analysis.baseShippingFee.toFixed(2)}/ea shipping)\n`;
                 }
             } else {
                 summaryText += `• Strategy: Split Order (${analysis.activeVendorsCount} Vendors)\n`;
-                summaryText += `• Items Subtotal: $${analysis.splitSubtotal.toFixed(2)}\n`;
+                if (analysis.splitDiscount > 0) {
+                    summaryText += `• Raw Items Subtotal: $${analysis.splitRawSubtotal.toFixed(2)}\n`;
+                    summaryText += `• Community Discount (Tong Shi Po 10%): -$${analysis.splitDiscount.toFixed(2)}\n`;
+                    summaryText += `• Adjusted Items Subtotal: $${analysis.splitSubtotal.toFixed(2)}\n`;
+                } else {
+                    summaryText += `• Items Subtotal: $${analysis.splitSubtotal.toFixed(2)}\n`;
+                }
                 summaryText += `• Est. Shipping: +$${analysis.splitShippingTotal.toFixed(2)} (${analysis.activeVendorsCount} vendors @ $${analysis.baseShippingFee.toFixed(2)}/ea)\n`;
                 summaryText += `• Est. Total: $${analysis.splitGrandTotal.toFixed(2)}\n`;
                 if (analysis.lowestSingleVendor) {

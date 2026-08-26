@@ -93,6 +93,13 @@
                         <span class="md:hidden">Export</span>
                     </button>
 
+                    <!-- Vendor Rules Manager Button -->
+                    <button id="open-rules-modal-btn" title="Configure Vendor Discount & Shipping Rules" class="flex items-center gap-1.5 sm:gap-2 bg-indigo-950/70 hover:bg-indigo-900 active:bg-indigo-950 text-indigo-200 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-indigo-700/50 cursor-pointer shadow-sm">
+                        <i class="fa-solid fa-sliders text-indigo-400 text-xs sm:text-sm"></i>
+                        <span class="hidden md:inline">Vendor Rules</span>
+                        <span class="md:hidden">Rules</span>
+                    </button>
+
                     <!-- Import Price Sheet Button -->
                     <button id="open-import-modal-btn" title="Import / Update Price Sheet (CSV/TSV/Paste)" class="flex items-center gap-1.5 sm:gap-2 bg-indigo-950/70 hover:bg-indigo-900 active:bg-indigo-950 text-indigo-200 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-indigo-700/50 cursor-pointer shadow-sm">
                         <i class="fa-solid fa-file-import text-indigo-400 text-xs sm:text-sm"></i>
@@ -785,6 +792,236 @@
                     </button>
                     <button id="apply-import-btn" class="hidden px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-lg shadow-emerald-600/20 border border-emerald-500/40 cursor-pointer flex items-center gap-1.5">
                         <i class="fa-solid fa-check"></i> Apply Updates & Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vendor Discount & Shipping Rules Manager Modal -->
+    <div id="rules-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 sm:p-6 bg-slate-950/85 backdrop-blur-md overflow-y-auto">
+        <div class="relative w-full max-w-4xl bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] my-auto">
+            <!-- Modal Header -->
+            <div class="p-4 sm:p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/50">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30 shrink-0">
+                        <i class="fa-solid fa-sliders text-sm"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base sm:text-lg font-bold text-white">Vendor Discount & Shipping Rules Manager</h3>
+                        <p class="text-[11px] sm:text-xs text-slate-400">Configure vendor-specific free shipping thresholds, percentage discounts, group-buy gating, and base shipping rates</p>
+                    </div>
+                </div>
+                <button id="close-rules-modal-btn" class="w-8 h-8 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center justify-center cursor-pointer">
+                    <i class="fa-solid fa-times text-base"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-4 sm:p-6 overflow-y-auto space-y-6 flex-1 touch-scroll">
+                
+                <!-- Global Shipping Rate Configuration Card -->
+                <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 space-y-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <div class="flex items-center gap-2 font-semibold text-slate-200 text-sm">
+                                <i class="fa-solid fa-truck-fast text-indigo-400"></i>
+                                <span>Global Base Shipping Fee per Vendor</span>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Standard flat shipping cost applied to each active vendor in single and split orders when free shipping is not unlocked.</p>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <span class="text-slate-400 text-xs font-bold">$</span>
+                            <input 
+                                type="number" 
+                                id="rules-default-shipping-cost" 
+                                min="0" 
+                                step="1" 
+                                value="50"
+                                class="w-24 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm font-mono text-white text-right focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vendor Rules Section -->
+                <div>
+                    <h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-building-columns text-indigo-400"></i>
+                        <span>Vendor-Specific Rules & Incentives</span>
+                    </h4>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        
+                        <!-- Vendor Card: Tina Tianjin Bio -->
+                        <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-4 space-y-4 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5 mb-3">
+                                    <div class="font-bold text-slate-200 text-sm flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                        <span>Tina Tianjin Bio</span>
+                                    </div>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-800/50">tina</span>
+                                </div>
+
+                                <!-- Tina Free Shipping Controls -->
+                                <div class="space-y-2 mb-4 bg-slate-900/50 border border-slate-800/70 p-3 rounded-lg">
+                                    <div class="flex items-center justify-between text-xs">
+                                        <label for="rules-tina-free-shipping-enable" class="font-semibold text-slate-300 flex items-center gap-1.5 cursor-pointer">
+                                            <i class="fa-solid fa-truck-ramp-box text-emerald-400"></i> Free Shipping
+                                        </label>
+                                        <input type="checkbox" id="rules-tina-free-shipping-enable" class="w-4 h-4 rounded text-emerald-600 bg-slate-950 border-slate-700 focus:ring-emerald-500 cursor-pointer">
+                                    </div>
+                                    <div class="flex items-center justify-between text-xs pt-1">
+                                        <span class="text-[11px] text-slate-400">Threshold ($):</span>
+                                        <input type="number" id="rules-tina-free-shipping-threshold" min="0" step="10" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-white text-right focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition">
+                                    </div>
+                                </div>
+
+                                <!-- Tina Discount Controls -->
+                                <div class="space-y-2 bg-slate-900/50 border border-slate-800/70 p-3 rounded-lg">
+                                    <div class="flex items-center justify-between text-xs">
+                                        <label for="rules-tina-discount-enable" class="font-semibold text-slate-300 flex items-center gap-1.5 cursor-pointer">
+                                            <i class="fa-solid fa-tag text-indigo-400"></i> Percentage Discount
+                                        </label>
+                                        <input type="checkbox" id="rules-tina-discount-enable" class="w-4 h-4 rounded text-indigo-600 bg-slate-950 border-slate-700 focus:ring-indigo-500 cursor-pointer">
+                                    </div>
+                                    <div class="flex items-center justify-between text-xs pt-1">
+                                        <span class="text-[11px] text-slate-400">Discount (%):</span>
+                                        <input type="number" id="rules-tina-discount-percent" min="0" max="100" step="1" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-white text-right focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition">
+                                    </div>
+                                    <div class="flex items-center justify-between text-xs">
+                                        <span class="text-[11px] text-slate-400">Threshold ($):</span>
+                                        <input type="number" id="rules-tina-discount-threshold" min="0" step="10" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-white text-right focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition">
+                                    </div>
+                                    <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-800/80">
+                                        <label for="rules-tina-discount-req-groupbuy" class="text-[11px] text-slate-400 flex items-center gap-1.5 cursor-pointer">
+                                            <i class="fa-solid fa-users text-purple-400 text-[10px]"></i> Requires Group Buy
+                                        </label>
+                                        <input type="checkbox" id="rules-tina-discount-req-groupbuy" class="w-3.5 h-3.5 rounded text-purple-600 bg-slate-950 border-slate-700 focus:ring-purple-500 cursor-pointer">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vendor Card: Tong Shi Po -->
+                        <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-4 space-y-4 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5 mb-3">
+                                    <div class="font-bold text-slate-200 text-sm flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                                        <span>Tong Shi Po</span>
+                                    </div>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950/80 text-amber-300 border border-amber-800/50">tong</span>
+                                </div>
+
+                                <!-- Tong Free Shipping Controls -->
+                                <div class="space-y-2 mb-4 bg-slate-900/50 border border-slate-800/70 p-3 rounded-lg">
+                                    <div class="flex items-center justify-between text-xs">
+                                        <label for="rules-tong-free-shipping-enable" class="font-semibold text-slate-300 flex items-center gap-1.5 cursor-pointer">
+                                            <i class="fa-solid fa-truck-ramp-box text-emerald-400"></i> Free Shipping
+                                        </label>
+                                        <input type="checkbox" id="rules-tong-free-shipping-enable" class="w-4 h-4 rounded text-emerald-600 bg-slate-950 border-slate-700 focus:ring-emerald-500 cursor-pointer">
+                                    </div>
+                                    <div class="flex items-center justify-between text-xs pt-1">
+                                        <span class="text-[11px] text-slate-400">Threshold ($):</span>
+                                        <input type="number" id="rules-tong-free-shipping-threshold" min="0" step="10" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-white text-right focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition">
+                                    </div>
+                                </div>
+
+                                <!-- Tong Discount Controls -->
+                                <div class="space-y-2 bg-slate-900/50 border border-slate-800/70 p-3 rounded-lg">
+                                    <div class="flex items-center justify-between text-xs">
+                                        <label for="rules-tong-discount-enable" class="font-semibold text-slate-300 flex items-center gap-1.5 cursor-pointer">
+                                            <i class="fa-solid fa-tag text-amber-400"></i> Percentage Discount
+                                        </label>
+                                        <input type="checkbox" id="rules-tong-discount-enable" class="w-4 h-4 rounded text-amber-600 bg-slate-950 border-slate-700 focus:ring-amber-500 cursor-pointer">
+                                    </div>
+                                    <div class="flex items-center justify-between text-xs pt-1">
+                                        <span class="text-[11px] text-slate-400">Discount (%):</span>
+                                        <input type="number" id="rules-tong-discount-percent" min="0" max="100" step="1" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-white text-right focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition">
+                                    </div>
+                                    <div class="flex items-center justify-between text-xs">
+                                        <span class="text-[11px] text-slate-400">Threshold ($):</span>
+                                        <input type="number" id="rules-tong-discount-threshold" min="0" step="10" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-white text-right focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition">
+                                    </div>
+                                    <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-800/80">
+                                        <label for="rules-tong-discount-req-groupbuy" class="text-[11px] text-slate-400 flex items-center gap-1.5 cursor-pointer">
+                                            <i class="fa-solid fa-users text-purple-400 text-[10px]"></i> Requires Group Buy
+                                        </label>
+                                        <input type="checkbox" id="rules-tong-discount-req-groupbuy" class="w-3.5 h-3.5 rounded text-purple-600 bg-slate-950 border-slate-700 focus:ring-purple-500 cursor-pointer">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vendor Card: Marvel Chloe -->
+                        <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-4 space-y-4 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5 mb-3">
+                                    <div class="font-bold text-slate-200 text-sm flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
+                                        <span>Marvel Chloe</span>
+                                    </div>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-800/50">marvel</span>
+                                </div>
+
+                                <!-- Marvel Free Shipping Controls -->
+                                <div class="space-y-2 mb-4 bg-slate-900/50 border border-slate-800/70 p-3 rounded-lg">
+                                    <div class="flex items-center justify-between text-xs">
+                                        <label for="rules-marvel-free-shipping-enable" class="font-semibold text-slate-300 flex items-center gap-1.5 cursor-pointer">
+                                            <i class="fa-solid fa-truck-ramp-box text-emerald-400"></i> Free Shipping
+                                        </label>
+                                        <input type="checkbox" id="rules-marvel-free-shipping-enable" class="w-4 h-4 rounded text-emerald-600 bg-slate-950 border-slate-700 focus:ring-emerald-500 cursor-pointer">
+                                    </div>
+                                    <div class="flex items-center justify-between text-xs pt-1">
+                                        <span class="text-[11px] text-slate-400">Threshold ($):</span>
+                                        <input type="number" id="rules-marvel-free-shipping-threshold" min="0" step="10" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-white text-right focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition">
+                                    </div>
+                                </div>
+
+                                <!-- Marvel Discount Controls -->
+                                <div class="space-y-2 bg-slate-900/50 border border-slate-800/70 p-3 rounded-lg">
+                                    <div class="flex items-center justify-between text-xs">
+                                        <label for="rules-marvel-discount-enable" class="font-semibold text-slate-300 flex items-center gap-1.5 cursor-pointer">
+                                            <i class="fa-solid fa-tag text-indigo-400"></i> Percentage Discount
+                                        </label>
+                                        <input type="checkbox" id="rules-marvel-discount-enable" class="w-4 h-4 rounded text-indigo-600 bg-slate-950 border-slate-700 focus:ring-indigo-500 cursor-pointer">
+                                    </div>
+                                    <div class="flex items-center justify-between text-xs pt-1">
+                                        <span class="text-[11px] text-slate-400">Discount (%):</span>
+                                        <input type="number" id="rules-marvel-discount-percent" min="0" max="100" step="1" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-white text-right focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition">
+                                    </div>
+                                    <div class="flex items-center justify-between text-xs">
+                                        <span class="text-[11px] text-slate-400">Threshold ($):</span>
+                                        <input type="number" id="rules-marvel-discount-threshold" min="0" step="10" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-white text-right focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition">
+                                    </div>
+                                    <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-800/80">
+                                        <label for="rules-marvel-discount-req-groupbuy" class="text-[11px] text-slate-400 flex items-center gap-1.5 cursor-pointer">
+                                            <i class="fa-solid fa-users text-purple-400 text-[10px]"></i> Requires Group Buy
+                                        </label>
+                                        <input type="checkbox" id="rules-marvel-discount-req-groupbuy" class="w-3.5 h-3.5 rounded text-purple-600 bg-slate-950 border-slate-700 focus:ring-purple-500 cursor-pointer">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer Actions -->
+            <div class="p-4 sm:p-5 border-t border-slate-800 bg-slate-950/60 flex items-center justify-between gap-3">
+                <button id="reset-rules-btn" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-semibold transition cursor-pointer flex items-center gap-1.5">
+                    <i class="fa-solid fa-rotate-left text-indigo-400"></i> Reset to Defaults
+                </button>
+                <div class="flex items-center gap-2 ml-auto">
+                    <button id="cancel-rules-btn" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 text-slate-300 rounded-xl text-xs font-semibold transition cursor-pointer">
+                        Cancel
+                    </button>
+                    <button id="save-rules-btn" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white rounded-xl text-xs font-bold transition shadow-lg shadow-indigo-600/20 border border-indigo-500/40 cursor-pointer flex items-center gap-1.5">
+                        <i class="fa-solid fa-floppy-disk"></i> Save Rules
                     </button>
                 </div>
             </div>
@@ -3126,6 +3363,93 @@
         }
         window.isGroupBuyActive = isGroupBuyActive;
 
+        const RULES_STORAGE_KEY = 'pep_pricing_rules';
+
+        const DEFAULT_PRICING_RULES = {
+            shipping: {
+                defaultCost: 50
+            },
+            vendors: {
+                tina: {
+                    name: "Tina Tianjin Bio",
+                    freeShippingEnabled: true,
+                    freeShippingThreshold: 700,
+                    discountEnabled: false,
+                    discountPercent: 0,
+                    discountThreshold: 0,
+                    discountRequiresGroupBuy: false
+                },
+                tong: {
+                    name: "Tong Shi Po",
+                    freeShippingEnabled: false,
+                    freeShippingThreshold: 0,
+                    discountEnabled: true,
+                    discountPercent: 10,
+                    discountThreshold: 700,
+                    discountRequiresGroupBuy: true
+                },
+                marvel: {
+                    name: "Marvel Chloe",
+                    freeShippingEnabled: false,
+                    freeShippingThreshold: 0,
+                    discountEnabled: false,
+                    discountPercent: 0,
+                    discountThreshold: 0,
+                    discountRequiresGroupBuy: false
+                }
+            }
+        };
+
+        let pricingRules = loadPricingRules();
+
+        function loadPricingRules() {
+            try {
+                const saved = localStorage.getItem(RULES_STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    return {
+                        shipping: {
+                            defaultCost: (parsed.shipping && typeof parsed.shipping.defaultCost === 'number') 
+                                ? parsed.shipping.defaultCost 
+                                : DEFAULT_PRICING_RULES.shipping.defaultCost
+                        },
+                        vendors: {
+                            tina: Object.assign({}, DEFAULT_PRICING_RULES.vendors.tina, (parsed.vendors && parsed.vendors.tina) || {}),
+                            tong: Object.assign({}, DEFAULT_PRICING_RULES.vendors.tong, (parsed.vendors && parsed.vendors.tong) || {}),
+                            marvel: Object.assign({}, DEFAULT_PRICING_RULES.vendors.marvel, (parsed.vendors && parsed.vendors.marvel) || {})
+                        }
+                    };
+                }
+            } catch (e) {
+                console.warn('Error loading pricing rules from localStorage:', e);
+            }
+            return JSON.parse(JSON.stringify(DEFAULT_PRICING_RULES));
+        }
+
+        function savePricingRules(rules) {
+            pricingRules = rules;
+            localStorage.setItem(RULES_STORAGE_KEY, JSON.stringify(rules));
+            if (rules.shipping && typeof rules.shipping.defaultCost === 'number') {
+                localStorage.setItem(SHIPPING_FEE_KEY, rules.shipping.defaultCost.toString());
+                if (shippingFeeInput) shippingFeeInput.value = rules.shipping.defaultCost;
+            }
+            renderCart();
+        }
+
+        function resetPricingRules() {
+            pricingRules = JSON.parse(JSON.stringify(DEFAULT_PRICING_RULES));
+            localStorage.setItem(RULES_STORAGE_KEY, JSON.stringify(pricingRules));
+            localStorage.setItem(SHIPPING_FEE_KEY, DEFAULT_PRICING_RULES.shipping.defaultCost.toString());
+            if (shippingFeeInput) shippingFeeInput.value = DEFAULT_PRICING_RULES.shipping.defaultCost;
+            renderCart();
+        }
+
+        window.loadPricingRules = loadPricingRules;
+        window.savePricingRules = savePricingRules;
+        window.resetPricingRules = resetPricingRules;
+        window.getPricingRules = () => pricingRules;
+        window.DEFAULT_PRICING_RULES = DEFAULT_PRICING_RULES;
+
         const SHIPPING_FEE_KEY = 'pep_shipping_fee_per_vendor';
         const DEFAULT_SHIPPING_FEE = 50;
         const shippingFeeInput = document.getElementById('shipping-fee-input');
@@ -3135,6 +3459,9 @@
             if (saved !== null && saved !== '') {
                 const parsed = parseFloat(saved);
                 if (!isNaN(parsed) && parsed >= 0) return parsed;
+            }
+            if (typeof pricingRules !== 'undefined' && pricingRules.shipping && typeof pricingRules.shipping.defaultCost === 'number') {
+                return pricingRules.shipping.defaultCost;
             }
             return DEFAULT_SHIPPING_FEE;
         }
@@ -3153,6 +3480,13 @@
         }
 
         // Modal Elements
+        const openRulesModalBtn = document.getElementById('open-rules-modal-btn');
+        const closeRulesModalBtn = document.getElementById('close-rules-modal-btn');
+        const cancelRulesBtn = document.getElementById('cancel-rules-btn');
+        const saveRulesBtn = document.getElementById('save-rules-btn');
+        const resetRulesBtn = document.getElementById('reset-rules-btn');
+        const rulesModal = document.getElementById('rules-modal');
+
         const openImportModalBtn = document.getElementById('open-import-modal-btn');
         const closeImportModalBtn = document.getElementById('close-import-modal-btn');
         const cancelImportBtn = document.getElementById('cancel-import-btn');
@@ -3266,6 +3600,9 @@
             updateAdminUiState(false);
             if (importModal && !importModal.classList.contains('hidden')) {
                 closeImportModal();
+            }
+            if (rulesModal && !rulesModal.classList.contains('hidden')) {
+                closeRulesModal();
             }
             showToast('Admin session locked', 'fa-lock');
         }
@@ -4359,6 +4696,117 @@
         }
 
         // ==========================================
+        // VENDOR RULES MANAGER MODAL CONTROLLER
+        // ==========================================
+        function openRulesModal() {
+            if (!isAdminAuthenticated()) {
+                showToast('Admin authentication required', 'fa-lock');
+                openAdminAuthModal();
+                return;
+            }
+            if (!rulesModal) return;
+            const r = pricingRules || loadPricingRules();
+            
+            const defaultShippingInput = document.getElementById('rules-default-shipping-cost');
+            if (defaultShippingInput) defaultShippingInput.value = r.shipping.defaultCost;
+
+            ['tina', 'tong', 'marvel'].forEach(vKey => {
+                const v = r.vendors[vKey] || {};
+                const freeEnable = document.getElementById('rules-' + vKey + '-free-shipping-enable');
+                const freeThreshold = document.getElementById('rules-' + vKey + '-free-shipping-threshold');
+                const discEnable = document.getElementById('rules-' + vKey + '-discount-enable');
+                const discPct = document.getElementById('rules-' + vKey + '-discount-percent');
+                const discThreshold = document.getElementById('rules-' + vKey + '-discount-threshold');
+                const discReqGroupBuy = document.getElementById('rules-' + vKey + '-discount-req-groupbuy');
+
+                if (freeEnable) freeEnable.checked = v.freeShippingEnabled === true;
+                if (freeThreshold) freeThreshold.value = v.freeShippingThreshold || 0;
+                if (discEnable) discEnable.checked = v.discountEnabled === true;
+                if (discPct) discPct.value = v.discountPercent || 0;
+                if (discThreshold) discThreshold.value = v.discountThreshold || 0;
+                if (discReqGroupBuy) discReqGroupBuy.checked = v.discountRequiresGroupBuy === true;
+            });
+
+            rulesModal.classList.remove('hidden');
+            rulesModal.classList.add('flex');
+        }
+
+        function closeRulesModal() {
+            if (!rulesModal) return;
+            rulesModal.classList.add('hidden');
+            rulesModal.classList.remove('flex');
+        }
+
+        function initAdminRulesControls() {
+            if (openRulesModalBtn) openRulesModalBtn.addEventListener('click', openRulesModal);
+            if (closeRulesModalBtn) closeRulesModalBtn.addEventListener('click', closeRulesModal);
+            if (cancelRulesBtn) cancelRulesBtn.addEventListener('click', closeRulesModal);
+            
+            if (rulesModal) {
+                rulesModal.addEventListener('click', (e) => {
+                    if (e.target === rulesModal) closeRulesModal();
+                });
+            }
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && rulesModal && !rulesModal.classList.contains('hidden')) {
+                    closeRulesModal();
+                }
+            });
+
+            if (saveRulesBtn) {
+                saveRulesBtn.addEventListener('click', () => {
+                    const shippingCost = parseFloat(document.getElementById('rules-default-shipping-cost').value) || 50;
+                    const updated = {
+                        shipping: {
+                            defaultCost: shippingCost
+                        },
+                        vendors: {
+                            tina: {
+                                name: "Tina Tianjin Bio",
+                                freeShippingEnabled: document.getElementById('rules-tina-free-shipping-enable').checked,
+                                freeShippingThreshold: parseFloat(document.getElementById('rules-tina-free-shipping-threshold').value) || 0,
+                                discountEnabled: document.getElementById('rules-tina-discount-enable').checked,
+                                discountPercent: parseFloat(document.getElementById('rules-tina-discount-percent').value) || 0,
+                                discountThreshold: parseFloat(document.getElementById('rules-tina-discount-threshold').value) || 0,
+                                discountRequiresGroupBuy: document.getElementById('rules-tina-discount-req-groupbuy').checked
+                            },
+                            tong: {
+                                name: "Tong Shi Po",
+                                freeShippingEnabled: document.getElementById('rules-tong-free-shipping-enable').checked,
+                                freeShippingThreshold: parseFloat(document.getElementById('rules-tong-free-shipping-threshold').value) || 0,
+                                discountEnabled: document.getElementById('rules-tong-discount-enable').checked,
+                                discountPercent: parseFloat(document.getElementById('rules-tong-discount-percent').value) || 0,
+                                discountThreshold: parseFloat(document.getElementById('rules-tong-discount-threshold').value) || 0,
+                                discountRequiresGroupBuy: document.getElementById('rules-tong-discount-req-groupbuy').checked
+                            },
+                            marvel: {
+                                name: "Marvel Chloe",
+                                freeShippingEnabled: document.getElementById('rules-marvel-free-shipping-enable').checked,
+                                freeShippingThreshold: parseFloat(document.getElementById('rules-marvel-free-shipping-threshold').value) || 0,
+                                discountEnabled: document.getElementById('rules-marvel-discount-enable').checked,
+                                discountPercent: parseFloat(document.getElementById('rules-marvel-discount-percent').value) || 0,
+                                discountThreshold: parseFloat(document.getElementById('rules-marvel-discount-threshold').value) || 0,
+                                discountRequiresGroupBuy: document.getElementById('rules-marvel-discount-req-groupbuy').checked
+                            }
+                        }
+                    };
+                    savePricingRules(updated);
+                    closeRulesModal();
+                    showToast('Vendor pricing & shipping rules updated!', 'fa-circle-check');
+                });
+            }
+
+            if (resetRulesBtn) {
+                resetRulesBtn.addEventListener('click', () => {
+                    resetPricingRules();
+                    openRulesModal();
+                    showToast('Pricing rules reset to official defaults', 'fa-rotate-left');
+                });
+            }
+        }
+
+        // ==========================================
         // MODAL CONTROLLER & EVENT LISTENERS
         // ==========================================
         function openImportModal() {
@@ -5056,15 +5504,13 @@
                 message += `• ${item.qty}x ${catStr}${item.key}\n`;
             });
 
-            if (vendorId === 'tong') {
-                const tongAnalysis = calculateOptimizerAnalysis(cart, peptideData);
-                const tongVendor = tongAnalysis.singleVendors.tong;
-                if (tongVendor && tongVendor.isDiscounted) {
-                    message += `\n------------------------------------\n`;
-                    message += `Items Subtotal: $${tongVendor.subtotal.toFixed(2)}\n`;
-                    message += `🏷️ 10% Community Discount (≥$700): -$${tongVendor.discount.toFixed(2)}\n`;
-                    message += `Adjusted Subtotal: $${tongVendor.adjustedSubtotal.toFixed(2)}\n`;
-                }
+            const analysis = calculateOptimizerAnalysis(cart, peptideData);
+            const vData = analysis.singleVendors[vendorId];
+            if (vData && vData.isDiscounted) {
+                message += `\n------------------------------------\n`;
+                message += `Items Subtotal: $${vData.subtotal.toFixed(2)}\n`;
+                message += `🏷️ ${vData.discountPercent}% Community Discount (≥$${vData.discountThreshold}): -$${vData.discount.toFixed(2)}\n`;
+                message += `Adjusted Subtotal: $${vData.adjustedSubtotal.toFixed(2)}\n`;
             }
 
             message += `\nPlease let me know the total cost including shipping to my address.\n\nThank you!`;
@@ -5099,12 +5545,6 @@
         // =========================================================================
         // ORDER OPTIMIZER & SHIPPING CALCULATION ENGINE
         // =========================================================================
-        const VENDOR_SHIPPING = {
-            marvel: { name: 'Marvel Chloe', fee: 35, freeThreshold: null, note: 'Direct Express Courier ($35)' },
-            tong: { name: 'Tong Shi Po', fee: 40, freeThreshold: null, note: 'Wholesale Export Courier ($40)' },
-            tina: { name: 'Tina Tianjin Bio', fee: 45, freeThreshold: 700, note: 'Courier ($45), Free on orders ≥ $700' }
-        };
-
         let currentOptimizerMode = 'all'; // 'all' (side-by-side), 'single-vendor', or 'split-order'
 
         function setOptimizerMode(mode) {
@@ -5138,32 +5578,36 @@
         window.setOptimizerMode = setOptimizerMode;
 
         // Core Optimizer Analysis Function
-        function calculateOptimizerAnalysis(cartItems, catalog, customShippingFee, customIsGroupBuy) {
+        function calculateOptimizerAnalysis(cartItems, catalog, customShippingFee, customIsGroupBuy, customRules) {
             const items = (cartItems && Array.isArray(cartItems)) 
                 ? cartItems 
                 : (typeof cart !== 'undefined' && Array.isArray(cart) ? cart : []);
             const dataCatalog = (catalog && Array.isArray(catalog)) ? catalog : peptideData;
             const totalItemsCount = items.reduce((acc, curr) => acc + curr.qty, 0);
+
+            const activeRules = customRules || (typeof pricingRules !== 'undefined' ? pricingRules : loadPricingRules());
+
             const baseShippingFee = typeof customShippingFee === 'number' && !isNaN(customShippingFee) 
                 ? customShippingFee 
-                : getShippingFeePerVendor();
+                : (typeof getShippingFeePerVendor === 'function' ? getShippingFeePerVendor() : activeRules.shipping.defaultCost);
+
             const isGroupBuy = typeof customIsGroupBuy === 'boolean' 
                 ? customIsGroupBuy 
                 : isGroupBuyActive();
 
             // 1. Single Vendor Calculations
             const singleVendors = {
-                marvel: { key: 'marvel', name: 'Marvel Chloe', subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, missing: false, unstocked: [], freeThreshold: null, isDiscounted: false },
-                tong: { key: 'tong', name: 'Tong Shi Po', subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, missing: false, unstocked: [], freeThreshold: null, isDiscounted: false },
-                tina: { key: 'tina', name: 'Tina Tianjin Bio', subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, missing: false, unstocked: [], freeThreshold: 700, isDiscounted: false }
+                marvel: { key: 'marvel', name: (activeRules.vendors.marvel && activeRules.vendors.marvel.name) || 'Marvel Chloe', subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, missing: false, unstocked: [], freeThreshold: null, isDiscounted: false, discountPercent: 0, discountThreshold: 0, discountRequiresGroupBuy: false },
+                tong: { key: 'tong', name: (activeRules.vendors.tong && activeRules.vendors.tong.name) || 'Tong Shi Po', subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, missing: false, unstocked: [], freeThreshold: null, isDiscounted: false, discountPercent: 0, discountThreshold: 0, discountRequiresGroupBuy: false },
+                tina: { key: 'tina', name: (activeRules.vendors.tina && activeRules.vendors.tina.name) || 'Tina Tianjin Bio', subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, missing: false, unstocked: [], freeThreshold: null, isDiscounted: false, discountPercent: 0, discountThreshold: 0, discountRequiresGroupBuy: false }
             };
 
             // 2. Split Order Calculations
             let splitRawSubtotal = 0;
             const splitAllocation = {
-                marvel: { count: 0, subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, items: [], freeThreshold: null, isDiscounted: false },
-                tong: { count: 0, subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, items: [], freeThreshold: null, isDiscounted: false },
-                tina: { count: 0, subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, items: [], freeThreshold: 700, isDiscounted: false }
+                marvel: { count: 0, subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, items: [], freeThreshold: null, isDiscounted: false, discountPercent: 0, discountThreshold: 0, discountRequiresGroupBuy: false },
+                tong: { count: 0, subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, items: [], freeThreshold: null, isDiscounted: false, discountPercent: 0, discountThreshold: 0, discountRequiresGroupBuy: false },
+                tina: { count: 0, subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, items: [], freeThreshold: null, isDiscounted: false, discountPercent: 0, discountThreshold: 0, discountRequiresGroupBuy: false }
             };
 
             items.forEach(cartItem => {
@@ -5183,9 +5627,9 @@
 
                 // Determine lowest price vendor for split-order
                 const available = [];
-                if (itemData.prices.marvel !== null) available.push({ vendor: 'marvel', name: 'Marvel Chloe', price: itemData.prices.marvel });
-                if (itemData.prices.tong !== null) available.push({ vendor: 'tong', name: 'Tong Shi Po', price: itemData.prices.tong });
-                if (itemData.prices.tina !== null) available.push({ vendor: 'tina', name: 'Tina Tianjin Bio', price: itemData.prices.tina });
+                if (itemData.prices.marvel !== null) available.push({ vendor: 'marvel', name: singleVendors.marvel.name, price: itemData.prices.marvel });
+                if (itemData.prices.tong !== null) available.push({ vendor: 'tong', name: singleVendors.tong.name, price: itemData.prices.tong });
+                if (itemData.prices.tina !== null) available.push({ vendor: 'tina', name: singleVendors.tina.name, price: itemData.prices.tina });
 
                 if (available.length > 0) {
                     available.sort((a, b) => a.price - b.price);
@@ -5205,46 +5649,49 @@
                 }
             });
 
-            // Tong Shi Po 10% Community Discount on Single Vendor Basket (Gated by Group Buy Mode AND Threshold >= $700)
-            const tongThreshold = 700;
-            const tongRawSubtotal = singleVendors.tong.subtotal;
-            let tongDiscount = 0;
-            let isTongQualified = false;
-            if (isGroupBuy && tongRawSubtotal >= tongThreshold) {
-                tongDiscount = Math.round(tongRawSubtotal * 0.10 * 100) / 100;
-                isTongQualified = true;
-            }
-            singleVendors.tong.discount = tongDiscount;
-            singleVendors.tong.adjustedSubtotal = Math.round((tongRawSubtotal - tongDiscount) * 100) / 100;
-            singleVendors.tong.isDiscounted = isTongQualified;
-
-            singleVendors.marvel.adjustedSubtotal = singleVendors.marvel.subtotal;
-            singleVendors.tina.adjustedSubtotal = singleVendors.tina.subtotal;
-
-            // Calculate Shipping & Grand Totals for Single Vendors
+            // Evaluate discounts & free shipping on single vendors
             const validSingleVendors = [];
-            Object.keys(singleVendors).forEach(vKey => {
+            ['marvel', 'tong', 'tina'].forEach(vKey => {
                 const v = singleVendors[vKey];
+                const vRule = (activeRules.vendors && activeRules.vendors[vKey]) || {};
+
+                // Free shipping evaluation
+                const freeEnabled = vRule.freeShippingEnabled === true;
+                const freeThreshold = typeof vRule.freeShippingThreshold === 'number' ? vRule.freeShippingThreshold : 0;
+                const isFreeShipping = freeEnabled && freeThreshold > 0 && v.subtotal >= freeThreshold;
+                v.freeThreshold = freeEnabled ? freeThreshold : null;
+                v.isFreeShipping = isFreeShipping;
+
+                // Discount evaluation
+                const discEnabled = vRule.discountEnabled === true;
+                const discPct = typeof vRule.discountPercent === 'number' ? vRule.discountPercent : 0;
+                const discThreshold = typeof vRule.discountThreshold === 'number' ? vRule.discountThreshold : 0;
+                const reqGroupBuy = vRule.discountRequiresGroupBuy === true;
+                const isGroupBuyEligible = !reqGroupBuy || isGroupBuy;
+                const isDiscounted = discEnabled && discPct > 0 && isGroupBuyEligible && v.subtotal >= discThreshold;
+
+                let discount = 0;
+                if (isDiscounted) {
+                    discount = Math.round(v.subtotal * (discPct / 100) * 100) / 100;
+                }
+
+                v.discount = discount;
+                v.isDiscounted = isDiscounted;
+                v.discountPercent = discPct;
+                v.discountThreshold = discThreshold;
+                v.discountRequiresGroupBuy = reqGroupBuy;
+                v.adjustedSubtotal = Math.round((v.subtotal - discount) * 100) / 100;
+
                 let shippingFee = 0;
-                let isFreeShipping = false;
-
-                const effectiveSubtotal = v.isDiscounted ? v.adjustedSubtotal : v.subtotal;
-
                 if (v.subtotal > 0) {
-                    if (v.freeThreshold && v.subtotal >= v.freeThreshold) {
-                        shippingFee = 0;
-                        isFreeShipping = true;
-                    } else {
-                        shippingFee = baseShippingFee;
-                    }
+                    shippingFee = isFreeShipping ? 0 : baseShippingFee;
                 }
                 v.shipping = shippingFee;
-                v.isFreeShipping = isFreeShipping;
-                v.grandTotal = Math.round((effectiveSubtotal + shippingFee) * 100) / 100;
+                v.grandTotal = Math.round((v.adjustedSubtotal + shippingFee) * 100) / 100;
 
                 let noteParts = [];
-                if (v.isDiscounted) noteParts.push(`🎉 10% Community Discount (-$${v.discount.toFixed(2)})`);
-                if (isFreeShipping) noteParts.push(`🎉 Free Shipping (≥$700)`);
+                if (isDiscounted) noteParts.push(`🎉 ${discPct}% Community Discount (-$${discount.toFixed(2)})`);
+                if (isFreeShipping) noteParts.push(`🎉 Free Shipping (≥$${freeThreshold})`);
                 else if (v.subtotal > 0) noteParts.push(`+$${baseShippingFee.toFixed(2)} standard ship`);
                 v.note = noteParts.join(' | ');
 
@@ -5256,54 +5703,63 @@
             validSingleVendors.sort((a, b) => a.grandTotal - b.grandTotal);
             const lowestSingleVendor = validSingleVendors[0] || null;
 
-            // Calculate Shipping & Grand Total for Split Order (factoring Tong 10% discount if Group Buy is active and Tong split >= $700)
-            let splitTongDiscount = 0;
-            let isSplitTongQualified = false;
-            if (isGroupBuy && splitAllocation.tong.subtotal >= tongThreshold) {
-                splitTongDiscount = Math.round(splitAllocation.tong.subtotal * 0.10 * 100) / 100;
-                isSplitTongQualified = true;
-            }
-            splitAllocation.tong.discount = splitTongDiscount;
-            splitAllocation.tong.adjustedSubtotal = Math.round((splitAllocation.tong.subtotal - splitTongDiscount) * 100) / 100;
-            splitAllocation.tong.isDiscounted = isSplitTongQualified;
+            // Calculate Shipping & Grand Total for Split Order
+            let splitTotalDiscount = 0;
+            ['marvel', 'tong', 'tina'].forEach(vKey => {
+                const alloc = splitAllocation[vKey];
+                const vRule = (activeRules.vendors && activeRules.vendors[vKey]) || {};
 
-            splitAllocation.marvel.adjustedSubtotal = splitAllocation.marvel.subtotal;
-            splitAllocation.tina.adjustedSubtotal = splitAllocation.tina.subtotal;
+                // Free Shipping evaluation for split basket
+                const freeEnabled = vRule.freeShippingEnabled === true;
+                const freeThreshold = typeof vRule.freeShippingThreshold === 'number' ? vRule.freeShippingThreshold : 0;
+                const isFreeShipping = freeEnabled && freeThreshold > 0 && alloc.subtotal >= freeThreshold;
+                alloc.freeThreshold = freeEnabled ? freeThreshold : null;
+                alloc.isFreeShipping = isFreeShipping;
 
-            const splitTotalDiscount = splitTongDiscount;
+                // Discount evaluation for split basket
+                const discEnabled = vRule.discountEnabled === true;
+                const discPct = typeof vRule.discountPercent === 'number' ? vRule.discountPercent : 0;
+                const discThreshold = typeof vRule.discountThreshold === 'number' ? vRule.discountThreshold : 0;
+                const reqGroupBuy = vRule.discountRequiresGroupBuy === true;
+                const isGroupBuyEligible = !reqGroupBuy || isGroupBuy;
+                const isDiscounted = discEnabled && discPct > 0 && isGroupBuyEligible && alloc.subtotal >= discThreshold;
+
+                let disc = 0;
+                if (isDiscounted) {
+                    disc = Math.round(alloc.subtotal * (discPct / 100) * 100) / 100;
+                }
+
+                alloc.discount = disc;
+                alloc.isDiscounted = isDiscounted;
+                alloc.discountPercent = discPct;
+                alloc.discountThreshold = discThreshold;
+                alloc.discountRequiresGroupBuy = reqGroupBuy;
+                alloc.adjustedSubtotal = Math.round((alloc.subtotal - disc) * 100) / 100;
+                splitTotalDiscount += disc;
+            });
+
             const splitSubtotal = Math.round((splitRawSubtotal - splitTotalDiscount) * 100) / 100;
 
             let splitShippingTotal = 0;
             const splitShippingBreakdown = [];
             let activeVendorsCount = 0;
-            const vendorNames = {
-                marvel: 'Marvel Chloe',
-                tong: 'Tong Shi Po',
-                tina: 'Tina Tianjin Bio'
-            };
 
             Object.keys(splitAllocation).forEach(vKey => {
                 const alloc = splitAllocation[vKey];
                 if (alloc.count > 0) {
                     activeVendorsCount++;
-                    let fee = baseShippingFee;
-                    let isFree = false;
-                    if (alloc.freeThreshold && alloc.subtotal >= alloc.freeThreshold) {
-                        fee = 0;
-                        isFree = true;
-                    }
+                    let fee = alloc.isFreeShipping ? 0 : baseShippingFee;
                     alloc.shipping = fee;
-                    alloc.isFreeShipping = isFree;
                     splitShippingTotal += fee;
                     splitShippingBreakdown.push({
                         vendorKey: vKey,
-                        name: vendorNames[vKey],
+                        name: singleVendors[vKey].name,
                         count: alloc.count,
                         subtotal: alloc.subtotal,
                         discount: alloc.discount || 0,
                         adjustedSubtotal: alloc.adjustedSubtotal,
                         fee: fee,
-                        isFree: isFree
+                        isFree: alloc.isFreeShipping
                     });
                 }
             });
@@ -5326,17 +5782,74 @@
                 bestOverallStrategy = 'split';
             }
 
-            // Tina Shipping Progress
-            const tinaSubtotal = singleVendors.tina.subtotal;
-            const tinaThreshold = 700;
-            const tinaProgressPct = Math.min(100, Math.round((tinaSubtotal / tinaThreshold) * 100));
-            const tinaRemaining = Math.max(0, tinaThreshold - tinaSubtotal);
-            const isTinaQualified = tinaSubtotal >= tinaThreshold;
+            // Vendor Incentive Trackers
+            const vendorIncentives = [];
+            ['tina', 'tong', 'marvel'].forEach(vKey => {
+                const v = singleVendors[vKey];
+                const vRule = (activeRules.vendors && activeRules.vendors[vKey]) || {};
 
-            // Tong Discount Progress (Gated by Group Buy Mode)
+                if (vRule.freeShippingEnabled && vRule.freeShippingThreshold > 0) {
+                    const threshold = vRule.freeShippingThreshold;
+                    const subtotal = v.subtotal;
+                    const pct = Math.min(100, Math.round((subtotal / threshold) * 100));
+                    const remaining = Math.max(0, threshold - subtotal);
+                    const isQualified = subtotal >= threshold;
+                    vendorIncentives.push({
+                        id: vKey + '-free-shipping',
+                        type: 'freeShipping',
+                        vendorKey: vKey,
+                        vendorName: v.name,
+                        threshold,
+                        subtotal,
+                        percentage: pct,
+                        remaining,
+                        isQualified,
+                        requiresGroupBuy: false,
+                        isActive: true
+                    });
+                }
+
+                if (vRule.discountEnabled && vRule.discountPercent > 0 && vRule.discountThreshold > 0) {
+                    const threshold = vRule.discountThreshold;
+                    const subtotal = v.subtotal;
+                    const reqGroupBuy = vRule.discountRequiresGroupBuy === true;
+                    const isEligible = !reqGroupBuy || isGroupBuy;
+                    const pct = isEligible ? Math.min(100, Math.round((subtotal / threshold) * 100)) : 0;
+                    const remaining = isEligible ? Math.max(0, threshold - subtotal) : threshold;
+                    const isQualified = isEligible && subtotal >= threshold;
+                    vendorIncentives.push({
+                        id: vKey + '-discount',
+                        type: 'discount',
+                        vendorKey: vKey,
+                        vendorName: v.name,
+                        discountPercent: vRule.discountPercent,
+                        threshold,
+                        subtotal,
+                        discount: v.discount,
+                        percentage: pct,
+                        remaining,
+                        isQualified,
+                        requiresGroupBuy: reqGroupBuy,
+                        isActive: isEligible
+                    });
+                }
+            });
+
+            // Backward compatibility progress fields
+            const tinaRule = (activeRules.vendors && activeRules.vendors.tina) || {};
+            const tinaSubtotal = singleVendors.tina.subtotal;
+            const tinaThreshold = tinaRule.freeShippingThreshold || 700;
+            const tinaProgressPct = tinaRule.freeShippingEnabled ? Math.min(100, Math.round((tinaSubtotal / tinaThreshold) * 100)) : 0;
+            const tinaRemaining = tinaRule.freeShippingEnabled ? Math.max(0, tinaThreshold - tinaSubtotal) : tinaThreshold;
+            const isTinaQualified = singleVendors.tina.isFreeShipping;
+
+            const tongRule = (activeRules.vendors && activeRules.vendors.tong) || {};
             const tongSubtotal = singleVendors.tong.subtotal;
-            const tongProgressPct = isGroupBuy ? Math.min(100, Math.round((tongSubtotal / tongThreshold) * 100)) : 0;
-            const tongRemaining = isGroupBuy ? Math.max(0, tongThreshold - tongSubtotal) : tongThreshold;
+            const tongThreshold = tongRule.discountThreshold || 700;
+            const isTongEligible = !tongRule.discountRequiresGroupBuy || isGroupBuy;
+            const tongProgressPct = (tongRule.discountEnabled && isTongEligible) ? Math.min(100, Math.round((tongSubtotal / tongThreshold) * 100)) : 0;
+            const tongRemaining = (tongRule.discountEnabled && isTongEligible) ? Math.max(0, tongThreshold - tongSubtotal) : tongThreshold;
+            const isTongQualified = singleVendors.tong.isDiscounted;
 
             return {
                 totalItemsCount,
@@ -5355,6 +5868,8 @@
                 bestOverallStrategy,
                 savingsVsOther,
                 isGroupBuyActive: isGroupBuy,
+                rules: activeRules,
+                vendorIncentives,
                 tinaShippingProgress: {
                     subtotal: tinaSubtotal,
                     threshold: tinaThreshold,
@@ -5368,7 +5883,7 @@
                     percentage: tongProgressPct,
                     remaining: tongRemaining,
                     isQualified: isTongQualified,
-                    discount: tongDiscount,
+                    discount: singleVendors.tong.discount,
                     adjustedSubtotal: singleVendors.tong.adjustedSubtotal,
                     isGroupBuy: isGroupBuy
                 }
@@ -5521,68 +6036,73 @@
                             <div class="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 border-b border-slate-800 pb-1.5">Vendor Total Comparison</div>
                             
                             <div class="flex justify-between items-center text-xs sm:text-sm">
-                                <span class="${!single.marvel.missing && bestSingle && bestSingle.name === 'Marvel Chloe' ? 'text-emerald-400 font-bold' : 'text-slate-300'}">Marvel Chloe:</span>
-                                <span class="font-bold ${!single.marvel.missing ? 'text-white' : 'text-slate-600'}">${!single.marvel.missing ? '$' + single.marvel.subtotal.toFixed(2) : 'Incomplete'}</span>
+                                <span class="${!single.marvel.missing && bestSingle && bestSingle.name === single.marvel.name ? 'text-emerald-400 font-bold' : 'text-slate-300'}">${single.marvel.name}:</span>
+                                <span class="font-bold ${!single.marvel.missing ? 'text-white' : 'text-slate-600'}">${!single.marvel.missing ? (single.marvel.isDiscounted ? '$' + single.marvel.adjustedSubtotal.toFixed(2) + ' <span class="text-[10px] text-amber-400 font-normal">(-' + single.marvel.discountPercent + '%)</span>' : '$' + single.marvel.subtotal.toFixed(2)) : 'Incomplete'}</span>
                             </div>
 
                             <div class="flex justify-between items-center text-xs sm:text-sm">
-                                <span class="${!single.tong.missing && bestSingle && bestSingle.name === 'Tong Shi Po' ? 'text-emerald-400 font-bold' : 'text-slate-300'}">Tong Shi Po:</span>
-                                <span class="font-bold ${!single.tong.missing ? 'text-white' : 'text-slate-600'}">${!single.tong.missing ? (single.tong.isDiscounted ? '$' + single.tong.adjustedSubtotal.toFixed(2) + ' <span class="text-[10px] text-amber-400 font-normal">(-10%)</span>' : '$' + single.tong.subtotal.toFixed(2)) : 'Incomplete'}</span>
+                                <span class="${!single.tong.missing && bestSingle && bestSingle.name === single.tong.name ? 'text-emerald-400 font-bold' : 'text-slate-300'}">${single.tong.name}:</span>
+                                <span class="font-bold ${!single.tong.missing ? 'text-white' : 'text-slate-600'}">${!single.tong.missing ? (single.tong.isDiscounted ? '$' + single.tong.adjustedSubtotal.toFixed(2) + ' <span class="text-[10px] text-amber-400 font-normal">(-' + single.tong.discountPercent + '%)</span>' : '$' + single.tong.subtotal.toFixed(2)) : 'Incomplete'}</span>
                             </div>
 
                             <div class="flex justify-between items-center text-xs sm:text-sm">
-                                <span class="${!single.tina.missing && bestSingle && bestSingle.name === 'Tina Tianjin Bio' ? 'text-emerald-400 font-bold' : 'text-slate-300'}">Tina Tianjin Bio:</span>
-                                <span class="font-bold ${!single.tina.missing ? 'text-white' : 'text-slate-600'}">${!single.tina.missing ? '$' + single.tina.subtotal.toFixed(2) : 'Incomplete'}</span>
+                                <span class="${!single.tina.missing && bestSingle && bestSingle.name === single.tina.name ? 'text-emerald-400 font-bold' : 'text-slate-300'}">${single.tina.name}:</span>
+                                <span class="font-bold ${!single.tina.missing ? 'text-white' : 'text-slate-600'}">${!single.tina.missing ? (single.tina.isDiscounted ? '$' + single.tina.adjustedSubtotal.toFixed(2) + ' <span class="text-[10px] text-amber-400 font-normal">(-' + single.tina.discountPercent + '%)</span>' : '$' + single.tina.subtotal.toFixed(2)) : 'Incomplete'}</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Vendor Incentive Progress Trackers (Tina Free Shipping & Group Buy Gated Tong 10% Discount) -->
-                    <div class="grid grid-cols-1 ${isGroupBuyActive() ? 'md:grid-cols-2' : ''} gap-3">
-                        <!-- Tina Tianjin Bio Free Shipping Progress Bar Widget -->
-                        <div id="tina-free-shipping-card" class="${isTinaQualified ? 'bg-emerald-950/40 border-emerald-500/40 shadow-emerald-950/50' : 'bg-slate-950/80 border-slate-800'} border rounded-xl p-3.5 space-y-2.5 transition-all duration-300 shadow-lg">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs">
-                                <div class="flex items-center gap-2 font-semibold ${isTinaQualified ? 'text-emerald-300' : 'text-slate-200'}">
-                                    <span class="leading-relaxed">${isTinaQualified 
-                                        ? '🎉 QUALIFIED: Free Shipping with Tina Tianjin Bio ($700+ met!)' 
-                                        : '🚚 Tina Tianjin Bio Free Shipping: $' + tinaSubtotal.toFixed(2) + ' / $700 ($' + tinaRemaining.toFixed(2) + ' away from free shipping)'}
-                                    </span>
-                                </div>
-                                <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
-                                    ${isTinaQualified 
-                                        ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">FREE SHIPPING UNLOCKED</span>' 
-                                        : ''}
-                                    <span class="font-mono text-xs font-extrabold ${isTinaQualified ? 'text-emerald-400' : 'text-indigo-400'}">${tinaPercentage}%</span>
-                                </div>
-                            </div>
-                            <div class="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden border border-slate-800">
-                                <div class="h-full rounded-full transition-all duration-500 ${isTinaQualified ? 'bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-300 shadow-sm shadow-emerald-500/50' : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-400'}" style="width: ${tinaPercentage}%"></div>
-                            </div>
-                        </div>
+                    <!-- Vendor Incentive Progress Trackers (Dynamic Rules-Driven Widgets) -->
+                    ${analysis.vendorIncentives.filter(i => i.isActive).length > 0 ? `
+                    <div class="grid grid-cols-1 ${analysis.vendorIncentives.filter(i => i.isActive).length > 1 ? 'md:grid-cols-2' : ''} gap-3">
+                        ${analysis.vendorIncentives.filter(i => i.isActive).map(inc => {
+                            const cardId = (inc.vendorKey === 'tina' && inc.type === 'freeShipping') 
+                                ? 'tina-free-shipping-card' 
+                                : ((inc.vendorKey === 'tong' && inc.type === 'discount') 
+                                    ? 'tong-discount-card' 
+                                    : `${inc.vendorKey}-${inc.type}-card`);
+                            
+                            const isFreeShip = inc.type === 'freeShipping';
+                            const qualBg = isFreeShip ? 'bg-emerald-950/40 border-emerald-500/40 shadow-emerald-950/50' : 'bg-amber-950/40 border-amber-500/40 shadow-amber-950/50';
+                            const qualText = isFreeShip ? 'text-emerald-300' : 'text-amber-300';
+                            const qualBadge = isFreeShip 
+                                ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono">FREE SHIPPING UNLOCKED</span>' 
+                                : `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono">${inc.discountPercent}% OFF UNLOCKED</span>`;
+                            const qualGradient = isFreeShip 
+                                ? 'bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-300 shadow-sm shadow-emerald-500/50' 
+                                : 'bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-300 shadow-sm shadow-amber-500/50';
+                            const pctText = isFreeShip ? 'text-emerald-400' : 'text-amber-400';
 
-                        ${isGroupBuyActive() ? `
-                        <!-- Tong Shi Po 10% Community Discount Progress Bar Widget (Group Buy Gated) -->
-                        <div id="tong-discount-card" class="${isTongQualified ? 'bg-amber-950/40 border-amber-500/40 shadow-amber-950/50' : 'bg-slate-950/80 border-slate-800'} border rounded-xl p-3.5 space-y-2.5 transition-all duration-300 shadow-lg">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs">
-                                <div class="flex items-center gap-2 font-semibold ${isTongQualified ? 'text-amber-300' : 'text-slate-200'}">
-                                    <span class="leading-relaxed">${isTongQualified 
-                                        ? '🎉 QUALIFIED: 10% Peptide Underground Discount Applied (-$' + tongDiscount.toFixed(2) + ' saved!)' 
-                                        : '🏷️ Tong Shi Po 10% Group Discount: $' + tongSubtotal.toFixed(2) + ' / $700 ($' + tongRemaining.toFixed(2) + ' away from 10% OFF)'}
-                                    </span>
+                            let titleText = '';
+                            if (isFreeShip) {
+                                titleText = inc.isQualified 
+                                    ? `🎉 QUALIFIED: Free Shipping with ${inc.vendorName} ($${inc.threshold}+ met!)` 
+                                    : `🚚 ${inc.vendorName} Free Shipping: $${inc.subtotal.toFixed(2)} / $${inc.threshold} ($${inc.remaining.toFixed(2)} away from free shipping)`;
+                            } else {
+                                titleText = inc.isQualified 
+                                    ? `🎉 QUALIFIED: ${inc.discountPercent}% ${inc.vendorKey === 'tong' ? 'Peptide Underground' : inc.vendorName} Discount Applied (-$${inc.discount.toFixed(2)} saved!)` 
+                                    : `🏷️ ${inc.vendorName} ${inc.discountPercent}% ${inc.requiresGroupBuy ? 'Group' : 'Volume'} Discount: $${inc.subtotal.toFixed(2)} / $${inc.threshold} ($${inc.remaining.toFixed(2)} away from ${inc.discountPercent}% OFF)`;
+                            }
+
+                            return `
+                                <div id="${cardId}" class="${inc.isQualified ? qualBg : 'bg-slate-950/80 border-slate-800'} border rounded-xl p-3.5 space-y-2.5 transition-all duration-300 shadow-lg">
+                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs">
+                                        <div class="flex items-center gap-2 font-semibold ${inc.isQualified ? qualText : 'text-slate-200'}">
+                                            <span class="leading-relaxed">${titleText}</span>
+                                        </div>
+                                        <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
+                                            ${inc.isQualified ? qualBadge : ''}
+                                            <span class="font-mono text-xs font-extrabold ${inc.isQualified ? pctText : 'text-indigo-400'}">${inc.percentage}%</span>
+                                        </div>
+                                    </div>
+                                    <div class="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden border border-slate-800">
+                                        <div class="h-full rounded-full transition-all duration-500 ${inc.isQualified ? qualGradient : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-400'}" style="width: ${inc.percentage}%"></div>
+                                    </div>
                                 </div>
-                                <div class="flex items-center gap-2 self-end sm:self-auto shrink-0">
-                                    ${isTongQualified 
-                                        ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-mono">10% OFF UNLOCKED</span>' 
-                                        : ''}
-                                    <span class="font-mono text-xs font-extrabold ${isTongQualified ? 'text-amber-400' : 'text-indigo-400'}">${tongPercentage}%</span>
-                                </div>
-                            </div>
-                            <div class="w-full bg-slate-900 rounded-full h-2.5 overflow-hidden border border-slate-800">
-                                <div class="h-full rounded-full transition-all duration-500 ${isTongQualified ? 'bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-300 shadow-sm shadow-amber-500/50' : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-400'}" style="width: ${tongPercentage}%"></div>
-                            </div>
-                        </div>
-                        ` : ''}
+                            `;
+                        }).join('')}
                     </div>
+                    ` : ''}
 
                     <!-- Dual Side-by-Side Panels: Split-Order vs Single-Vendor with Shipping -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
@@ -5600,30 +6120,30 @@
                                 <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
                                     <div class="flex items-center gap-2">
                                         <span class="w-2 h-2 rounded-full bg-blue-400"></span>
-                                        <span class="text-slate-300 font-medium">Marvel Chloe:</span>
+                                        <span class="text-slate-300 font-medium">${single.marvel.name}:</span>
                                     </div>
                                     <span class="font-mono ${split.marvel.count > 0 ? 'text-white font-bold' : 'text-slate-500'}">
-                                        ${split.marvel.count} kits ($${split.marvel.subtotal.toFixed(2)})
+                                        ${split.marvel.count} kits ($${split.marvel.adjustedSubtotal.toFixed(2)}${split.marvel.isDiscounted ? ' [-' + split.marvel.discountPercent + '%]' : ''})
                                     </span>
                                 </div>
 
                                 <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
                                     <div class="flex items-center gap-2">
                                         <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                                        <span class="text-slate-300 font-medium">Tong Shi Po:</span>
+                                        <span class="text-slate-300 font-medium">${single.tong.name}:</span>
                                     </div>
                                     <span class="font-mono ${split.tong.count > 0 ? 'text-white font-bold' : 'text-slate-500'}">
-                                        ${split.tong.count} kits ($${split.tong.adjustedSubtotal.toFixed(2)}${split.tong.isDiscounted ? ' [-10%]' : ''})
+                                        ${split.tong.count} kits ($${split.tong.adjustedSubtotal.toFixed(2)}${split.tong.isDiscounted ? ' [-' + split.tong.discountPercent + '%]' : ''})
                                     </span>
                                 </div>
 
                                 <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
                                     <div class="flex items-center gap-2">
                                         <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                                        <span class="text-slate-300 font-medium">Tina Tianjin Bio:</span>
+                                        <span class="text-slate-300 font-medium">${single.tina.name}:</span>
                                     </div>
                                     <span class="font-mono ${split.tina.count > 0 ? 'text-white font-bold' : 'text-slate-500'}">
-                                        ${split.tina.count} kits ($${split.tina.subtotal.toFixed(2)})
+                                        ${split.tina.count} kits ($${split.tina.adjustedSubtotal.toFixed(2)}${split.tina.isDiscounted ? ' [-' + split.tina.discountPercent + '%]' : ''})
                                     </span>
                                 </div>
                             </div>
@@ -5651,8 +6171,10 @@
                             <div class="space-y-2 text-xs">
                                 <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
                                     <div>
-                                        <span class="text-slate-300 font-medium">Marvel Chloe</span>
-                                        <span class="text-[10px] text-slate-500 block">+$${single.marvel.shipping.toFixed(2)} standard ship</span>
+                                        <span class="text-slate-300 font-medium">${single.marvel.name}</span>
+                                        <span class="text-[10px] ${single.marvel.isDiscounted ? 'text-amber-400 font-semibold' : 'text-slate-500'} block">
+                                            ${single.marvel.isDiscounted ? '🎉 ' + single.marvel.discountPercent + '% Discount (-$' + single.marvel.discount.toFixed(2) + ') | ' : ''}${single.marvel.isFreeShipping ? '🎉 Free Shipping (≥$' + single.marvel.freeThreshold + ')' : '+$' + single.marvel.shipping.toFixed(2) + ' standard ship'}
+                                        </span>
                                     </div>
                                     <div class="text-right">
                                         <span class="font-mono ${!single.marvel.missing ? 'text-white font-bold' : 'text-slate-600'}">
@@ -5663,11 +6185,9 @@
 
                                 <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
                                     <div>
-                                        <span class="text-slate-300 font-medium">Tong Shi Po</span>
+                                        <span class="text-slate-300 font-medium">${single.tong.name}</span>
                                         <span class="text-[10px] ${single.tong.isDiscounted ? 'text-amber-400 font-semibold' : 'text-slate-500'} block">
-                                            ${single.tong.isDiscounted 
-                                                ? '🎉 10% Discount (-$' + single.tong.discount.toFixed(2) + ') | +$' + single.tong.shipping.toFixed(2) + ' ship' 
-                                                : '+$' + single.tong.shipping.toFixed(2) + ' standard ship'}
+                                            ${single.tong.isDiscounted ? '🎉 ' + single.tong.discountPercent + '% Discount (-$' + single.tong.discount.toFixed(2) + ') | ' : ''}${single.tong.isFreeShipping ? '🎉 Free Shipping (≥$' + single.tong.freeThreshold + ')' : '+$' + single.tong.shipping.toFixed(2) + ' standard ship'}
                                         </span>
                                     </div>
                                     <div class="text-right">
@@ -5679,8 +6199,10 @@
 
                                 <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
                                     <div>
-                                        <span class="text-slate-300 font-medium">Tina Tianjin Bio</span>
-                                        <span class="text-[10px] ${single.tina.isFreeShipping ? 'text-emerald-400 font-semibold' : 'text-slate-500'} block">${single.tina.isFreeShipping ? '🎉 Free Shipping (≥$700)' : '+$' + single.tina.shipping.toFixed(2) + ' standard ship'}</span>
+                                        <span class="text-slate-300 font-medium">${single.tina.name}</span>
+                                        <span class="text-[10px] ${single.tina.isDiscounted ? 'text-amber-400 font-semibold' : (single.tina.isFreeShipping ? 'text-emerald-400 font-semibold' : 'text-slate-500')} block">
+                                            ${single.tina.isDiscounted ? '🎉 ' + single.tina.discountPercent + '% Discount (-$' + single.tina.discount.toFixed(2) + ') | ' : ''}${single.tina.isFreeShipping ? '🎉 Free Shipping (≥$' + single.tina.freeThreshold + ')' : '+$' + single.tina.shipping.toFixed(2) + ' standard ship'}
+                                        </span>
                                     </div>
                                     <div class="text-right">
                                         <span class="font-mono ${!single.tina.missing ? 'text-white font-bold' : 'text-slate-600'}">
@@ -5838,12 +6360,12 @@
                 summaryText += `• Strategy: Single Vendor (${best.name})\n`;
                 if (best.isDiscounted) {
                     summaryText += `• Items Subtotal: $${best.subtotal.toFixed(2)}\n`;
-                    summaryText += `• Community Discount (10% on $700+): -$${best.discount.toFixed(2)}\n`;
+                    summaryText += `• Community Discount (${best.discountPercent}% on $${best.discountThreshold}+): -$${best.discount.toFixed(2)}\n`;
                     summaryText += `• Adjusted Items Subtotal: $${best.adjustedSubtotal.toFixed(2)}\n`;
                 } else {
                     summaryText += `• Items Subtotal: $${best.subtotal.toFixed(2)}\n`;
                 }
-                summaryText += `• Est. Shipping: +$${best.shipping.toFixed(2)}${best.isFreeShipping ? ' (Free Shipping ≥$700)' : ' ($' + analysis.baseShippingFee.toFixed(2) + '/vendor)'}\n`;
+                summaryText += `• Est. Shipping: +$${best.shipping.toFixed(2)}${best.isFreeShipping ? ' (Free Shipping ≥$' + best.freeThreshold + ')' : ' ($' + analysis.baseShippingFee.toFixed(2) + '/vendor)'}\n`;
                 summaryText += `• Est. Total: $${best.grandTotal.toFixed(2)}\n`;
                 if (analysis.splitGrandTotal) {
                     summaryText += `• Split-Order Alternative: $${analysis.splitGrandTotal.toFixed(2)} (${analysis.activeVendorsCount} vendors @ $${analysis.baseShippingFee.toFixed(2)}/ea shipping)\n`;
@@ -5852,7 +6374,7 @@
                 summaryText += `• Strategy: Split Order (${analysis.activeVendorsCount} Vendors)\n`;
                 if (analysis.splitDiscount > 0) {
                     summaryText += `• Raw Items Subtotal: $${analysis.splitRawSubtotal.toFixed(2)}\n`;
-                    summaryText += `• Community Discount (Tong Shi Po 10%): -$${analysis.splitDiscount.toFixed(2)}\n`;
+                    summaryText += `• Community Discounts: -$${analysis.splitDiscount.toFixed(2)}\n`;
                     summaryText += `• Adjusted Items Subtotal: $${analysis.splitSubtotal.toFixed(2)}\n`;
                 } else {
                     summaryText += `• Items Subtotal: $${analysis.splitSubtotal.toFixed(2)}\n`;
@@ -5952,6 +6474,7 @@
             renderCart();
             initGroupBuyControls();
             initShippingFeeControl();
+            initAdminRulesControls();
         }
 
         initApp();

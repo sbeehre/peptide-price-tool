@@ -491,18 +491,18 @@
             </div>
 
             <!-- Table Container with Smooth Touch Horizontal Scroll -->
-            <div class="overflow-x-auto touch-scroll pb-2">
-                <table class="w-full text-left text-xs sm:text-sm min-w-[680px] sm:min-w-[720px]">
+            <div class="overflow-x-auto touch-scroll pb-4 pr-6 sm:pr-8">
+                <table class="w-full text-left text-xs sm:text-sm min-w-full table-auto min-w-[900px]">
                     <thead class="bg-slate-900/80 text-[11px] sm:text-xs text-slate-400 uppercase tracking-wider border-b border-slate-800">
                         <tr>
-                            <th class="py-3 px-3.5 sm:py-3.5 sm:px-4 font-semibold">Peptide / Product</th>
-                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold">Specification</th>
-                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right">Marvel Chloe</th>
-                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right">Tong Shi Po</th>
-                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right">Tina Bio</th>
-                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right">Lowest Price</th>
-                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-center">Best Vendor</th>
-                            <th class="py-3 px-3.5 sm:py-3.5 sm:px-4 font-semibold text-center min-w-[76px] sm:min-w-[84px] pr-4 sm:pr-5">Add</th>
+                            <th class="py-3 px-3.5 sm:py-3.5 sm:px-4 font-semibold min-w-[180px]">Peptide / Product</th>
+                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold min-w-[110px]">Specification</th>
+                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right min-w-[100px]">Marvel Chloe</th>
+                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right min-w-[100px]">Tong Shi Po</th>
+                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right min-w-[100px]">Tina Bio</th>
+                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right min-w-[100px]">Lowest Price</th>
+                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-center min-w-[110px]">Best Vendor</th>
+                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-center w-28 min-w-[100px] pr-4 shrink-0">ADD</th>
                         </tr>
                     </thead>
                     <tbody id="catalog-tbody" class="divide-y divide-slate-800/60 text-slate-300">
@@ -4956,9 +4956,10 @@
                                 ${info.winners.join(', ') || 'N/A'}
                             </span>
                         </td>
-                        <td class="py-3 px-3.5 sm:py-3.5 sm:px-4 text-center whitespace-nowrap min-w-[76px] sm:min-w-[84px] pr-4 sm:pr-5">
-                            <button data-umami-event="add-to-order" class="add-to-cart-table-btn shrink-0 bg-indigo-600/30 hover:bg-indigo-600 active:bg-indigo-700 text-indigo-300 hover:text-white border border-indigo-500/40 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer min-h-[36px] flex items-center justify-center mx-auto" data-key="${item.key}">
-                                <i class="fa-solid fa-plus mr-1 shrink-0"></i> <span>Add</span>
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-center whitespace-nowrap w-28 min-w-[100px] pr-4 shrink-0">
+                            <button data-umami-event="add-to-order" class="add-to-cart-table-btn w-full max-w-[80px] mx-auto py-1.5 px-2.5 flex items-center justify-center gap-1 text-xs font-semibold rounded-lg bg-indigo-600/80 hover:bg-indigo-500 text-white shrink-0 transition cursor-pointer shadow-sm border border-indigo-500/50" data-key="${item.key}">
+                                <i class="fa-solid fa-plus text-xs shrink-0"></i>
+                                <span>Add</span>
                             </button>
                         </td>
                     </tr>

@@ -393,7 +393,7 @@
                         </div>
                     </div>
 
-                    <div class="overflow-x-auto rounded-xl border border-slate-800 touch-scroll">
+                    <div class="overflow-x-auto rounded-xl border border-slate-800 touch-scroll pb-1">
                         <table class="w-full text-left text-xs sm:text-sm min-w-[620px]">
                             <thead class="bg-slate-900/90 text-[11px] sm:text-xs text-slate-400 uppercase tracking-wider border-b border-slate-800">
                                 <tr>
@@ -491,8 +491,8 @@
             </div>
 
             <!-- Table Container with Smooth Touch Horizontal Scroll -->
-            <div class="overflow-x-auto touch-scroll">
-                <table class="w-full text-left text-xs sm:text-sm min-w-[640px]">
+            <div class="overflow-x-auto touch-scroll pb-2">
+                <table class="w-full text-left text-xs sm:text-sm min-w-[680px] sm:min-w-[720px]">
                     <thead class="bg-slate-900/80 text-[11px] sm:text-xs text-slate-400 uppercase tracking-wider border-b border-slate-800">
                         <tr>
                             <th class="py-3 px-3.5 sm:py-3.5 sm:px-4 font-semibold">Peptide / Product</th>
@@ -502,7 +502,7 @@
                             <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right">Tina Bio</th>
                             <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right">Lowest Price</th>
                             <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-center">Best Vendor</th>
-                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-center">Add</th>
+                            <th class="py-3 px-3.5 sm:py-3.5 sm:px-4 font-semibold text-center min-w-[76px] sm:min-w-[84px] pr-4 sm:pr-5">Add</th>
                         </tr>
                     </thead>
                     <tbody id="catalog-tbody" class="divide-y divide-slate-800/60 text-slate-300">
@@ -3120,6 +3120,12 @@
         const groupBuyToggle = document.getElementById('group-buy-toggle');
         const groupBuyContainer = document.getElementById('group-buy-input-container');
         const groupBuyBatchInput = document.getElementById('group-buy-batch-input');
+        function isGroupBuyActive() {
+            if (groupBuyToggle) return groupBuyToggle.checked;
+            return localStorage.getItem(GROUP_BUY_ACTIVE_KEY) === 'true';
+        }
+        window.isGroupBuyActive = isGroupBuyActive;
+
         const SHIPPING_FEE_KEY = 'pep_shipping_fee_per_vendor';
         const DEFAULT_SHIPPING_FEE = 50;
         const shippingFeeInput = document.getElementById('shipping-fee-input');
@@ -4950,9 +4956,9 @@
                                 ${info.winners.join(', ') || 'N/A'}
                             </span>
                         </td>
-                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-center whitespace-nowrap">
-                            <button data-umami-event="add-to-order" class="add-to-cart-table-btn bg-indigo-600/30 hover:bg-indigo-600 active:bg-indigo-700 text-indigo-300 hover:text-white border border-indigo-500/40 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer min-h-[36px] flex items-center justify-center mx-auto" data-key="${item.key}">
-                                <i class="fa-solid fa-plus mr-1"></i> Add
+                        <td class="py-3 px-3.5 sm:py-3.5 sm:px-4 text-center whitespace-nowrap min-w-[76px] sm:min-w-[84px] pr-4 sm:pr-5">
+                            <button data-umami-event="add-to-order" class="add-to-cart-table-btn shrink-0 bg-indigo-600/30 hover:bg-indigo-600 active:bg-indigo-700 text-indigo-300 hover:text-white border border-indigo-500/40 px-3 py-1.5 rounded-lg text-xs font-semibold transition cursor-pointer min-h-[36px] flex items-center justify-center mx-auto" data-key="${item.key}">
+                                <i class="fa-solid fa-plus mr-1 shrink-0"></i> <span>Add</span>
                             </button>
                         </td>
                     </tr>
@@ -5131,12 +5137,18 @@
         window.setOptimizerMode = setOptimizerMode;
 
         // Core Optimizer Analysis Function
-        function calculateOptimizerAnalysis(cartItems, catalog, customShippingFee) {
+        function calculateOptimizerAnalysis(cartItems, catalog, customShippingFee, customIsGroupBuy) {
+            const items = (cartItems && Array.isArray(cartItems)) 
+                ? cartItems 
+                : (typeof cart !== 'undefined' && Array.isArray(cart) ? cart : []);
             const dataCatalog = (catalog && Array.isArray(catalog)) ? catalog : peptideData;
-            const totalItemsCount = cartItems.reduce((acc, curr) => acc + curr.qty, 0);
+            const totalItemsCount = items.reduce((acc, curr) => acc + curr.qty, 0);
             const baseShippingFee = typeof customShippingFee === 'number' && !isNaN(customShippingFee) 
                 ? customShippingFee 
                 : getShippingFeePerVendor();
+            const isGroupBuy = typeof customIsGroupBuy === 'boolean' 
+                ? customIsGroupBuy 
+                : isGroupBuyActive();
 
             // 1. Single Vendor Calculations
             const singleVendors = {
@@ -5153,7 +5165,7 @@
                 tina: { count: 0, subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, items: [], freeThreshold: 700, isDiscounted: false }
             };
 
-            cartItems.forEach(cartItem => {
+            items.forEach(cartItem => {
                 const itemData = dataCatalog.find(i => i.key === cartItem.key || i.id === cartItem.key);
                 if (!itemData) return;
 
@@ -5192,12 +5204,12 @@
                 }
             });
 
-            // Tong Shi Po 10% Community Discount on Single Vendor Basket (Threshold >= $700)
+            // Tong Shi Po 10% Community Discount on Single Vendor Basket (Gated by Group Buy Mode AND Threshold >= $700)
             const tongThreshold = 700;
             const tongRawSubtotal = singleVendors.tong.subtotal;
             let tongDiscount = 0;
             let isTongQualified = false;
-            if (tongRawSubtotal >= tongThreshold) {
+            if (isGroupBuy && tongRawSubtotal >= tongThreshold) {
                 tongDiscount = Math.round(tongRawSubtotal * 0.10 * 100) / 100;
                 isTongQualified = true;
             }
@@ -5243,10 +5255,10 @@
             validSingleVendors.sort((a, b) => a.grandTotal - b.grandTotal);
             const lowestSingleVendor = validSingleVendors[0] || null;
 
-            // Calculate Shipping & Grand Total for Split Order (factoring Tong 10% discount if Tong split >= $700)
+            // Calculate Shipping & Grand Total for Split Order (factoring Tong 10% discount if Group Buy is active and Tong split >= $700)
             let splitTongDiscount = 0;
             let isSplitTongQualified = false;
-            if (splitAllocation.tong.subtotal >= tongThreshold) {
+            if (isGroupBuy && splitAllocation.tong.subtotal >= tongThreshold) {
                 splitTongDiscount = Math.round(splitAllocation.tong.subtotal * 0.10 * 100) / 100;
                 isSplitTongQualified = true;
             }
@@ -5320,10 +5332,10 @@
             const tinaRemaining = Math.max(0, tinaThreshold - tinaSubtotal);
             const isTinaQualified = tinaSubtotal >= tinaThreshold;
 
-            // Tong Discount Progress
+            // Tong Discount Progress (Gated by Group Buy Mode)
             const tongSubtotal = singleVendors.tong.subtotal;
-            const tongProgressPct = Math.min(100, Math.round((tongSubtotal / tongThreshold) * 100));
-            const tongRemaining = Math.max(0, tongThreshold - tongSubtotal);
+            const tongProgressPct = isGroupBuy ? Math.min(100, Math.round((tongSubtotal / tongThreshold) * 100)) : 0;
+            const tongRemaining = isGroupBuy ? Math.max(0, tongThreshold - tongSubtotal) : tongThreshold;
 
             return {
                 totalItemsCount,
@@ -5341,6 +5353,7 @@
                 baseShippingFee,
                 bestOverallStrategy,
                 savingsVsOther,
+                isGroupBuyActive: isGroupBuy,
                 tinaShippingProgress: {
                     subtotal: tinaSubtotal,
                     threshold: tinaThreshold,
@@ -5355,12 +5368,14 @@
                     remaining: tongRemaining,
                     isQualified: isTongQualified,
                     discount: tongDiscount,
-                    adjustedSubtotal: singleVendors.tong.adjustedSubtotal
+                    adjustedSubtotal: singleVendors.tong.adjustedSubtotal,
+                    isGroupBuy: isGroupBuy
                 }
             };
         }
 
         window.calculateOptimizerAnalysis = calculateOptimizerAnalysis;
+        window.getCart = () => cart;
 
         function renderCart() {
             const totalItemsCount = cart.reduce((acc, curr) => acc + curr.qty, 0);
@@ -5521,8 +5536,8 @@
                         </div>
                     </div>
 
-                    <!-- Vendor Incentive Progress Trackers (Tina Free Shipping & Tong 10% Discount) -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <!-- Vendor Incentive Progress Trackers (Tina Free Shipping & Group Buy Gated Tong 10% Discount) -->
+                    <div class="grid grid-cols-1 ${isGroupBuyActive() ? 'md:grid-cols-2' : ''} gap-3">
                         <!-- Tina Tianjin Bio Free Shipping Progress Bar Widget -->
                         <div id="tina-free-shipping-card" class="${isTinaQualified ? 'bg-emerald-950/40 border-emerald-500/40 shadow-emerald-950/50' : 'bg-slate-950/80 border-slate-800'} border rounded-xl p-3.5 space-y-2.5 transition-all duration-300 shadow-lg">
                             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs">
@@ -5544,7 +5559,8 @@
                             </div>
                         </div>
 
-                        <!-- Tong Shi Po 10% Community Discount Progress Bar Widget -->
+                        ${isGroupBuyActive() ? `
+                        <!-- Tong Shi Po 10% Community Discount Progress Bar Widget (Group Buy Gated) -->
                         <div id="tong-discount-card" class="${isTongQualified ? 'bg-amber-950/40 border-amber-500/40 shadow-amber-950/50' : 'bg-slate-950/80 border-slate-800'} border rounded-xl p-3.5 space-y-2.5 transition-all duration-300 shadow-lg">
                             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs">
                                 <div class="flex items-center gap-2 font-semibold ${isTongQualified ? 'text-amber-300' : 'text-slate-200'}">
@@ -5564,6 +5580,7 @@
                                 <div class="h-full rounded-full transition-all duration-500 ${isTongQualified ? 'bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-300 shadow-sm shadow-amber-500/50' : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-400'}" style="width: ${tongPercentage}%"></div>
                             </div>
                         </div>
+                        ` : ''}
                     </div>
 
                     <!-- Dual Side-by-Side Panels: Split-Order vs Single-Vendor with Shipping -->
@@ -5777,6 +5794,7 @@
                     groupBuyContainer.classList.remove('flex');
                     if (badge) badge.classList.add('hidden');
                 }
+                renderCart();
             });
 
             groupBuyBatchInput.addEventListener('input', (e) => {

@@ -61,7 +61,7 @@
 
     <!-- Navigation / Header -->
     <header class="border-b border-slate-800 bg-slate-950/90 backdrop-blur sticky top-0 z-50 transition-all">
-        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-4">
+        <div class="max-w-screen-2xl mx-auto px-4 sm:px-8 py-3 sm:py-4 flex items-center justify-between gap-2 sm:gap-4">
             <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
                 <button id="header-logo-btn" aria-label="Logo" class="p-2 sm:p-2.5 bg-indigo-600/20 text-indigo-400 rounded-xl border border-indigo-500/30 shrink-0 select-none cursor-default">
                     <i class="fa-solid fa-flask-vial text-xl sm:text-2xl pointer-events-none"></i>
@@ -125,7 +125,7 @@
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6 sm:space-y-8">
+    <main class="max-w-screen-2xl mx-auto px-4 sm:px-8 py-4 sm:py-8 space-y-6 sm:space-y-8">
 
         <!-- Search Section -->
         <section class="bg-slate-950/90 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl backdrop-blur relative z-40">
@@ -477,7 +477,7 @@
         </section>
 
         <!-- Catalog Results Table -->
-        <section class="bg-slate-950/70 border border-slate-800 rounded-xl sm:rounded-2xl overflow-hidden shadow-xl">
+        <section class="bg-slate-950/70 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
             <div class="p-4 sm:p-5 border-b border-slate-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
                 <div>
                     <h3 class="font-bold text-slate-200 text-base sm:text-lg">Full Price Catalog Table</h3>
@@ -491,18 +491,18 @@
             </div>
 
             <!-- Table Container with Smooth Touch Horizontal Scroll -->
-            <div class="overflow-x-auto touch-scroll pb-4 pr-6 sm:pr-8">
-                <table class="w-full text-left text-xs sm:text-sm min-w-full table-auto min-w-[900px]">
+            <div class="w-full overflow-x-auto touch-scroll pb-4 pr-6 sm:pr-8">
+                <table class="w-full min-w-[950px] table-auto text-left text-xs sm:text-sm">
                     <thead class="bg-slate-900/80 text-[11px] sm:text-xs text-slate-400 uppercase tracking-wider border-b border-slate-800">
                         <tr>
-                            <th class="py-3 px-3.5 sm:py-3.5 sm:px-4 font-semibold min-w-[180px]">Peptide / Product</th>
-                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold min-w-[110px]">Specification</th>
-                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right min-w-[100px]">Marvel Chloe</th>
-                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right min-w-[100px]">Tong Shi Po</th>
-                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right min-w-[100px]">Tina Bio</th>
-                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right min-w-[100px]">Lowest Price</th>
-                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-center min-w-[110px]">Best Vendor</th>
-                            <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-center w-28 min-w-[100px] pr-4 shrink-0">ADD</th>
+                            <th class="py-3.5 px-4 font-semibold w-auto min-w-[180px] pl-4">Peptide / Product</th>
+                            <th class="py-3.5 px-3 font-semibold min-w-[110px]">Specification</th>
+                            <th class="py-3.5 px-3 font-semibold text-center min-w-[95px]">Marvel Chloe</th>
+                            <th class="py-3.5 px-3 font-semibold text-center min-w-[95px]">Tong Shi Po</th>
+                            <th class="py-3.5 px-3 font-semibold text-center min-w-[95px]">Tina Bio</th>
+                            <th class="py-3.5 px-3 font-semibold text-center min-w-[95px]">Lowest Price</th>
+                            <th class="py-3.5 px-3 font-semibold text-center min-w-[95px]">Best Vendor</th>
+                            <th class="py-3.5 px-3 font-semibold text-center w-28 min-w-[100px] pr-6 shrink-0">ADD</th>
                         </tr>
                     </thead>
                     <tbody id="catalog-tbody" class="divide-y divide-slate-800/60 text-slate-300">
@@ -4917,46 +4917,46 @@
 
                 return `
                     <tr class="catalog-row border-b border-slate-800/50 hover:bg-slate-800/40 active:bg-slate-800/60 cursor-pointer transition ${isSelected ? 'bg-indigo-950/30' : ''}" data-key="${item.key}">
-                        <td class="py-3 px-3.5 sm:py-3.5 sm:px-4 font-medium text-white whitespace-nowrap">
+                        <td class="py-3.5 px-4 font-medium text-white whitespace-nowrap pl-4">
                             <div class="flex items-center gap-1.5">
                                 ${item.catNo ? `<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-800/40">${item.catNo}</span>` : ''}
                                 <span>${item.name}</span>
                             </div>
                         </td>
-                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-slate-400 font-mono text-xs whitespace-nowrap">${item.spec}</td>
-                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right whitespace-nowrap ${isMarvelLowest ? 'bg-emerald-950/20' : ''}">
+                        <td class="py-3.5 px-3 text-slate-400 font-mono text-xs whitespace-nowrap min-w-[110px]">${item.spec}</td>
+                        <td class="py-3.5 px-3 text-center whitespace-nowrap min-w-[95px] ${isMarvelLowest ? 'bg-emerald-950/20' : ''}">
                             ${marvelPrice !== null ? `
-                                <span class="inline-flex items-center justify-end gap-1.5 font-mono ${isMarvelLowest ? 'text-emerald-400 font-bold' : 'text-slate-300'}">
+                                <span class="inline-flex items-center justify-center gap-1.5 font-mono ${isMarvelLowest ? 'text-emerald-400 font-bold' : 'text-slate-300'}">
                                     <span>$${marvelPrice.toFixed(2)}</span>
                                     ${isMarvelLowest ? '<span class="text-[9px] px-1 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-sans uppercase font-bold tracking-tight border border-emerald-500/30">Best</span>' : ''}
                                 </span>
                             ` : '<span class="text-slate-600 font-mono">—</span>'}
                         </td>
-                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right whitespace-nowrap ${isTongLowest ? 'bg-emerald-950/20' : ''}">
+                        <td class="py-3.5 px-3 text-center whitespace-nowrap min-w-[95px] ${isTongLowest ? 'bg-emerald-950/20' : ''}">
                             ${tongPrice !== null ? `
-                                <span class="inline-flex items-center justify-end gap-1.5 font-mono ${isTongLowest ? 'text-emerald-400 font-bold' : 'text-slate-300'}">
+                                <span class="inline-flex items-center justify-center gap-1.5 font-mono ${isTongLowest ? 'text-emerald-400 font-bold' : 'text-slate-300'}">
                                     <span>$${tongPrice.toFixed(2)}</span>
                                     ${isTongLowest ? '<span class="text-[9px] px-1 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-sans uppercase font-bold tracking-tight border border-emerald-500/30">Best</span>' : ''}
                                 </span>
                             ` : '<span class="text-slate-600 font-mono">—</span>'}
                         </td>
-                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right whitespace-nowrap ${isTinaLowest ? 'bg-emerald-950/20' : ''}">
+                        <td class="py-3.5 px-3 text-center whitespace-nowrap min-w-[95px] ${isTinaLowest ? 'bg-emerald-950/20' : ''}">
                             ${tinaPrice !== null ? `
-                                <span class="inline-flex items-center justify-end gap-1.5 font-mono ${isTinaLowest ? 'text-emerald-400 font-bold' : 'text-slate-300'}">
+                                <span class="inline-flex items-center justify-center gap-1.5 font-mono ${isTinaLowest ? 'text-emerald-400 font-bold' : 'text-slate-300'}">
                                     <span>$${tinaPrice.toFixed(2)}</span>
                                     ${isTinaLowest ? '<span class="text-[9px] px-1 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-sans uppercase font-bold tracking-tight border border-emerald-500/30">Best</span>' : ''}
                                 </span>
                             ` : '<span class="text-slate-600 font-mono">—</span>'}
                         </td>
-                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right font-semibold text-emerald-400 whitespace-nowrap">
+                        <td class="py-3.5 px-3 text-center font-semibold text-emerald-400 whitespace-nowrap min-w-[95px]">
                             <span class="font-mono font-bold">${info.min ? '$' + info.min.toFixed(2) : '—'}</span>
                         </td>
-                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-center whitespace-nowrap">
+                        <td class="py-3.5 px-3 text-center whitespace-nowrap min-w-[95px]">
                             <span class="text-[11px] sm:text-xs px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-slate-300 inline-block">
                                 ${info.winners.join(', ') || 'N/A'}
                             </span>
                         </td>
-                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-center whitespace-nowrap w-28 min-w-[100px] pr-4 shrink-0">
+                        <td class="py-3.5 px-3 text-center whitespace-nowrap w-28 min-w-[100px] pr-6 shrink-0">
                             <button data-umami-event="add-to-order" class="add-to-cart-table-btn w-full max-w-[80px] mx-auto py-1.5 px-2.5 flex items-center justify-center gap-1 text-xs font-semibold rounded-lg bg-indigo-600/80 hover:bg-indigo-500 text-white shrink-0 transition cursor-pointer shadow-sm border border-indigo-500/50" data-key="${item.key}">
                                 <i class="fa-solid fa-plus text-xs shrink-0"></i>
                                 <span>Add</span>

@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+body { 
+    font-family: 'Inter', sans-serif;
+    touch-action: manipulation;
+}
+
+/* Custom scrollbar for desktop & modern touch browsers */
+::-webkit-scrollbar { 
+    width: 6px; 
+    height: 6px; 
+}
+::-webkit-scrollbar-track { 
+    background: #0f172a; 
+}
+::-webkit-scrollbar-thumb { 
+    background: #334155; 
+    border-radius: 4px; 
+}
+::-webkit-scrollbar-thumb:hover { 
+    background: #475569; 
+}
+
+/* Smooth momentum scrolling on mobile devices */
+.touch-scroll {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+/* Prevent auto-zoom on iOS inputs */
+@media screen and (max-width: 640px) {
+    input, select, textarea {
+        font-size: 16px !important;
+    }
+}

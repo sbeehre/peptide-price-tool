@@ -1,7 +1,8 @@
 FROM nginx:alpine
 
-# Copy static application assets and dataset directory
+# Copy static application assets, compiled css, and dataset directory
 COPY index.html /usr/share/nginx/html/index.html
+COPY css/ /usr/share/nginx/html/css/
 COPY data/ /usr/share/nginx/html/data/
 
 # Expose HTTP port

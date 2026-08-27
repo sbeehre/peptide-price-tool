@@ -13,6 +13,19 @@ body {
     touch-action: manipulation;
 }
 
+/* Chrome, Safari, Edge, Opera number spinner suppression */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox number spinner suppression */
+input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
 /* Custom scrollbar for desktop & modern touch browsers */
 ::-webkit-scrollbar { 
     width: 6px; 

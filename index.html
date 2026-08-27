@@ -27,6 +27,19 @@
             touch-action: manipulation;
         }
 
+        /* Chrome, Safari, Edge, Opera number spinner suppression */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox number spinner suppression */
+        input[type=number] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
         /* Custom scrollbar for desktop & modern touch browsers */
         ::-webkit-scrollbar { 
             width: 6px; 
@@ -838,7 +851,7 @@
                                 min="0" 
                                 step="1" 
                                 value="50"
-                                class="w-24 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-sm font-mono text-white text-right focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
+                                class="w-20 sm:w-24 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs sm:text-sm font-mono text-white text-center focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition outline-none"
                             >
                         </div>
                     </div>
@@ -874,7 +887,7 @@
                                     </div>
                                     <div class="flex items-center justify-between text-xs pt-1">
                                         <span class="text-[11px] text-slate-400">Threshold ($):</span>
-                                        <input type="number" id="rules-tina-free-shipping-threshold" min="0" step="10" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-white text-right focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition">
+                                        <input type="number" id="rules-tina-free-shipping-threshold" min="0" step="10" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition outline-none">
                                     </div>
                                 </div>
 
@@ -888,11 +901,11 @@
                                     </div>
                                     <div class="flex items-center justify-between text-xs pt-1">
                                         <span class="text-[11px] text-slate-400">Discount (%):</span>
-                                        <input type="number" id="rules-tina-discount-percent" min="0" max="100" step="1" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-white text-right focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition">
+                                        <input type="number" id="rules-tina-discount-percent" min="0" max="100" step="1" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition outline-none">
                                     </div>
                                     <div class="flex items-center justify-between text-xs">
                                         <span class="text-[11px] text-slate-400">Threshold ($):</span>
-                                        <input type="number" id="rules-tina-discount-threshold" min="0" step="10" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-white text-right focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition">
+                                        <input type="number" id="rules-tina-discount-threshold" min="0" step="10" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition outline-none">
                                     </div>
                                     <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-800/80">
                                         <label for="rules-tina-discount-req-groupbuy" class="text-[11px] text-slate-400 flex items-center gap-1.5 cursor-pointer">
@@ -925,7 +938,7 @@
                                     </div>
                                     <div class="flex items-center justify-between text-xs pt-1">
                                         <span class="text-[11px] text-slate-400">Threshold ($):</span>
-                                        <input type="number" id="rules-tong-free-shipping-threshold" min="0" step="10" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-white text-right focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition">
+                                        <input type="number" id="rules-tong-free-shipping-threshold" min="0" step="10" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition outline-none">
                                     </div>
                                 </div>
 
@@ -939,11 +952,11 @@
                                     </div>
                                     <div class="flex items-center justify-between text-xs pt-1">
                                         <span class="text-[11px] text-slate-400">Discount (%):</span>
-                                        <input type="number" id="rules-tong-discount-percent" min="0" max="100" step="1" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-white text-right focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition">
+                                        <input type="number" id="rules-tong-discount-percent" min="0" max="100" step="1" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition outline-none">
                                     </div>
                                     <div class="flex items-center justify-between text-xs">
                                         <span class="text-[11px] text-slate-400">Threshold ($):</span>
-                                        <input type="number" id="rules-tong-discount-threshold" min="0" step="10" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-white text-right focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition">
+                                        <input type="number" id="rules-tong-discount-threshold" min="0" step="10" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition outline-none">
                                     </div>
                                     <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-800/80">
                                         <label for="rules-tong-discount-req-groupbuy" class="text-[11px] text-slate-400 flex items-center gap-1.5 cursor-pointer">
@@ -976,7 +989,7 @@
                                     </div>
                                     <div class="flex items-center justify-between text-xs pt-1">
                                         <span class="text-[11px] text-slate-400">Threshold ($):</span>
-                                        <input type="number" id="rules-marvel-free-shipping-threshold" min="0" step="10" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-white text-right focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition">
+                                        <input type="number" id="rules-marvel-free-shipping-threshold" min="0" step="10" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition outline-none">
                                     </div>
                                 </div>
 
@@ -990,11 +1003,11 @@
                                     </div>
                                     <div class="flex items-center justify-between text-xs pt-1">
                                         <span class="text-[11px] text-slate-400">Discount (%):</span>
-                                        <input type="number" id="rules-marvel-discount-percent" min="0" max="100" step="1" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-white text-right focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition">
+                                        <input type="number" id="rules-marvel-discount-percent" min="0" max="100" step="1" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition outline-none">
                                     </div>
                                     <div class="flex items-center justify-between text-xs">
                                         <span class="text-[11px] text-slate-400">Threshold ($):</span>
-                                        <input type="number" id="rules-marvel-discount-threshold" min="0" step="10" class="w-24 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-mono text-white text-right focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition">
+                                        <input type="number" id="rules-marvel-discount-threshold" min="0" step="10" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition outline-none">
                                     </div>
                                     <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-800/80">
                                         <label for="rules-marvel-discount-req-groupbuy" class="text-[11px] text-slate-400 flex items-center gap-1.5 cursor-pointer">

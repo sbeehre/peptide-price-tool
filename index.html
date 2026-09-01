@@ -94,41 +94,41 @@
                 <!-- Hidden Admin Controls Toolbar (Revealed only upon cryptographic authentication) -->
                 <div id="admin-toolbar-controls" class="hidden flex items-center gap-1.5 sm:gap-2">
                     <!-- Admin Active Status Indicator -->
-                    <div id="admin-active-badge" class="hidden md:flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-[11px] font-semibold">
+                    <div id="admin-active-badge" class="hidden md:flex items-center gap-1 px-2.5 py-1.5 h-9 sm:h-10 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-[11px] font-semibold">
                         <i class="fa-solid fa-shield-check text-emerald-400"></i>
                         <span>Admin Active</span>
                     </div>
 
                     <!-- Export Master Catalog Button -->
-                    <button id="export-catalog-btn" data-umami-event="export-summary" title="Export Master Catalog (.json) to commit to GitHub" class="flex items-center gap-1.5 sm:gap-2 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-slate-300 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-slate-800 hover:border-slate-700 cursor-pointer shadow-sm">
+                    <button id="export-catalog-btn" data-umami-event="export-summary" title="Export Master Catalog (.json) to commit to GitHub" class="flex items-center gap-1.5 sm:gap-2 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-slate-300 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 h-9 sm:h-10 rounded-xl text-xs sm:text-sm transition border border-slate-800 hover:border-slate-700 cursor-pointer shadow-sm">
                         <i class="fa-solid fa-download text-indigo-400 text-xs sm:text-sm"></i>
                         <span class="hidden md:inline">Export Catalog</span>
                         <span class="md:hidden">Export</span>
                     </button>
 
                     <!-- Vendor Rules Manager Button -->
-                    <button id="open-rules-modal-btn" title="Configure Vendor Discount & Shipping Rules" class="flex items-center gap-1.5 sm:gap-2 bg-indigo-950/70 hover:bg-indigo-900 active:bg-indigo-950 text-indigo-200 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-indigo-700/50 cursor-pointer shadow-sm">
+                    <button id="open-rules-modal-btn" title="Configure Vendor Discount & Shipping Rules" class="flex items-center gap-1.5 sm:gap-2 bg-indigo-950/70 hover:bg-indigo-900 active:bg-indigo-950 text-indigo-200 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 h-9 sm:h-10 rounded-xl text-xs sm:text-sm transition border border-indigo-700/50 cursor-pointer shadow-sm">
                         <i class="fa-solid fa-sliders text-indigo-400 text-xs sm:text-sm"></i>
                         <span class="hidden md:inline">Vendor Rules</span>
                         <span class="md:hidden">Rules</span>
                     </button>
 
                     <!-- Import Price Sheet Button -->
-                    <button id="open-import-modal-btn" title="Import / Update Price Sheet (CSV/TSV/Paste)" class="flex items-center gap-1.5 sm:gap-2 bg-indigo-950/70 hover:bg-indigo-900 active:bg-indigo-950 text-indigo-200 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-indigo-700/50 cursor-pointer shadow-sm">
+                    <button id="open-import-modal-btn" title="Import / Update Price Sheet (CSV/TSV/Paste)" class="flex items-center gap-1.5 sm:gap-2 bg-indigo-950/70 hover:bg-indigo-900 active:bg-indigo-950 text-indigo-200 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 h-9 sm:h-10 rounded-xl text-xs sm:text-sm transition border border-indigo-700/50 cursor-pointer shadow-sm">
                         <i class="fa-solid fa-file-import text-indigo-400 text-xs sm:text-sm"></i>
                         <span class="hidden sm:inline">Import Rates</span>
                         <span class="sm:hidden">Import</span>
                     </button>
 
                     <!-- Reset to Defaults Button -->
-                    <button id="reset-defaults-btn" title="Reset to Official Default Rates" class="flex items-center gap-1.5 sm:gap-2 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-slate-300 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-slate-800 hover:border-slate-700 cursor-pointer shadow-sm">
+                    <button id="reset-defaults-btn" title="Reset to Official Default Rates" class="flex items-center gap-1.5 sm:gap-2 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-slate-300 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 h-9 sm:h-10 rounded-xl text-xs sm:text-sm transition border border-slate-800 hover:border-slate-700 cursor-pointer shadow-sm">
                         <i class="fa-solid fa-rotate-left text-indigo-400 text-xs sm:text-sm"></i>
                         <span class="hidden sm:inline">Reset Rates</span>
                         <span class="sm:hidden">Reset</span>
                     </button>
 
                     <!-- Lock Admin Session Button -->
-                    <button id="lock-admin-btn" title="Lock Admin Session and Hide Controls" class="flex items-center gap-1.5 sm:gap-2 bg-rose-950/60 hover:bg-rose-900/80 active:bg-rose-950 text-rose-300 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-xl text-xs sm:text-sm transition border border-rose-800/50 cursor-pointer shadow-sm">
+                    <button id="lock-admin-btn" title="Lock Admin Session and Hide Controls" class="flex items-center gap-1.5 sm:gap-2 bg-rose-950/60 hover:bg-rose-900/80 active:bg-rose-950 text-rose-300 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 h-9 sm:h-10 rounded-xl text-xs sm:text-sm transition border border-rose-800/50 cursor-pointer shadow-sm">
                         <i class="fa-solid fa-lock text-rose-400 text-xs sm:text-sm"></i>
                         <span class="hidden sm:inline">Lock Session</span>
                         <span class="sm:hidden">Lock</span>
@@ -138,21 +138,21 @@
                 <!-- Currency Selector Dropdown -->
                 <div class="relative flex items-center shrink-0">
                     <div class="relative flex items-center">
-                        <i class="fa-solid fa-coins text-indigo-400 text-xs absolute left-2.5 sm:left-3 pointer-events-none"></i>
-                        <select id="currency-select" aria-label="Select Currency" data-umami-event="currency-change" class="bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-slate-200 hover:text-white font-semibold text-xs sm:text-sm pl-7 sm:pl-8 pr-7 sm:pr-8 py-2 sm:py-2.5 rounded-xl border border-slate-800 hover:border-slate-700 transition cursor-pointer appearance-none outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 shadow-sm">
-                            <option value="USD" class="bg-slate-900 text-white">USD ($)</option>
-                            <option value="AUD" class="bg-slate-900 text-white">AUD (A$)</option>
-                            <option value="NZD" class="bg-slate-900 text-white">NZD (NZ$)</option>
-                            <option value="CAD" class="bg-slate-900 text-white">CAD (C$)</option>
-                            <option value="GBP" class="bg-slate-900 text-white">GBP (£)</option>
-                            <option value="EUR" class="bg-slate-900 text-white">EUR (€)</option>
+                        <i class="fa-solid fa-coins text-indigo-400 text-xs sm:text-sm absolute left-3 pointer-events-none z-10"></i>
+                        <select id="currency-select" aria-label="Select Currency" data-umami-event="currency-change" class="h-9 sm:h-10 bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-slate-200 hover:text-white font-semibold text-xs sm:text-sm pl-8 sm:pl-9 pr-7 sm:pr-8 py-1.5 sm:py-2 rounded-xl border border-indigo-500/40 hover:border-indigo-400/70 focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400 transition cursor-pointer appearance-none outline-none shadow-sm">
+                            <option value="USD" class="bg-slate-900 text-white py-1">USD ($)</option>
+                            <option value="AUD" class="bg-slate-900 text-white py-1">AUD (A$)</option>
+                            <option value="NZD" class="bg-slate-900 text-white py-1">NZD (NZ$)</option>
+                            <option value="CAD" class="bg-slate-900 text-white py-1">CAD (C$)</option>
+                            <option value="GBP" class="bg-slate-900 text-white py-1">GBP (£)</option>
+                            <option value="EUR" class="bg-slate-900 text-white py-1">EUR (€)</option>
                         </select>
-                        <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] absolute right-2.5 sm:right-3 pointer-events-none"></i>
+                        <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] absolute right-2.5 sm:right-3 pointer-events-none z-10"></i>
                     </div>
                 </div>
 
                 <!-- Order List Cart Button -->
-                <a href="#cart-section" class="flex items-center gap-1.5 sm:gap-2 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm transition shadow-lg shadow-indigo-600/20 border border-indigo-500/50 cursor-pointer">
+                <a href="#cart-section" class="flex items-center gap-1.5 sm:gap-2 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold px-3 py-2 sm:px-4 sm:py-2.5 h-9 sm:h-10 rounded-xl text-xs sm:text-sm transition shadow-lg shadow-indigo-600/20 border border-indigo-500/50 cursor-pointer">
                     <i class="fa-solid fa-shopping-basket text-xs sm:text-sm"></i>
                     <span class="hidden xs:inline">Order List</span>
                     <span id="cart-badge-count" class="bg-indigo-950 text-indigo-200 border border-indigo-400/40 text-[11px] sm:text-xs px-1.5 py-0.5 sm:px-2 rounded-full font-bold min-w-[20px] text-center">0</span>

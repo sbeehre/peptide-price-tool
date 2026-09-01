@@ -135,6 +135,22 @@
                     </button>
                 </div>
 
+                <!-- Currency Selector Dropdown -->
+                <div class="relative flex items-center shrink-0">
+                    <div class="relative flex items-center">
+                        <i class="fa-solid fa-coins text-indigo-400 text-xs absolute left-2.5 sm:left-3 pointer-events-none"></i>
+                        <select id="currency-select" aria-label="Select Currency" data-umami-event="currency-change" class="bg-slate-900 hover:bg-slate-800 active:bg-slate-950 text-slate-200 hover:text-white font-semibold text-xs sm:text-sm pl-7 sm:pl-8 pr-7 sm:pr-8 py-2 sm:py-2.5 rounded-xl border border-slate-800 hover:border-slate-700 transition cursor-pointer appearance-none outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 shadow-sm">
+                            <option value="USD" class="bg-slate-900 text-white">USD ($)</option>
+                            <option value="AUD" class="bg-slate-900 text-white">AUD (A$)</option>
+                            <option value="NZD" class="bg-slate-900 text-white">NZD (NZ$)</option>
+                            <option value="CAD" class="bg-slate-900 text-white">CAD (C$)</option>
+                            <option value="GBP" class="bg-slate-900 text-white">GBP (£)</option>
+                            <option value="EUR" class="bg-slate-900 text-white">EUR (€)</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down text-slate-400 text-[10px] absolute right-2.5 sm:right-3 pointer-events-none"></i>
+                    </div>
+                </div>
+
                 <!-- Order List Cart Button -->
                 <a href="#cart-section" class="flex items-center gap-1.5 sm:gap-2 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold px-3 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm transition shadow-lg shadow-indigo-600/20 border border-indigo-500/50 cursor-pointer">
                     <i class="fa-solid fa-shopping-basket text-xs sm:text-sm"></i>
@@ -285,7 +301,7 @@
                     </div>
                     <div class="pt-3 border-t border-slate-800/60 text-[11px] sm:text-xs text-slate-400 space-y-1">
                         <div>• MOQ: 1 Kit (10 vials)</div>
-                        <div>• Free Shipping on orders > $700</div>
+                        <div id="spotlight-tina-shipping-note">• Free Shipping on orders ≥ $700</div>
                     </div>
                 </div>
             </div>
@@ -378,6 +394,7 @@
                                     class="w-20 bg-slate-950 border border-slate-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-white text-xs rounded-lg px-2 pl-6 py-1 text-center font-mono outline-none"
                                 >
                             </div>
+                            <span id="shipping-fee-converted" class="hidden text-[11px] text-indigo-300 font-mono whitespace-nowrap"></span>
                         </div>
                     </div>
                 </div>
@@ -3446,6 +3463,7 @@
                 localStorage.setItem(SHIPPING_FEE_KEY, rules.shipping.defaultCost.toString());
                 if (shippingFeeInput) shippingFeeInput.value = rules.shipping.defaultCost;
             }
+            if (typeof updateShippingFeeConvertedDisplay === 'function') updateShippingFeeConvertedDisplay();
             renderCart();
         }
 
@@ -3454,6 +3472,7 @@
             localStorage.setItem(RULES_STORAGE_KEY, JSON.stringify(pricingRules));
             localStorage.setItem(SHIPPING_FEE_KEY, DEFAULT_PRICING_RULES.shipping.defaultCost.toString());
             if (shippingFeeInput) shippingFeeInput.value = DEFAULT_PRICING_RULES.shipping.defaultCost;
+            if (typeof updateShippingFeeConvertedDisplay === 'function') updateShippingFeeConvertedDisplay();
             renderCart();
         }
 
@@ -3488,9 +3507,217 @@
                 let val = parseFloat(e.target.value);
                 if (isNaN(val) || val < 0) val = 0;
                 localStorage.setItem(SHIPPING_FEE_KEY, val.toString());
+                updateShippingFeeConvertedDisplay();
                 renderCart();
             });
         }
+
+        // =========================================================================
+        // MULTI-CURRENCY CONVERSION & LIVE FX ENGINE
+        // =========================================================================
+        const CURRENCY_CONFIG = {
+            USD: { code: 'USD', symbol: '$', label: 'USD ($)', name: 'US Dollar' },
+            AUD: { code: 'AUD', symbol: 'A$', label: 'AUD (A$)', name: 'Australian Dollar' },
+            NZD: { code: 'NZD', symbol: 'NZ$', label: 'NZD (NZ$)', name: 'New Zealand Dollar' },
+            CAD: { code: 'CAD', symbol: 'C$', label: 'CAD (C$)', name: 'Canadian Dollar' },
+            GBP: { code: 'GBP', symbol: '£', label: 'GBP (£)', name: 'British Pound' },
+            EUR: { code: 'EUR', symbol: '€', label: 'EUR (€)', name: 'Euro' }
+        };
+
+        const DEFAULT_CURRENCY = 'USD';
+        const FALLBACK_RATES = {
+            USD: 1.0,
+            NZD: 1.65,
+            AUD: 1.55,
+            CAD: 1.38,
+            EUR: 0.92,
+            GBP: 0.78
+        };
+
+        const SELECTED_CURRENCY_KEY = 'selectedCurrency';
+        const FX_RATES_KEY = 'fxRates';
+        const FX_TIMESTAMP_KEY = 'fxTimestamp';
+        const FX_CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+        let currentCurrency = localStorage.getItem(SELECTED_CURRENCY_KEY) || DEFAULT_CURRENCY;
+        if (!CURRENCY_CONFIG[currentCurrency]) {
+            currentCurrency = DEFAULT_CURRENCY;
+        }
+
+        let fxRates = { ...FALLBACK_RATES };
+
+        const currencySelect = document.getElementById('currency-select');
+        const shippingFeeConverted = document.getElementById('shipping-fee-converted');
+
+        function loadCachedFxRates() {
+            try {
+                const cachedRatesStr = localStorage.getItem(FX_RATES_KEY);
+                const cachedTimestampStr = localStorage.getItem(FX_TIMESTAMP_KEY);
+                if (cachedRatesStr && cachedTimestampStr) {
+                    const cachedRates = JSON.parse(cachedRatesStr);
+                    const timestamp = parseInt(cachedTimestampStr, 10);
+                    const now = Date.now();
+                    if (cachedRates && typeof cachedRates === 'object' && cachedRates.USD) {
+                        fxRates = { ...FALLBACK_RATES, ...cachedRates };
+                        if (!isNaN(timestamp) && (now - timestamp) < FX_CACHE_MAX_AGE_MS) {
+                            return true; // Cache is valid & fresh (<24h)
+                        }
+                    }
+                }
+            } catch (e) {
+                console.warn('[FX] Error reading cached FX rates from localStorage:', e);
+            }
+            return false;
+        }
+
+        async function fetchLiveFxRates() {
+            const isFresh = loadCachedFxRates();
+            if (isFresh) {
+                updateCurrencyUi();
+                return;
+            }
+
+            try {
+                const response = await fetch('https://open.er-api.com/v6/latest/USD');
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+                if (data && (data.result === 'success' || data.rates) && data.rates) {
+                    const freshRates = {
+                        USD: 1.0,
+                        NZD: typeof data.rates.NZD === 'number' ? data.rates.NZD : FALLBACK_RATES.NZD,
+                        AUD: typeof data.rates.AUD === 'number' ? data.rates.AUD : FALLBACK_RATES.AUD,
+                        CAD: typeof data.rates.CAD === 'number' ? data.rates.CAD : FALLBACK_RATES.CAD,
+                        EUR: typeof data.rates.EUR === 'number' ? data.rates.EUR : FALLBACK_RATES.EUR,
+                        GBP: typeof data.rates.GBP === 'number' ? data.rates.GBP : FALLBACK_RATES.GBP
+                    };
+                    fxRates = freshRates;
+                    localStorage.setItem(FX_RATES_KEY, JSON.stringify(freshRates));
+                    localStorage.setItem(FX_TIMESTAMP_KEY, Date.now().toString());
+                    console.log('[FX] Live exchange rates loaded successfully:', fxRates);
+                    if (currentCurrency !== 'USD') {
+                        updateAllRenderedPrices();
+                    }
+                }
+            } catch (err) {
+                console.warn('[FX] Could not fetch live FX rates, falling back to cache or defaults:', err);
+                if (!fxRates || !fxRates.USD) {
+                    fxRates = { ...FALLBACK_RATES };
+                }
+            }
+            updateCurrencyUi();
+        }
+
+        function getExchangeRate(currencyCode = currentCurrency) {
+            if (currencyCode === 'USD') return 1.0;
+            return (fxRates && typeof fxRates[currencyCode] === 'number') 
+                ? fxRates[currencyCode] 
+                : (FALLBACK_RATES[currencyCode] || 1.0);
+        }
+
+        function getCurrencySymbol(currencyCode = currentCurrency) {
+            const config = CURRENCY_CONFIG[currencyCode] || CURRENCY_CONFIG.USD;
+            return config.symbol;
+        }
+
+        function convertFromUsd(usdAmount, currencyCode = currentCurrency) {
+            if (usdAmount === null || usdAmount === undefined || isNaN(usdAmount)) return null;
+            const rate = getExchangeRate(currencyCode);
+            return usdAmount * rate;
+        }
+
+        /**
+         * Centralized price formatter converting base USD amount to selected display currency
+         * @param {number|null|undefined} usdAmount Amount in USD
+         * @param {object} [options] Formatting overrides
+         * @returns {string} Formatted price string (e.g. "$70.00", "A$108.50", "€64.40")
+         */
+        function formatPrice(usdAmount, options = {}) {
+            const fallback = options.fallback !== undefined ? options.fallback : 'N/A';
+            if (usdAmount === null || usdAmount === undefined || isNaN(usdAmount)) {
+                return fallback;
+            }
+            const currency = options.currency || currentCurrency;
+            const decimals = options.decimals !== undefined ? options.decimals : 2;
+            const includeSymbol = options.includeSymbol !== false;
+
+            const converted = convertFromUsd(usdAmount, currency);
+            const formattedNum = converted.toLocaleString('en-US', {
+                minimumFractionDigits: decimals,
+                maximumFractionDigits: decimals
+            });
+
+            if (!includeSymbol) return formattedNum;
+            const symbol = getCurrencySymbol(currency);
+            return `${symbol}${formattedNum}`;
+        }
+
+        function setCurrency(currencyCode) {
+            if (!CURRENCY_CONFIG[currencyCode]) return;
+            currentCurrency = currencyCode;
+            localStorage.setItem(SELECTED_CURRENCY_KEY, currencyCode);
+            updateCurrencyUi();
+            updateAllRenderedPrices();
+
+            if (typeof window !== 'undefined' && window.umami) {
+                window.umami.track('currency-change', { currency: currencyCode });
+            }
+        }
+
+        function updateCurrencyUi() {
+            if (currencySelect && currencySelect.value !== currentCurrency) {
+                currencySelect.value = currentCurrency;
+            }
+            updateShippingFeeConvertedDisplay();
+        }
+
+        function updateShippingFeeConvertedDisplay() {
+            const feeEl = document.getElementById('shipping-fee-converted');
+            if (!feeEl) return;
+            if (currentCurrency === 'USD') {
+                feeEl.classList.add('hidden');
+                feeEl.textContent = '';
+            } else {
+                const baseFee = getShippingFeePerVendor();
+                feeEl.textContent = `≈ ${formatPrice(baseFee)}`;
+                feeEl.classList.remove('hidden');
+            }
+        }
+
+        function updateAllRenderedPrices() {
+            if (selectedItem) {
+                updateSpotlight(selectedItem);
+            }
+            renderCatalog(searchInput ? searchInput.value : '');
+            renderCart();
+            if (dropdown && !dropdown.classList.contains('hidden') && searchInput) {
+                renderDropdownResults(searchInput.value);
+            }
+            updateShippingFeeConvertedDisplay();
+        }
+
+        function initCurrencySelector() {
+            loadCachedFxRates();
+            if (currencySelect) {
+                currencySelect.value = currentCurrency;
+                currencySelect.addEventListener('change', (e) => {
+                    setCurrency(e.target.value);
+                });
+            }
+            updateShippingFeeConvertedDisplay();
+        }
+
+        // Window globals for testing, developer debugging and telemetry
+        window.CURRENCY_CONFIG = CURRENCY_CONFIG;
+        window.FALLBACK_RATES = FALLBACK_RATES;
+        window.getExchangeRate = getExchangeRate;
+        window.getCurrencySymbol = getCurrencySymbol;
+        window.convertFromUsd = convertFromUsd;
+        window.formatPrice = formatPrice;
+        window.setCurrency = setCurrency;
+        window.getCurrency = () => currentCurrency;
+        window.getFxRates = () => fxRates;
+        window.fetchLiveFxRates = fetchLiveFxRates;
+        window.updateAllRenderedPrices = updateAllRenderedPrices;
 
         // Modal Elements
         const openRulesModalBtn = document.getElementById('open-rules-modal-btn');
@@ -4630,16 +4857,16 @@
 
                     vList.forEach(v => {
                         if (row.action === 'new' && v.n !== null) {
-                            diffLines.push(`<div>${v.name}: <strong class="text-emerald-400">$${v.n.toFixed(2)}</strong></div>`);
+                            diffLines.push(`<div>${v.name}: <strong class="text-emerald-400">${formatPrice(v.n)}</strong></div>`);
                         } else if (v.imported && v.n !== null) {
                             if (v.o !== null && v.o !== v.n) {
-                                diffLines.push(`<div>${v.name}: <span class="text-slate-500 line-through mr-1">$${v.o.toFixed(2)}</span><strong class="text-emerald-400">$${v.n.toFixed(2)}</strong></div>`);
+                                diffLines.push(`<div>${v.name}: <span class="text-slate-500 line-through mr-1">${formatPrice(v.o)}</span><strong class="text-emerald-400">${formatPrice(v.n)}</strong></div>`);
                                 pcts.push(formatPercentChangeBadge(v.o, v.n));
                             } else if (v.o === null) {
-                                diffLines.push(`<div>${v.name}: <strong class="text-emerald-400">$${v.n.toFixed(2)}</strong></div>`);
+                                diffLines.push(`<div>${v.name}: <strong class="text-emerald-400">${formatPrice(v.n)}</strong></div>`);
                                 pcts.push(formatPercentChangeBadge(null, v.n));
                             } else {
-                                diffLines.push(`<div>${v.name}: <span class="text-slate-400">$${v.n.toFixed(2)}</span></div>`);
+                                diffLines.push(`<div>${v.name}: <span class="text-slate-400">${formatPrice(v.n)}</span></div>`);
                             }
                         }
                     });
@@ -4651,12 +4878,12 @@
                 function formatSingleDiff(oldP, newP) {
                     if (newP === null) return '<span class="text-slate-600">—</span>';
                     if (oldP === null || oldP === undefined) {
-                        return `<span class="text-emerald-400 font-bold">$${newP.toFixed(2)}</span>`;
+                        return `<span class="text-emerald-400 font-bold">${formatPrice(newP)}</span>`;
                     }
                     if (oldP !== newP) {
-                        return `<span class="text-slate-500 line-through text-[11px] mr-1.5">$${oldP.toFixed(2)}</span><span class="text-slate-400 mr-1.5">→</span><span class="text-emerald-400 font-bold text-sm">$${newP.toFixed(2)}</span>`;
+                        return `<span class="text-slate-500 line-through text-[11px] mr-1.5">${formatPrice(oldP)}</span><span class="text-slate-400 mr-1.5">→</span><span class="text-emerald-400 font-bold text-sm">${formatPrice(newP)}</span>`;
                     }
-                    return `<span class="text-slate-300">$${newP.toFixed(2)}</span>`;
+                    return `<span class="text-slate-300">${formatPrice(newP)}</span>`;
                 }
 
                 const catBadge = row.catNo ? `<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800/50 mr-1.5">${row.catNo}</span>` : '';
@@ -5164,7 +5391,7 @@
                 const cardEl = document.getElementById(`card-${v.id}`);
 
                 if (v.price !== null && v.price !== undefined) {
-                    priceEl.textContent = `$${v.price.toFixed(2)}`;
+                    priceEl.textContent = formatPrice(v.price);
                     priceEl.classList.remove('text-slate-600');
                     
                     if (v.price === min) {
@@ -5175,7 +5402,7 @@
                     } else {
                         badgeEl.classList.add('hidden');
                         const diff = v.price - min;
-                        diffEl.textContent = `+$${diff.toFixed(2)} vs lowest`;
+                        diffEl.textContent = `+${formatPrice(diff)} vs lowest`;
                         diffEl.className = "block text-xs font-medium text-slate-400 mt-1";
                         cardEl.className = "bg-slate-900/80 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700";
                     }
@@ -5193,9 +5420,21 @@
             const recName = document.getElementById('rec-vendor-name');
             if (info.winners.length > 0) {
                 recBanner.classList.remove('hidden');
-                recName.textContent = `${info.winners.join(' / ')} ($${min.toFixed(2)})`;
+                recName.textContent = `${info.winners.join(' / ')} (${formatPrice(min)})`;
             } else {
                 recBanner.classList.add('hidden');
+            }
+
+            const spotlightTinaShippingNote = document.getElementById('spotlight-tina-shipping-note');
+            if (spotlightTinaShippingNote) {
+                const activeRules = typeof pricingRules !== 'undefined' ? pricingRules : loadPricingRules();
+                const tinaRule = (activeRules.vendors && activeRules.vendors.tina) || {};
+                if (tinaRule.freeShippingEnabled && tinaRule.freeShippingThreshold > 0) {
+                    spotlightTinaShippingNote.textContent = `• Free Shipping on orders ≥ ${formatPrice(tinaRule.freeShippingThreshold)}`;
+                    spotlightTinaShippingNote.classList.remove('hidden');
+                } else {
+                    spotlightTinaShippingNote.classList.add('hidden');
+                }
             }
         }
 
@@ -5308,7 +5547,7 @@
                             <div class="text-[11px] text-slate-400 font-mono">${item.spec}</div>
                         </div>
                         <div class="text-right">
-                            <div class="text-xs sm:text-sm font-bold text-emerald-400">${info.min ? '$' + info.min.toFixed(2) : '—'}</div>
+                            <div class="text-xs sm:text-sm font-bold text-emerald-400">${info.min !== null ? formatPrice(info.min) : '—'}</div>
                             <div class="text-[10px] text-slate-500">${info.winners.join(', ') || 'N/A'}</div>
                         </div>
                     </div>
@@ -5388,7 +5627,7 @@
                         <td class="py-3.5 px-3 text-center whitespace-nowrap min-w-[95px] ${isMarvelLowest ? 'bg-emerald-950/20' : ''}">
                             ${marvelPrice !== null ? `
                                 <span class="inline-flex items-center justify-center gap-1.5 font-mono ${isMarvelLowest ? 'text-emerald-400 font-bold' : 'text-slate-300'}">
-                                    <span>$${marvelPrice.toFixed(2)}</span>
+                                    <span>${formatPrice(marvelPrice)}</span>
                                     ${isMarvelLowest ? '<span class="text-[9px] px-1 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-sans uppercase font-bold tracking-tight border border-emerald-500/30">Best</span>' : ''}
                                 </span>
                             ` : '<span class="text-slate-600 font-mono">—</span>'}
@@ -5396,7 +5635,7 @@
                         <td class="py-3.5 px-3 text-center whitespace-nowrap min-w-[95px] ${isTongLowest ? 'bg-emerald-950/20' : ''}">
                             ${tongPrice !== null ? `
                                 <span class="inline-flex items-center justify-center gap-1.5 font-mono ${isTongLowest ? 'text-emerald-400 font-bold' : 'text-slate-300'}">
-                                    <span>$${tongPrice.toFixed(2)}</span>
+                                    <span>${formatPrice(tongPrice)}</span>
                                     ${isTongLowest ? '<span class="text-[9px] px-1 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-sans uppercase font-bold tracking-tight border border-emerald-500/30">Best</span>' : ''}
                                 </span>
                             ` : '<span class="text-slate-600 font-mono">—</span>'}
@@ -5404,13 +5643,13 @@
                         <td class="py-3.5 px-3 text-center whitespace-nowrap min-w-[95px] ${isTinaLowest ? 'bg-emerald-950/20' : ''}">
                             ${tinaPrice !== null ? `
                                 <span class="inline-flex items-center justify-center gap-1.5 font-mono ${isTinaLowest ? 'text-emerald-400 font-bold' : 'text-slate-300'}">
-                                    <span>$${tinaPrice.toFixed(2)}</span>
+                                    <span>${formatPrice(tinaPrice)}</span>
                                     ${isTinaLowest ? '<span class="text-[9px] px-1 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-sans uppercase font-bold tracking-tight border border-emerald-500/30">Best</span>' : ''}
                                 </span>
                             ` : '<span class="text-slate-600 font-mono">—</span>'}
                         </td>
                         <td class="py-3.5 px-3 text-center font-semibold text-emerald-400 whitespace-nowrap min-w-[95px]">
-                            <span class="font-mono font-bold">${info.min ? '$' + info.min.toFixed(2) : '—'}</span>
+                            <span class="font-mono font-bold">${info.min !== null ? formatPrice(info.min) : '—'}</span>
                         </td>
                         <td class="py-3.5 px-3 text-center whitespace-nowrap min-w-[95px]">
                             <span class="text-[11px] sm:text-xs px-2.5 py-1 rounded-md bg-slate-800 border border-slate-700 text-slate-300 inline-block">
@@ -5519,11 +5758,23 @@
 
             const analysis = calculateOptimizerAnalysis(cart, peptideData);
             const vData = analysis.singleVendors[vendorId];
-            if (vData && vData.isDiscounted) {
+            const isNonUsd = currentCurrency !== 'USD';
+
+            if (vData && vData.subtotal > 0) {
                 message += `\n------------------------------------\n`;
-                message += `Items Subtotal: $${vData.subtotal.toFixed(2)}\n`;
-                message += `🏷️ ${vData.discountPercent}% Community Discount (≥$${vData.discountThreshold}): -$${vData.discount.toFixed(2)}\n`;
-                message += `Adjusted Subtotal: $${vData.adjustedSubtotal.toFixed(2)}\n`;
+                if (isNonUsd) {
+                    message += `Items Subtotal: $${vData.subtotal.toFixed(2)} USD (${formatPrice(vData.subtotal)})\n`;
+                    if (vData.isDiscounted) {
+                        message += `🏷️ ${vData.discountPercent}% Community Discount (≥$${vData.discountThreshold} USD / ${formatPrice(vData.discountThreshold)}): -$${vData.discount.toFixed(2)} USD (-${formatPrice(vData.discount)})\n`;
+                        message += `Adjusted Subtotal: $${vData.adjustedSubtotal.toFixed(2)} USD (${formatPrice(vData.adjustedSubtotal)})\n`;
+                    }
+                } else {
+                    message += `Items Subtotal: $${vData.subtotal.toFixed(2)} USD\n`;
+                    if (vData.isDiscounted) {
+                        message += `🏷️ ${vData.discountPercent}% Community Discount (≥$${vData.discountThreshold}): -$${vData.discount.toFixed(2)} USD\n`;
+                        message += `Adjusted Subtotal: $${vData.adjustedSubtotal.toFixed(2)} USD\n`;
+                    }
+                }
             }
 
             message += `\nPlease let me know the total cost including shipping to my address.\n\nThank you!`;
@@ -5703,9 +5954,9 @@
                 v.grandTotal = Math.round((v.adjustedSubtotal + shippingFee) * 100) / 100;
 
                 let noteParts = [];
-                if (isDiscounted) noteParts.push(`🎉 ${discPct}% Community Discount (-$${discount.toFixed(2)})`);
-                if (isFreeShipping) noteParts.push(`🎉 Free Shipping (≥$${freeThreshold})`);
-                else if (v.subtotal > 0) noteParts.push(`+$${baseShippingFee.toFixed(2)} standard ship`);
+                if (isDiscounted) noteParts.push(`🎉 ${discPct}% Community Discount (-${formatPrice(discount)})`);
+                if (isFreeShipping) noteParts.push(`🎉 Free Shipping (≥${formatPrice(freeThreshold)})`);
+                else if (v.subtotal > 0) noteParts.push(`+${formatPrice(baseShippingFee)} standard ship`);
                 v.note = noteParts.join(' | ');
 
                 if (!v.missing && v.subtotal > 0) {
@@ -5951,13 +6202,13 @@
                             </div>
                         </td>
                         <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right font-medium whitespace-nowrap ${marvelSub !== null ? 'text-slate-200' : 'text-slate-600'}">
-                            ${marvelSub !== null ? '$' + marvelSub.toFixed(2) : 'N/A'}
+                            ${marvelSub !== null ? formatPrice(marvelSub) : 'N/A'}
                         </td>
                         <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right font-medium whitespace-nowrap ${tongSub !== null ? 'text-slate-200' : 'text-slate-600'}">
-                            ${tongSub !== null ? '$' + tongSub.toFixed(2) : 'N/A'}
+                            ${tongSub !== null ? formatPrice(tongSub) : 'N/A'}
                         </td>
                         <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right font-medium whitespace-nowrap ${tinaSub !== null ? 'text-slate-200' : 'text-slate-600'}">
-                            ${tinaSub !== null ? '$' + tinaSub.toFixed(2) : 'N/A'}
+                            ${tinaSub !== null ? formatPrice(tinaSub) : 'N/A'}
                         </td>
                         <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-center whitespace-nowrap">
                             <button class="w-9 h-9 min-w-[36px] min-h-[36px] inline-flex items-center justify-center rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-950/40 active:bg-rose-900/50 transition cursor-pointer" onclick="removeFromCart('${cartItem.key}')" aria-label="Delete item">
@@ -6010,23 +6261,23 @@
                             <i class="fa-solid fa-trophy"></i> OVERALL CHEAPEST VENDOR RECOMMENDATION
                         </div>
                     `;
-                    strategyHeadline = `${bestSingle.name} <span class="text-emerald-400">($${bestSingle.grandTotal.toFixed(2)} Total)</span>`;
-                    strategyDesc = `Ordering all ${totalItemsCount} kit(s) from <strong>${bestSingle.name}</strong> provides the lowest combined price ($${bestSingle.grandTotal.toFixed(2)} with shipping vs $${analysis.splitGrandTotal.toFixed(2)} split order). Sourcing from a single vendor saves <strong class="text-emerald-400">$${analysis.savingsVsOther.toFixed(2)}</strong> by avoiding duplicate shipping fees across ${analysis.activeVendorsCount} separate vendors.`;
+                    strategyHeadline = `${bestSingle.name} <span class="text-emerald-400">(${formatPrice(bestSingle.grandTotal)} Total)</span>`;
+                    strategyDesc = `Ordering all ${totalItemsCount} kit(s) from <strong>${bestSingle.name}</strong> provides the lowest combined price (${formatPrice(bestSingle.grandTotal)} with shipping vs ${formatPrice(analysis.splitGrandTotal)} split order). Sourcing from a single vendor saves <strong class="text-emerald-400">${formatPrice(analysis.savingsVsOther)}</strong> by avoiding duplicate shipping fees across ${analysis.activeVendorsCount} separate vendors.`;
                 } else if (analysis.bestOverallStrategy === 'split') {
                     strategyBadge = `
                         <div class="inline-flex items-center gap-1.5 sm:gap-2 bg-purple-500/20 text-purple-300 border border-purple-500/30 px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold">
                             <i class="fa-solid fa-layer-group"></i> OPTIMAL SPLIT-ORDER RECOMMENDATION
                         </div>
                     `;
-                    strategyHeadline = `Optimal Split Order: <span class="text-purple-400">$${analysis.splitGrandTotal.toFixed(2)} Total</span>`;
-                    strategyDesc = `Splitting your order across <strong>${analysis.activeVendorsCount} vendors</strong> provides the lowest combined price ($${analysis.splitGrandTotal.toFixed(2)} total including $${analysis.splitShippingTotal.toFixed(2)} shipping across ${analysis.activeVendorsCount} vendors vs ${bestSingle ? '$' + bestSingle.grandTotal.toFixed(2) : 'N/A'} single vendor), saving you <strong class="text-purple-400">$${analysis.savingsVsOther.toFixed(2)}</strong>!`;
+                    strategyHeadline = `Optimal Split Order: <span class="text-purple-400">${formatPrice(analysis.splitGrandTotal)} Total</span>`;
+                    strategyDesc = `Splitting your order across <strong>${analysis.activeVendorsCount} vendors</strong> provides the lowest combined price (${formatPrice(analysis.splitGrandTotal)} total including ${formatPrice(analysis.splitShippingTotal)} shipping across ${analysis.activeVendorsCount} vendors vs ${bestSingle ? formatPrice(bestSingle.grandTotal) : 'N/A'} single vendor), saving you <strong class="text-purple-400">${formatPrice(analysis.savingsVsOther)}</strong>!`;
                 } else {
                     strategyBadge = `
                         <div class="inline-flex items-center gap-1.5 sm:gap-2 bg-purple-500/20 text-purple-300 border border-purple-500/30 px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold">
                             <i class="fa-solid fa-layer-group"></i> SPLIT ORDER (BEST PER ITEM) OPTIMIZER
                         </div>
                     `;
-                    strategyHeadline = `Maximum Savings Basket: <span class="text-purple-400">$${analysis.splitSubtotal.toFixed(2)}</span>`;
+                    strategyHeadline = `Maximum Savings Basket: <span class="text-purple-400">${formatPrice(analysis.splitSubtotal)}</span>`;
                     strategyDesc = `No single vendor carries every item. Sourcing each item from the vendor with the lowest unit rate gives you the best price.`;
                 }
 
@@ -6050,17 +6301,17 @@
                             
                             <div class="flex justify-between items-center text-xs sm:text-sm">
                                 <span class="${!single.marvel.missing && bestSingle && bestSingle.name === single.marvel.name ? 'text-emerald-400 font-bold' : 'text-slate-300'}">${single.marvel.name}:</span>
-                                <span class="font-bold ${!single.marvel.missing ? 'text-white' : 'text-slate-600'}">${!single.marvel.missing ? (single.marvel.isDiscounted ? '$' + single.marvel.adjustedSubtotal.toFixed(2) + ' <span class="text-[10px] text-amber-400 font-normal">(-' + single.marvel.discountPercent + '%)</span>' : '$' + single.marvel.subtotal.toFixed(2)) : 'Incomplete'}</span>
+                                <span class="font-bold ${!single.marvel.missing ? 'text-white' : 'text-slate-600'}">${!single.marvel.missing ? (single.marvel.isDiscounted ? formatPrice(single.marvel.adjustedSubtotal) + ' <span class="text-[10px] text-amber-400 font-normal">(-' + single.marvel.discountPercent + '%)</span>' : formatPrice(single.marvel.subtotal)) : 'Incomplete'}</span>
                             </div>
 
                             <div class="flex justify-between items-center text-xs sm:text-sm">
                                 <span class="${!single.tong.missing && bestSingle && bestSingle.name === single.tong.name ? 'text-emerald-400 font-bold' : 'text-slate-300'}">${single.tong.name}:</span>
-                                <span class="font-bold ${!single.tong.missing ? 'text-white' : 'text-slate-600'}">${!single.tong.missing ? (single.tong.isDiscounted ? '$' + single.tong.adjustedSubtotal.toFixed(2) + ' <span class="text-[10px] text-amber-400 font-normal">(-' + single.tong.discountPercent + '%)</span>' : '$' + single.tong.subtotal.toFixed(2)) : 'Incomplete'}</span>
+                                <span class="font-bold ${!single.tong.missing ? 'text-white' : 'text-slate-600'}">${!single.tong.missing ? (single.tong.isDiscounted ? formatPrice(single.tong.adjustedSubtotal) + ' <span class="text-[10px] text-amber-400 font-normal">(-' + single.tong.discountPercent + '%)</span>' : formatPrice(single.tong.subtotal)) : 'Incomplete'}</span>
                             </div>
 
                             <div class="flex justify-between items-center text-xs sm:text-sm">
                                 <span class="${!single.tina.missing && bestSingle && bestSingle.name === single.tina.name ? 'text-emerald-400 font-bold' : 'text-slate-300'}">${single.tina.name}:</span>
-                                <span class="font-bold ${!single.tina.missing ? 'text-white' : 'text-slate-600'}">${!single.tina.missing ? (single.tina.isDiscounted ? '$' + single.tina.adjustedSubtotal.toFixed(2) + ' <span class="text-[10px] text-amber-400 font-normal">(-' + single.tina.discountPercent + '%)</span>' : '$' + single.tina.subtotal.toFixed(2)) : 'Incomplete'}</span>
+                                <span class="font-bold ${!single.tina.missing ? 'text-white' : 'text-slate-600'}">${!single.tina.missing ? (single.tina.isDiscounted ? formatPrice(single.tina.adjustedSubtotal) + ' <span class="text-[10px] text-amber-400 font-normal">(-' + single.tina.discountPercent + '%)</span>' : formatPrice(single.tina.subtotal)) : 'Incomplete'}</span>
                             </div>
                         </div>
                     </div>
@@ -6089,12 +6340,12 @@
                             let titleText = '';
                             if (isFreeShip) {
                                 titleText = inc.isQualified 
-                                    ? `🎉 QUALIFIED: Free Shipping with ${inc.vendorName} ($${inc.threshold}+ met!)` 
-                                    : `🚚 ${inc.vendorName} Free Shipping: $${inc.subtotal.toFixed(2)} / $${inc.threshold} ($${inc.remaining.toFixed(2)} away from free shipping)`;
+                                    ? `🎉 QUALIFIED: Free Shipping with ${inc.vendorName} (${formatPrice(inc.threshold)}+ met!)` 
+                                    : `🚚 ${inc.vendorName} Free Shipping: ${formatPrice(inc.subtotal)} / ${formatPrice(inc.threshold)} (${formatPrice(inc.remaining)} away from free shipping)`;
                             } else {
                                 titleText = inc.isQualified 
-                                    ? `🎉 QUALIFIED: ${inc.discountPercent}% ${inc.vendorKey === 'tong' ? 'Peptide Underground' : inc.vendorName} Discount Applied (-$${inc.discount.toFixed(2)} saved!)` 
-                                    : `🏷️ ${inc.vendorName} ${inc.discountPercent}% ${inc.requiresGroupBuy ? 'Group' : 'Volume'} Discount: $${inc.subtotal.toFixed(2)} / $${inc.threshold} ($${inc.remaining.toFixed(2)} away from ${inc.discountPercent}% OFF)`;
+                                    ? `🎉 QUALIFIED: ${inc.discountPercent}% ${inc.vendorKey === 'tong' ? 'Peptide Underground' : inc.vendorName} Discount Applied (-${formatPrice(inc.discount)} saved!)` 
+                                    : `🏷️ ${inc.vendorName} ${inc.discountPercent}% ${inc.requiresGroupBuy ? 'Group' : 'Volume'} Discount: ${formatPrice(inc.subtotal)} / ${formatPrice(inc.threshold)} (${formatPrice(inc.remaining)} away from ${inc.discountPercent}% OFF)`;
                             }
 
                             return `
@@ -6126,7 +6377,7 @@
                                     <i class="fa-solid fa-layer-group text-purple-400"></i>
                                     <span>Optimal Split-Order Allocation</span>
                                 </div>
-                                <span class="text-xs font-extrabold text-purple-300">$${analysis.splitSubtotal.toFixed(2)} Items</span>
+                                <span class="text-xs font-extrabold text-purple-300">${formatPrice(analysis.splitSubtotal)} Items</span>
                             </div>
 
                             <div class="space-y-2 text-xs">
@@ -6136,7 +6387,7 @@
                                         <span class="text-slate-300 font-medium">${single.marvel.name}:</span>
                                     </div>
                                     <span class="font-mono ${split.marvel.count > 0 ? 'text-white font-bold' : 'text-slate-500'}">
-                                        ${split.marvel.count} kits ($${split.marvel.adjustedSubtotal.toFixed(2)}${split.marvel.isDiscounted ? ' [-' + split.marvel.discountPercent + '%]' : ''})
+                                        ${split.marvel.count} kits (${formatPrice(split.marvel.adjustedSubtotal)}${split.marvel.isDiscounted ? ' [-' + split.marvel.discountPercent + '%]' : ''})
                                     </span>
                                 </div>
 
@@ -6146,7 +6397,7 @@
                                         <span class="text-slate-300 font-medium">${single.tong.name}:</span>
                                     </div>
                                     <span class="font-mono ${split.tong.count > 0 ? 'text-white font-bold' : 'text-slate-500'}">
-                                        ${split.tong.count} kits ($${split.tong.adjustedSubtotal.toFixed(2)}${split.tong.isDiscounted ? ' [-' + split.tong.discountPercent + '%]' : ''})
+                                        ${split.tong.count} kits (${formatPrice(split.tong.adjustedSubtotal)}${split.tong.isDiscounted ? ' [-' + split.tong.discountPercent + '%]' : ''})
                                     </span>
                                 </div>
 
@@ -6156,18 +6407,18 @@
                                         <span class="text-slate-300 font-medium">${single.tina.name}:</span>
                                     </div>
                                     <span class="font-mono ${split.tina.count > 0 ? 'text-white font-bold' : 'text-slate-500'}">
-                                        ${split.tina.count} kits ($${split.tina.adjustedSubtotal.toFixed(2)}${split.tina.isDiscounted ? ' [-' + split.tina.discountPercent + '%]' : ''})
+                                        ${split.tina.count} kits (${formatPrice(split.tina.adjustedSubtotal)}${split.tina.isDiscounted ? ' [-' + split.tina.discountPercent + '%]' : ''})
                                     </span>
                                 </div>
                             </div>
 
                             <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-400 flex justify-between items-center">
                                 <span>Combined Split Shipping:</span>
-                                <span class="font-bold text-slate-300">+$${analysis.splitShippingTotal.toFixed(2)} <span class="text-[10px] text-slate-500 font-normal">(${analysis.activeVendorsCount} vendor${analysis.activeVendorsCount === 1 ? '' : 's'} @ $${analysis.baseShippingFee.toFixed(2)})</span></span>
+                                <span class="font-bold text-slate-300">+${formatPrice(analysis.splitShippingTotal)} <span class="text-[10px] text-slate-500 font-normal">(${analysis.activeVendorsCount} vendor${analysis.activeVendorsCount === 1 ? '' : 's'} @ ${formatPrice(analysis.baseShippingFee)})</span></span>
                             </div>
                             <div class="flex justify-between items-center text-xs font-bold text-purple-300 bg-purple-950/40 border border-purple-500/20 p-2 rounded-lg">
                                 <span>Split Total (with Shipping):</span>
-                                <span class="text-sm">$${analysis.splitGrandTotal.toFixed(2)}</span>
+                                <span class="text-sm">${formatPrice(analysis.splitGrandTotal)}</span>
                             </div>
                         </div>
 
@@ -6178,7 +6429,7 @@
                                     <i class="fa-solid fa-boxes-stacked text-indigo-400"></i>
                                     <span>Single-Vendor Consolidated</span>
                                 </div>
-                                <span class="text-xs font-extrabold text-indigo-300">${bestSingle ? '$' + bestSingle.grandTotal.toFixed(2) + ' Total' : 'N/A'}</span>
+                                <span class="text-xs font-extrabold text-indigo-300">${bestSingle ? formatPrice(bestSingle.grandTotal) + ' Total' : 'N/A'}</span>
                             </div>
 
                             <div class="space-y-2 text-xs">
@@ -6186,12 +6437,12 @@
                                     <div>
                                         <span class="text-slate-300 font-medium">${single.marvel.name}</span>
                                         <span class="text-[10px] ${single.marvel.isDiscounted ? 'text-amber-400 font-semibold' : 'text-slate-500'} block">
-                                            ${single.marvel.isDiscounted ? '🎉 ' + single.marvel.discountPercent + '% Discount (-$' + single.marvel.discount.toFixed(2) + ') | ' : ''}${single.marvel.isFreeShipping ? '🎉 Free Shipping (≥$' + single.marvel.freeThreshold + ')' : '+$' + single.marvel.shipping.toFixed(2) + ' standard ship'}
+                                            ${single.marvel.isDiscounted ? '🎉 ' + single.marvel.discountPercent + '% Discount (-' + formatPrice(single.marvel.discount) + ') | ' : ''}${single.marvel.isFreeShipping ? '🎉 Free Shipping (≥' + formatPrice(single.marvel.freeThreshold) + ')' : '+' + formatPrice(single.marvel.shipping) + ' standard ship'}
                                         </span>
                                     </div>
                                     <div class="text-right">
                                         <span class="font-mono ${!single.marvel.missing ? 'text-white font-bold' : 'text-slate-600'}">
-                                            ${!single.marvel.missing ? '$' + single.marvel.grandTotal.toFixed(2) : 'Incomplete'}
+                                            ${!single.marvel.missing ? formatPrice(single.marvel.grandTotal) : 'Incomplete'}
                                         </span>
                                     </div>
                                 </div>
@@ -6200,12 +6451,12 @@
                                     <div>
                                         <span class="text-slate-300 font-medium">${single.tong.name}</span>
                                         <span class="text-[10px] ${single.tong.isDiscounted ? 'text-amber-400 font-semibold' : 'text-slate-500'} block">
-                                            ${single.tong.isDiscounted ? '🎉 ' + single.tong.discountPercent + '% Discount (-$' + single.tong.discount.toFixed(2) + ') | ' : ''}${single.tong.isFreeShipping ? '🎉 Free Shipping (≥$' + single.tong.freeThreshold + ')' : '+$' + single.tong.shipping.toFixed(2) + ' standard ship'}
+                                            ${single.tong.isDiscounted ? '🎉 ' + single.tong.discountPercent + '% Discount (-' + formatPrice(single.tong.discount) + ') | ' : ''}${single.tong.isFreeShipping ? '🎉 Free Shipping (≥' + formatPrice(single.tong.freeThreshold) + ')' : '+' + formatPrice(single.tong.shipping) + ' standard ship'}
                                         </span>
                                     </div>
                                     <div class="text-right">
                                         <span class="font-mono ${!single.tong.missing ? 'text-white font-bold' : 'text-slate-600'}">
-                                            ${!single.tong.missing ? '$' + single.tong.grandTotal.toFixed(2) : 'Incomplete'}
+                                            ${!single.tong.missing ? formatPrice(single.tong.grandTotal) : 'Incomplete'}
                                         </span>
                                     </div>
                                 </div>
@@ -6214,12 +6465,12 @@
                                     <div>
                                         <span class="text-slate-300 font-medium">${single.tina.name}</span>
                                         <span class="text-[10px] ${single.tina.isDiscounted ? 'text-amber-400 font-semibold' : (single.tina.isFreeShipping ? 'text-emerald-400 font-semibold' : 'text-slate-500')} block">
-                                            ${single.tina.isDiscounted ? '🎉 ' + single.tina.discountPercent + '% Discount (-$' + single.tina.discount.toFixed(2) + ') | ' : ''}${single.tina.isFreeShipping ? '🎉 Free Shipping (≥$' + single.tina.freeThreshold + ')' : '+$' + single.tina.shipping.toFixed(2) + ' standard ship'}
+                                            ${single.tina.isDiscounted ? '🎉 ' + single.tina.discountPercent + '% Discount (-' + formatPrice(single.tina.discount) + ') | ' : ''}${single.tina.isFreeShipping ? '🎉 Free Shipping (≥' + formatPrice(single.tina.freeThreshold) + ')' : '+' + formatPrice(single.tina.shipping) + ' standard ship'}
                                         </span>
                                     </div>
                                     <div class="text-right">
                                         <span class="font-mono ${!single.tina.missing ? 'text-white font-bold' : 'text-slate-600'}">
-                                            ${!single.tina.missing ? '$' + single.tina.grandTotal.toFixed(2) : 'Incomplete'}
+                                            ${!single.tina.missing ? formatPrice(single.tina.grandTotal) : 'Incomplete'}
                                         </span>
                                     </div>
                                 </div>
@@ -6231,7 +6482,7 @@
                             </div>
                             <div class="flex justify-between items-center text-xs font-bold text-emerald-300 bg-emerald-950/40 border border-emerald-500/20 p-2 rounded-lg">
                                 <span>Lowest Single Total (with Shipping):</span>
-                                <span class="text-sm">${bestSingle ? '$' + bestSingle.grandTotal.toFixed(2) : 'N/A'}</span>
+                                <span class="text-sm">${bestSingle ? formatPrice(bestSingle.grandTotal) : 'N/A'}</span>
                             </div>
                         </div>
                     </div>
@@ -6367,36 +6618,66 @@
 
             // Append Optimizer Cost Breakdown
             const analysis = calculateOptimizerAnalysis(cart, peptideData);
+            const isNonUsd = currentCurrency !== 'USD';
+
             summaryText += `ESTIMATED COST BREAKDOWN:\n`;
+            if (isNonUsd) {
+                const rate = getExchangeRate();
+                summaryText += `• Display Currency: ${currentCurrency} (1 USD = ${rate.toFixed(4)} ${currentCurrency})\n`;
+                summaryText += `• Baseline Currency: USD ($)\n`;
+            }
+
             if (analysis.bestOverallStrategy === 'single' && analysis.lowestSingleVendor) {
                 const best = analysis.lowestSingleVendor;
                 summaryText += `• Strategy: Single Vendor (${best.name})\n`;
                 if (best.isDiscounted) {
-                    summaryText += `• Items Subtotal: $${best.subtotal.toFixed(2)}\n`;
-                    summaryText += `• Community Discount (${best.discountPercent}% on $${best.discountThreshold}+): -$${best.discount.toFixed(2)}\n`;
-                    summaryText += `• Adjusted Items Subtotal: $${best.adjustedSubtotal.toFixed(2)}\n`;
+                    const subStr = isNonUsd ? `${formatPrice(best.subtotal)} ($${best.subtotal.toFixed(2)} USD)` : `$${best.subtotal.toFixed(2)}`;
+                    const discStr = isNonUsd ? `-${formatPrice(best.discount)} (-$${best.discount.toFixed(2)} USD)` : `-$${best.discount.toFixed(2)}`;
+                    const adjStr = isNonUsd ? `${formatPrice(best.adjustedSubtotal)} ($${best.adjustedSubtotal.toFixed(2)} USD)` : `$${best.adjustedSubtotal.toFixed(2)}`;
+                    const threshStr = isNonUsd ? `$${best.discountThreshold}+ USD / ${formatPrice(best.discountThreshold)}+` : `$${best.discountThreshold}+`;
+                    summaryText += `• Items Subtotal: ${subStr}\n`;
+                    summaryText += `• Community Discount (${best.discountPercent}% on ${threshStr}): ${discStr}\n`;
+                    summaryText += `• Adjusted Items Subtotal: ${adjStr}\n`;
                 } else {
-                    summaryText += `• Items Subtotal: $${best.subtotal.toFixed(2)}\n`;
+                    const subStr = isNonUsd ? `${formatPrice(best.subtotal)} ($${best.subtotal.toFixed(2)} USD)` : `$${best.subtotal.toFixed(2)}`;
+                    summaryText += `• Items Subtotal: ${subStr}\n`;
                 }
-                summaryText += `• Est. Shipping: +$${best.shipping.toFixed(2)}${best.isFreeShipping ? ' (Free Shipping ≥$' + best.freeThreshold + ')' : ' ($' + analysis.baseShippingFee.toFixed(2) + '/vendor)'}\n`;
-                summaryText += `• Est. Total: $${best.grandTotal.toFixed(2)}\n`;
+                const shipFeeStr = isNonUsd ? `+${formatPrice(best.shipping)} (+${formatPrice(best.shipping, { currency: 'USD' })} USD)` : `+$${best.shipping.toFixed(2)}`;
+                const freeNote = best.isFreeShipping 
+                    ? ` (Free Shipping ≥${isNonUsd ? '$' + best.freeThreshold + ' USD / ' + formatPrice(best.freeThreshold) : '$' + best.freeThreshold})` 
+                    : ` (${isNonUsd ? '$' + analysis.baseShippingFee.toFixed(2) + ' USD / ' + formatPrice(analysis.baseShippingFee) : '$' + analysis.baseShippingFee.toFixed(2)}/vendor)`;
+                summaryText += `• Est. Shipping: ${shipFeeStr}${freeNote}\n`;
+                const totalStr = isNonUsd ? `${formatPrice(best.grandTotal)} ($${best.grandTotal.toFixed(2)} USD)` : `$${best.grandTotal.toFixed(2)}`;
+                summaryText += `• Est. Total: ${totalStr}\n`;
                 if (analysis.splitGrandTotal) {
-                    summaryText += `• Split-Order Alternative: $${analysis.splitGrandTotal.toFixed(2)} (${analysis.activeVendorsCount} vendors @ $${analysis.baseShippingFee.toFixed(2)}/ea shipping)\n`;
+                    const splitTotalStr = isNonUsd ? `${formatPrice(analysis.splitGrandTotal)} ($${analysis.splitGrandTotal.toFixed(2)} USD)` : `$${analysis.splitGrandTotal.toFixed(2)}`;
+                    summaryText += `• Split-Order Alternative: ${splitTotalStr} (${analysis.activeVendorsCount} vendors @ $${analysis.baseShippingFee.toFixed(2)} USD/ea)\n`;
                 }
             } else {
                 summaryText += `• Strategy: Split Order (${analysis.activeVendorsCount} Vendors)\n`;
                 if (analysis.splitDiscount > 0) {
-                    summaryText += `• Raw Items Subtotal: $${analysis.splitRawSubtotal.toFixed(2)}\n`;
-                    summaryText += `• Community Discounts: -$${analysis.splitDiscount.toFixed(2)}\n`;
-                    summaryText += `• Adjusted Items Subtotal: $${analysis.splitSubtotal.toFixed(2)}\n`;
+                    const rawStr = isNonUsd ? `${formatPrice(analysis.splitRawSubtotal)} ($${analysis.splitRawSubtotal.toFixed(2)} USD)` : `$${analysis.splitRawSubtotal.toFixed(2)}`;
+                    const discStr = isNonUsd ? `-${formatPrice(analysis.splitDiscount)} (-$${analysis.splitDiscount.toFixed(2)} USD)` : `-$${analysis.splitDiscount.toFixed(2)}`;
+                    const adjStr = isNonUsd ? `${formatPrice(analysis.splitSubtotal)} ($${analysis.splitSubtotal.toFixed(2)} USD)` : `$${analysis.splitSubtotal.toFixed(2)}`;
+                    summaryText += `• Raw Items Subtotal: ${rawStr}\n`;
+                    summaryText += `• Community Discounts: ${discStr}\n`;
+                    summaryText += `• Adjusted Items Subtotal: ${adjStr}\n`;
                 } else {
-                    summaryText += `• Items Subtotal: $${analysis.splitSubtotal.toFixed(2)}\n`;
+                    const subStr = isNonUsd ? `${formatPrice(analysis.splitSubtotal)} ($${analysis.splitSubtotal.toFixed(2)} USD)` : `$${analysis.splitSubtotal.toFixed(2)}`;
+                    summaryText += `• Items Subtotal: ${subStr}\n`;
                 }
-                summaryText += `• Est. Shipping: +$${analysis.splitShippingTotal.toFixed(2)} (${analysis.activeVendorsCount} vendors @ $${analysis.baseShippingFee.toFixed(2)}/ea)\n`;
-                summaryText += `• Est. Total: $${analysis.splitGrandTotal.toFixed(2)}\n`;
+                const shipStr = isNonUsd ? `+${formatPrice(analysis.splitShippingTotal)} (+${formatPrice(analysis.splitShippingTotal, { currency: 'USD' })} USD)` : `+$${analysis.splitShippingTotal.toFixed(2)}`;
+                summaryText += `• Est. Shipping: ${shipStr} (${analysis.activeVendorsCount} vendors @ ${isNonUsd ? '$' + analysis.baseShippingFee.toFixed(2) + ' USD / ' + formatPrice(analysis.baseShippingFee) : '$' + analysis.baseShippingFee.toFixed(2)}/ea)\n`;
+                const totalStr = isNonUsd ? `${formatPrice(analysis.splitGrandTotal)} ($${analysis.splitGrandTotal.toFixed(2)} USD)` : `$${analysis.splitGrandTotal.toFixed(2)}`;
+                summaryText += `• Est. Total: ${totalStr}\n`;
                 if (analysis.lowestSingleVendor) {
-                    summaryText += `• Single Vendor Alternative (${analysis.lowestSingleVendor.name}): $${analysis.lowestSingleVendor.grandTotal.toFixed(2)}\n`;
+                    const singleTotalStr = isNonUsd ? `${formatPrice(analysis.lowestSingleVendor.grandTotal)} ($${analysis.lowestSingleVendor.grandTotal.toFixed(2)} USD)` : `$${analysis.lowestSingleVendor.grandTotal.toFixed(2)}`;
+                    summaryText += `• Single Vendor Alternative (${analysis.lowestSingleVendor.name}): ${singleTotalStr}\n`;
                 }
+            }
+            if (isNonUsd) {
+                summaryText += `------------------------------------\n`;
+                summaryText += `NOTE FOR VENDOR: Chinese vendor catalog rates are pegged to USD ($). Converted prices (${currentCurrency}) are provided for buyer reference.\n`;
             }
             summaryText += `------------------------------------\n`;
             
@@ -6481,6 +6762,8 @@
             }
 
             await loadPeptideData();
+            initCurrencySelector();
+            fetchLiveFxRates();
             selectedItem = peptideData.find(i => i.key === "Semaglutide (10mg*10)" || i.id === "semaglutide_10mg") || peptideData[0];
             updateSpotlight(selectedItem);
             renderCatalog();

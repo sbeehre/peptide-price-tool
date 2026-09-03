@@ -941,10 +941,16 @@
             {
                 id: "tina",
                 name: "Tina Tianjin Bio",
-                repName: "Tina",
-                phone: "8613512884424",
+                shortName: "Tina Bio",
+                color: "emerald",
                 badgeColor: "emerald",
                 defaultShipping: 50,
+                contact: {
+                    repName: "Tina",
+                    phone: "+8613512884424"
+                },
+                repName: "Tina",
+                phone: "+8613512884424",
                 rules: {
                     freeShippingThreshold: 700,
                     freeShippingRequiresGB: false,
@@ -958,10 +964,16 @@
             {
                 id: "tong",
                 name: "Tong Shi Po",
-                repName: "Tong",
-                phone: "8613027198018",
+                shortName: "Tong Shi Po",
+                color: "amber",
                 badgeColor: "amber",
                 defaultShipping: 50,
+                contact: {
+                    repName: "Tong Shi Po Rep",
+                    phone: "+8613027198018"
+                },
+                repName: "Tong Shi Po Rep",
+                phone: "+8613027198018",
                 rules: {
                     freeShippingThreshold: 0,
                     freeShippingRequiresGB: false,
@@ -975,10 +987,16 @@
             {
                 id: "marvel",
                 name: "Marvel Chloe",
-                repName: "Chloe",
-                phone: "85365265146",
+                shortName: "Marvel Chloe",
+                color: "indigo",
                 badgeColor: "indigo",
                 defaultShipping: 50,
+                contact: {
+                    repName: "Chloe",
+                    phone: "+85365265146"
+                },
+                repName: "Chloe",
+                phone: "+85365265146",
                 rules: {
                     freeShippingThreshold: 0,
                     freeShippingRequiresGB: false,
@@ -3325,7 +3343,7 @@
         const RULES_STORAGE_KEY = 'pep_pricing_rules';
 
         function getVendorTheme(vendor) {
-            const color = (typeof vendor === 'string' ? vendor : (vendor && vendor.badgeColor)) || 'indigo';
+            const color = (typeof vendor === 'string' ? vendor : (vendor && (vendor.color || vendor.badgeColor))) || 'indigo';
             const themes = {
                 emerald: {
                     dot: 'bg-emerald-400',
@@ -4352,32 +4370,87 @@
             return result;
         }
 
-        // Dynamically loads vendor configuration from ./data/vendors.json if available
-        async function loadVendorsConfig() {
-            if (window.location.protocol !== 'file:') {
-                try {
-                    const res = await fetch('./data/vendors.json', { cache: 'no-cache' });
-                    if (res.ok) {
-                        const json = await res.json();
-                        if (Array.isArray(json) && json.length > 0) {
-                            VENDORS_CONFIG = json;
-                            window.VENDORS_CONFIG = VENDORS_CONFIG;
-                            DEFAULT_PRICING_RULES = buildDefaultPricingRules(VENDORS_CONFIG);
-                            pricingRules = loadPricingRules();
-                        }
-                    }
-                } catch (fetchErr) {
-                    console.warn('vendors.json fetch failed; using inline defaults:', fetchErr);
-                }
-            }
-            return VENDORS_CONFIG;
+        function normalizeVendor(v) {
+            if (!v) return null;
+            const repName = (v.contact && v.contact.repName) || v.repName || v.name;
+            const phone = (v.contact && v.contact.phone) || v.phone || '';
+            const color = v.color || v.badgeColor || 'indigo';
+            const shortName = v.shortName || v.name;
+            const defaultShipping = (typeof v.defaultShipping === 'number') ? v.defaultShipping : 50;
+            const rawRules = v.rules || {};
+            const rules = {
+                freeShippingThreshold: typeof rawRules.freeShippingThreshold === 'number' ? rawRules.freeShippingThreshold : 0,
+                freeShippingRequiresGB: rawRules.freeShippingRequiresGB === true || rawRules.freeShippingRequiresGroupBuy === true,
+                freeShippingEnabled: rawRules.freeShippingEnabled !== undefined ? rawRules.freeShippingEnabled : ((rawRules.freeShippingThreshold || 0) > 0),
+                discountPercent: typeof rawRules.discountPercent === 'number' ? rawRules.discountPercent : 0,
+                discountThreshold: typeof rawRules.discountThreshold === 'number' ? rawRules.discountThreshold : 0,
+                discountRequiresGB: rawRules.discountRequiresGB === true || rawRules.discountRequiresGroupBuy === true,
+                discountEnabled: rawRules.discountEnabled !== undefined ? rawRules.discountEnabled : ((rawRules.discountPercent || 0) > 0)
+            };
+            return {
+                ...v,
+                shortName,
+                color,
+                badgeColor: color,
+                defaultShipping,
+                contact: { repName, phone },
+                repName,
+                phone,
+                rules
+            };
         }
-        window.loadVendorsConfig = loadVendorsConfig;
+        window.normalizeVendor = normalizeVendor;
+
+        // Visual loading skeleton renderer for initial loading state
+        function renderLoadingSkeletons() {
+            const grid = document.getElementById('spotlight-cards-grid');
+            if (grid) {
+                const cols = (VENDORS_CONFIG && VENDORS_CONFIG.length) ? Math.min(Math.max(VENDORS_CONFIG.length, 1), 3) : 3;
+                grid.className = `grid grid-cols-1 md:grid-cols-${cols} gap-3.5 sm:gap-5`;
+                grid.innerHTML = Array(cols).fill(0).map(() => `
+                    <div class="bg-slate-900/60 border border-slate-800/80 rounded-xl sm:rounded-2xl p-4 sm:p-5 animate-pulse space-y-4">
+                        <div class="flex justify-between items-start">
+                            <div class="space-y-2">
+                                <div class="h-4 w-28 bg-slate-800 rounded"></div>
+                                <div class="h-3 w-20 bg-slate-800/60 rounded"></div>
+                            </div>
+                            <div class="h-5 w-16 bg-slate-800/80 rounded-full"></div>
+                        </div>
+                        <div class="my-3 space-y-2">
+                            <div class="h-8 w-24 bg-slate-800 rounded"></div>
+                            <div class="h-3 w-16 bg-slate-800/60 rounded"></div>
+                        </div>
+                        <div class="pt-3 border-t border-slate-800/60 space-y-2">
+                            <div class="h-3 w-32 bg-slate-800/50 rounded"></div>
+                            <div class="h-3 w-24 bg-slate-800/50 rounded"></div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            if (catalogTbody) {
+                const cols = (VENDORS_CONFIG && VENDORS_CONFIG.length) ? VENDORS_CONFIG.length : 3;
+                const vendorPlaceholders = Array(cols).fill('<td class="py-4 px-3 text-center"><div class="h-4 w-14 bg-slate-800/60 rounded mx-auto"></div></td>').join('');
+                catalogTbody.innerHTML = Array(8).fill(0).map(() => `
+                    <tr class="animate-pulse border-b border-slate-800/40">
+                        <td class="py-4 px-4 pl-4"><div class="h-4 w-36 sm:w-44 bg-slate-800 rounded"></div></td>
+                        <td class="py-4 px-3"><div class="h-4 w-20 bg-slate-800/70 rounded"></div></td>
+                        ${vendorPlaceholders}
+                        <td class="py-4 px-3 text-center"><div class="h-4 w-14 bg-slate-800/70 rounded mx-auto"></div></td>
+                        <td class="py-4 px-3 text-center"><div class="h-4 w-20 bg-slate-800/60 rounded mx-auto"></div></td>
+                        <td class="py-4 px-3 text-center pr-6"><div class="h-7 w-16 bg-slate-800/80 rounded mx-auto"></div></td>
+                    </tr>
+                `).join('');
+            }
+            if (catalogCount) {
+                catalogCount.innerHTML = `<span class="animate-pulse text-indigo-400 font-medium"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i>Loading verified peptide catalog...</span>`;
+            }
+        }
+        window.renderLoadingSkeletons = renderLoadingSkeletons;
 
         // Allows runtime dynamic update of vendors
         function applyVendorsConfig(newVendors) {
             if (!Array.isArray(newVendors) || newVendors.length === 0) return;
-            VENDORS_CONFIG = newVendors;
+            VENDORS_CONFIG = newVendors.map(normalizeVendor);
             window.VENDORS_CONFIG = VENDORS_CONFIG;
             DEFAULT_PRICING_RULES = buildDefaultPricingRules(VENDORS_CONFIG);
             pricingRules = loadPricingRules();
@@ -4405,41 +4478,62 @@
         }
         window.applyVendorsConfig = applyVendorsConfig;
 
-        // Dynamically loads peptide dataset on startup
-        async function loadPeptideData(forceDefault = false) {
-            await loadVendorsConfig();
-            let baseCatalog = null;
+        // Parallel fetch for data/vendors.json and data/catalog.json via Promise.all
+        async function loadAppData(forceDefault = false) {
+            let vendorsLoaded = null;
+            let catalogLoaded = null;
             let loadedFromNetwork = false;
 
-            // 1. Attempt dynamic fetch if running via HTTP/HTTPS
+            // 1. Fetch decoupled JSON datasets in parallel if HTTP/HTTPS
             if (window.location.protocol !== 'file:') {
                 try {
-                    const res = await fetch('./data/peptides.json', { cache: 'no-cache' });
-                    if (res.ok) {
-                        const json = await res.json();
-                        if (Array.isArray(json) && json.length > 0) {
-                            baseCatalog = json;
+                    const [vendorsRes, catalogRes] = await Promise.all([
+                        fetch('data/vendors.json', { cache: 'no-cache' }),
+                        fetch('data/catalog.json', { cache: 'no-cache' })
+                    ]);
+
+                    if (vendorsRes.ok) {
+                        const vJson = await vendorsRes.json();
+                        if (Array.isArray(vJson) && vJson.length > 0) {
+                            vendorsLoaded = vJson;
+                            loadedFromNetwork = true;
+                        }
+                    }
+
+                    if (catalogRes.ok) {
+                        const cJson = await catalogRes.json();
+                        if (Array.isArray(cJson) && cJson.length > 0) {
+                            catalogLoaded = cJson;
                             loadedFromNetwork = true;
                         }
                     }
                 } catch (fetchErr) {
-                    console.warn('peptides.json fetch failed; using inline defaults:', fetchErr);
+                    console.warn('Network fetch for data/vendors.json or data/catalog.json failed; using local fallbacks:', fetchErr);
                 }
             }
 
-            // 2. Fall back gracefully to inline defaults if fetch was not used or failed
-            if (!baseCatalog || !Array.isArray(baseCatalog) || baseCatalog.length === 0) {
-                baseCatalog = JSON.parse(JSON.stringify(INLINE_DEFAULT_PEPTIDES));
+            // 2. Vendor registry configuration fallback
+            if (!vendorsLoaded || !Array.isArray(vendorsLoaded) || vendorsLoaded.length === 0) {
+                vendorsLoaded = JSON.parse(JSON.stringify(INLINE_DEFAULT_VENDORS));
+            }
+            VENDORS_CONFIG = vendorsLoaded.map(normalizeVendor);
+            window.VENDORS_CONFIG = VENDORS_CONFIG;
+            DEFAULT_PRICING_RULES = buildDefaultPricingRules(VENDORS_CONFIG);
+            pricingRules = loadPricingRules();
+
+            // 3. Product catalog fallback
+            if (!catalogLoaded || !Array.isArray(catalogLoaded) || catalogLoaded.length === 0) {
+                catalogLoaded = JSON.parse(JSON.stringify(INLINE_DEFAULT_PEPTIDES));
             }
 
-            // 3. Merge user-imported customizations if not forcing official defaults
+            // 4. Merge user-imported customizations if not forcing official defaults
             let hasCustomData = false;
             if (!forceDefault) {
                 try {
                     const customRaw = localStorage.getItem('custom_peptide_data');
                     if (customRaw) {
                         const parsedCustom = JSON.parse(customRaw);
-                        baseCatalog = mergeCustomPeptideData(baseCatalog, parsedCustom);
+                        catalogLoaded = mergeCustomPeptideData(catalogLoaded, parsedCustom);
                         hasCustomData = true;
                     }
                 } catch (storageErr) {
@@ -4447,28 +4541,31 @@
                 }
             }
 
-            // Normalize every record in memory
-            peptideData = baseCatalog.map(normalizePeptideItem);
+            // 5. Normalize every record in memory
+            peptideData = catalogLoaded.map(normalizePeptideItem);
             window.peptideData = peptideData;
 
-            // Update Category Filter Pills
+            // 6. Update Category Filter Pills
             if (typeof renderCategoryPills === 'function') {
                 renderCategoryPills();
             }
 
-            // Update UI status badge
+            // 7. Update UI status badge
             if (rateBadge) {
                 if (hasCustomData) {
                     rateBadge.className = "inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-950/80 text-amber-300 border border-amber-700/50";
                     rateBadge.textContent = "Custom Rates Active";
                 } else {
                     rateBadge.className = "hidden xs:inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-indigo-950 text-indigo-300 border border-indigo-800/40";
-                    rateBadge.textContent = "Official Rates";
+                    rateBadge.textContent = loadedFromNetwork ? "Official Catalog (Live)" : "Official Rates";
                 }
             }
 
-            return { peptideData, hasCustomData, loadedFromNetwork };
+            return { VENDORS_CONFIG, peptideData, hasCustomData, loadedFromNetwork };
         }
+        window.loadAppData = loadAppData;
+        window.loadPeptideData = loadAppData;
+        window.loadVendorsConfig = async () => VENDORS_CONFIG;
 
         // ==========================================
         // EXPORT / BACKUP MASTER CATALOG MODULE
@@ -6082,7 +6179,8 @@
             } catch (err) {}
 
             const encodedMessage = encodeURIComponent(message);
-            const waUrl = `https://wa.me/${vendor.phone}?text=${encodedMessage}`;
+            const cleanPhone = (vendor.phone || (vendor.contact && vendor.contact.phone) || '').replace(/[^0-9]/g, '');
+            const waUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
 
             const link = document.createElement('a');
             link.href = waUrl;
@@ -7056,7 +7154,12 @@
                 }
             }
 
-            await loadPeptideData();
+            // Visual loading skeleton during initial load
+            renderLoadingSkeletons();
+
+            // Fetch decoupled data/vendors.json and data/catalog.json via Promise.all
+            await loadAppData();
+
             updateHeaderSubtitle();
             renderSpotlightCards();
             renderCatalogHeaders();
@@ -7066,7 +7169,7 @@
             renderVendorRulesControls();
             initCurrencySelector();
             fetchLiveFxRates();
-            selectedItem = peptideData.find(i => i.key === "Semaglutide (10mg*10)" || i.id === "semaglutide_10mg") || peptideData[0];
+            selectedItem = peptideData.find(i => i.key === "Semaglutide (10mg*10)" || i.id === "SM10" || i.id === "semaglutide_10mg") || peptideData[0];
             updateSpotlight(selectedItem);
             renderCatalog();
             renderCart();

@@ -2,10 +2,16 @@
   {
     "id": "tina",
     "name": "Tina Tianjin Bio",
-    "repName": "Tina",
-    "phone": "8613512884424",
+    "shortName": "Tina Bio",
+    "color": "emerald",
     "badgeColor": "emerald",
     "defaultShipping": 50,
+    "contact": {
+      "repName": "Tina",
+      "phone": "+8613512884424"
+    },
+    "repName": "Tina",
+    "phone": "+8613512884424",
     "rules": {
       "freeShippingThreshold": 700,
       "freeShippingRequiresGB": false,
@@ -19,10 +25,16 @@
   {
     "id": "tong",
     "name": "Tong Shi Po",
-    "repName": "Tong",
-    "phone": "8613027198018",
+    "shortName": "Tong Shi Po",
+    "color": "amber",
     "badgeColor": "amber",
     "defaultShipping": 50,
+    "contact": {
+      "repName": "Tong Shi Po Rep",
+      "phone": "+8613027198018"
+    },
+    "repName": "Tong Shi Po Rep",
+    "phone": "+8613027198018",
     "rules": {
       "freeShippingThreshold": 0,
       "freeShippingRequiresGB": false,
@@ -36,10 +48,16 @@
   {
     "id": "marvel",
     "name": "Marvel Chloe",
-    "repName": "Chloe",
-    "phone": "85365265146",
+    "shortName": "Marvel Chloe",
+    "color": "indigo",
     "badgeColor": "indigo",
     "defaultShipping": 50,
+    "contact": {
+      "repName": "Chloe",
+      "phone": "+85365265146"
+    },
+    "repName": "Chloe",
+    "phone": "+85365265146",
     "rules": {
       "freeShippingThreshold": 0,
       "freeShippingRequiresGB": false,

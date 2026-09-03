@@ -72,15 +72,14 @@
         /* Custom utilities for navigation header controls */
         .h-10 { height: 2.5rem; }
         .h-11 { height: 2.75rem; }
-        .w-32 { width: 8rem; }
-        .w-36 { width: 9rem; }
-        @media (min-width: 640px) {
-            .sm\:w-36 { width: 9rem; }
-        }
         .top-1\/2 { top: 50%; }
         .-translate-y-1\/2 { transform: translateY(-50%); }
+        .right-3 { right: 0.75rem; }
+        .pl-4 { padding-left: 1rem; }
+        .pr-9 { padding-right: 2.25rem; }
         .tracking-wide { letter-spacing: 0.025em; }
         .\[text-align-last\:center\] { text-align-last: center; -moz-text-align-last: center; }
+        .hover\:border-indigo-400\/70:hover { border-color: rgba(129, 140, 248, 0.7); }
 
         /* Ensure currency selector has no rogue background glyphs and text is dead-centered */
         #currency-select {
@@ -91,6 +90,9 @@
             text-align: center !important;
             text-align-last: center !important;
             -moz-text-align-last: center !important;
+        }
+        #currency-select::-ms-expand {
+            display: none;
         }
     </style>
 </head>
@@ -161,7 +163,7 @@
 
                 <!-- Currency Selector Dropdown -->
                 <div class="relative inline-flex items-center shrink-0">
-                    <select id="currency-select" aria-label="Select Currency" data-umami-event="currency-change" class="h-10 w-32 bg-slate-900 border border-indigo-500/40 hover:border-indigo-400 rounded-xl px-6 text-xs font-semibold text-white tracking-wide appearance-none cursor-pointer outline-none text-center [text-align-last:center]" style="background-image: none !important;">
+                    <select id="currency-select" aria-label="Select Currency" data-umami-event="currency-change" class="h-11 pl-4 pr-9 bg-slate-900 border border-indigo-500/40 hover:border-indigo-400/70 rounded-xl text-xs font-semibold text-white tracking-wide appearance-none cursor-pointer outline-none text-center [text-align-last:center]" style="background-image: none !important;">
                         <option value="USD" class="bg-slate-900 text-white">USD ($)</option>
                         <option value="NZD" class="bg-slate-900 text-white">NZD (NZ$)</option>
                         <option value="AUD" class="bg-slate-900 text-white">AUD (A$)</option>
@@ -169,13 +171,13 @@
                         <option value="GBP" class="bg-slate-900 text-white">GBP (£)</option>
                         <option value="EUR" class="bg-slate-900 text-white">EUR (€)</option>
                     </select>
-                    <svg class="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
                 </div>
 
                 <!-- Order List Cart Button -->
-                <a href="#cart-section" class="h-10 px-3.5 sm:px-4 rounded-xl flex items-center gap-1.5 sm:gap-2 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold text-xs sm:text-sm transition shadow-lg shadow-indigo-600/20 border border-indigo-500/50 cursor-pointer shrink-0">
+                <a href="#cart-section" class="h-11 px-3.5 sm:px-4 rounded-xl flex items-center gap-1.5 sm:gap-2 bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold text-xs sm:text-sm transition shadow-lg shadow-indigo-600/20 border border-indigo-500/50 cursor-pointer shrink-0">
                     <i class="fa-solid fa-shopping-basket text-xs sm:text-sm"></i>
                     <span class="hidden xs:inline">Order List</span>
                     <span id="cart-badge-count" class="bg-indigo-950 text-indigo-200 border border-indigo-400/40 text-[11px] sm:text-xs px-1.5 py-0.5 sm:px-2 rounded-full font-bold min-w-[20px] text-center">0</span>

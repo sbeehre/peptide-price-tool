@@ -107,7 +107,7 @@
                 </button>
                 <div class="min-w-0">
                     <div class="flex items-center gap-2">
-                        <h1 class="text-base sm:text-xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent truncate">
+                        <h1 id="header-brand-title" class="text-base sm:text-xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent truncate">
                             Peptide Underground Price Tool
                         </h1>
                         <span id="rate-badge" class="hidden xs:inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-indigo-950 text-indigo-300 border border-indigo-800/40">Official Rates</span>
@@ -132,11 +132,11 @@
                         <span class="md:hidden">Export</span>
                     </button>
 
-                    <!-- Vendor Rules Manager Button -->
-                    <button id="open-rules-modal-btn" title="Configure Vendor Discount & Shipping Rules" class="flex items-center gap-1.5 sm:gap-2 bg-indigo-950/70 hover:bg-indigo-900 active:bg-indigo-950 text-indigo-200 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 h-9 sm:h-10 rounded-xl text-xs sm:text-sm transition border border-indigo-700/50 cursor-pointer shadow-sm">
+                    <!-- Vendor Rules & Branding Settings Button -->
+                    <button id="open-rules-modal-btn" title="Configure Settings, Community Branding & Vendor Rules" class="flex items-center gap-1.5 sm:gap-2 bg-indigo-950/70 hover:bg-indigo-900 active:bg-indigo-950 text-indigo-200 hover:text-white font-medium px-2.5 py-2 sm:px-3 sm:py-2.5 h-9 sm:h-10 rounded-xl text-xs sm:text-sm transition border border-indigo-700/50 cursor-pointer shadow-sm">
                         <i class="fa-solid fa-sliders text-indigo-400 text-xs sm:text-sm"></i>
-                        <span class="hidden md:inline">Vendor Rules</span>
-                        <span class="md:hidden">Rules</span>
+                        <span class="hidden md:inline">Settings & Rules</span>
+                        <span class="md:hidden">Settings</span>
                     </button>
 
                     <!-- Import Price Sheet Button -->
@@ -588,7 +588,7 @@
                     Logout / Lock
                 </button>
             </div>
-            <p class="font-medium text-slate-400">Peptide Underground Price Tool</p>
+            <p id="footer-brand-title" class="font-medium text-slate-400">Peptide Underground Price Tool</p>
             <p>Vendor rate comparison and order optimizer for research peptides.</p>
         </footer>
 
@@ -602,11 +602,11 @@
                 <div class="w-12 h-12 rounded-2xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center mx-auto mb-3 border border-indigo-500/30 shadow-inner">
                     <i class="fa-solid fa-users-viewfinder text-xl"></i>
                 </div>
-                <h2 class="text-xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                <h2 id="community-gate-title" class="text-xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                     Peptide Underground Price Tool
                 </h2>
                 <p class="text-xs text-indigo-300 font-semibold mt-1">Skool Community Member Gate</p>
-                <p class="text-xs text-slate-400 mt-1.5">Welcome! Enter the shared community passphrase from the Skool classroom to unlock catalog pricing and the multi-vendor order optimizer.</p>
+                <p id="community-gate-desc" class="text-xs text-slate-400 mt-1.5">Welcome! Enter the shared community passphrase from the Skool classroom to unlock catalog pricing and the multi-vendor order optimizer.</p>
             </div>
 
             <!-- Form -->
@@ -863,8 +863,8 @@
                         <i class="fa-solid fa-sliders text-sm"></i>
                     </div>
                     <div>
-                        <h3 class="text-base sm:text-lg font-bold text-white">Vendor Discount & Shipping Rules Manager</h3>
-                        <p class="text-[11px] sm:text-xs text-slate-400">Configure vendor-specific free shipping thresholds, percentage discounts, group-buy gating, and base shipping rates</p>
+                        <h3 class="text-base sm:text-lg font-bold text-white">Vendor Rules & Community Settings</h3>
+                        <p class="text-[11px] sm:text-xs text-slate-400">Configure community name, vendor-specific free shipping thresholds, percentage discounts, group-buy gating, and base shipping rates</p>
                     </div>
                 </div>
                 <button id="close-rules-modal-btn" class="w-8 h-8 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition flex items-center justify-center cursor-pointer">
@@ -875,6 +875,28 @@
             <!-- Modal Body -->
             <div class="p-4 sm:p-6 overflow-y-auto space-y-6 flex-1 touch-scroll">
                 
+                <!-- Community Branding & Tool Title Configuration Card -->
+                <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 space-y-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                            <div class="flex items-center gap-2 font-semibold text-slate-200 text-sm">
+                                <i class="fa-solid fa-tag text-indigo-400"></i>
+                                <span>Community Name / Tool Title</span>
+                            </div>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Custom community name used across the header title, document &lt;title&gt;, card branding, and WhatsApp order messages.</p>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <input 
+                                type="text" 
+                                id="rules-community-name" 
+                                placeholder="Peptide Underground" 
+                                value="Peptide Underground"
+                                class="w-48 sm:w-56 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs sm:text-sm font-medium text-white placeholder-slate-500 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition outline-none"
+                            >
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Global Shipping Rate Configuration Card -->
                 <div class="bg-slate-950/60 border border-slate-800 rounded-xl p-4 space-y-3">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -938,6 +960,72 @@
     </div>
 
     <script>
+        // ==========================================
+        // COMMUNITY BRANDING & TOOL CONFIGURATION
+        // ==========================================
+        const DEFAULT_COMMUNITY_NAME = 'Peptide Underground';
+        const COMMUNITY_NAME_STORAGE_KEY = 'appCommunityName';
+
+        function getCommunityName() {
+            try {
+                const stored = localStorage.getItem(COMMUNITY_NAME_STORAGE_KEY);
+                if (stored && typeof stored === 'string' && stored.trim()) {
+                    return stored.trim();
+                }
+            } catch (err) {}
+            return DEFAULT_COMMUNITY_NAME;
+        }
+        window.getCommunityName = getCommunityName;
+
+        function setCommunityName(name) {
+            const clean = (name && typeof name === 'string' && name.trim()) ? name.trim() : DEFAULT_COMMUNITY_NAME;
+            try {
+                localStorage.setItem(COMMUNITY_NAME_STORAGE_KEY, clean);
+            } catch (err) {}
+            updateCommunityBrandingUi();
+            if (typeof renderCart === 'function') renderCart();
+            return clean;
+        }
+        window.setCommunityName = setCommunityName;
+
+        function updateCommunityBrandingUi() {
+            const commName = getCommunityName();
+            const brandTitle = `${commName} Price Tool`;
+
+            if (typeof document !== 'undefined') {
+                document.title = brandTitle;
+                const ogTitle = document.querySelector('meta[property="og:title"]');
+                if (ogTitle) ogTitle.setAttribute('content', brandTitle);
+                const twTitle = document.querySelector('meta[name="twitter:title"]');
+                if (twTitle) twTitle.setAttribute('content', brandTitle);
+
+                const headerTitle = document.getElementById('header-brand-title');
+                if (headerTitle) {
+                    headerTitle.textContent = brandTitle;
+                }
+
+                const footerTitle = document.getElementById('footer-brand-title');
+                if (footerTitle) {
+                    footerTitle.textContent = brandTitle;
+                }
+
+                const gateTitle = document.getElementById('community-gate-title');
+                if (gateTitle) {
+                    gateTitle.textContent = brandTitle;
+                }
+                const gateDesc = document.getElementById('community-gate-desc');
+                if (gateDesc) {
+                    gateDesc.textContent = `Welcome! Enter the shared community passphrase from the ${commName} classroom to unlock catalog pricing and the multi-vendor order optimizer.`;
+                }
+
+                const rulesCommInput = document.getElementById('rules-community-name');
+                if (rulesCommInput && document.activeElement !== rulesCommInput) {
+                    rulesCommInput.value = commName;
+                }
+            }
+        }
+        window.updateCommunityBrandingUi = updateCommunityBrandingUi;
+
         // Centralized Vendor Configuration Registry (guarantees zero-network availability & file:// compatibility)
         const INLINE_DEFAULT_VENDORS = [
             {
@@ -5203,6 +5291,9 @@
             const defaultShippingInput = document.getElementById('rules-default-shipping-cost');
             if (defaultShippingInput) defaultShippingInput.value = r.shipping.defaultCost;
 
+            const commInput = document.getElementById('rules-community-name');
+            if (commInput) commInput.value = getCommunityName();
+
             renderVendorRulesControls();
 
             rulesModal.classList.remove('hidden');
@@ -5234,6 +5325,12 @@
 
             if (saveRulesBtn) {
                 saveRulesBtn.addEventListener('click', () => {
+                    const commInput = document.getElementById('rules-community-name');
+                    if (commInput) {
+                        const enteredName = commInput.value.trim();
+                        setCommunityName(enteredName || DEFAULT_COMMUNITY_NAME);
+                    }
+
                     const shippingCost = parseFloat(document.getElementById('rules-default-shipping-cost').value) || 50;
                     const vendorRules = {};
                     VENDORS_CONFIG.forEach(v => {
@@ -5267,15 +5364,19 @@
                     };
                     savePricingRules(updated);
                     closeRulesModal();
-                    showToast('Vendor pricing & shipping rules updated!', 'fa-circle-check');
+                    showToast('Settings & vendor rules updated!', 'fa-circle-check');
                 });
             }
 
             if (resetRulesBtn) {
                 resetRulesBtn.addEventListener('click', () => {
+                    setCommunityName(DEFAULT_COMMUNITY_NAME);
+                    const commInput = document.getElementById('rules-community-name');
+                    if (commInput) commInput.value = DEFAULT_COMMUNITY_NAME;
+
                     resetPricingRules();
                     openRulesModal();
-                    showToast('Pricing rules reset to official defaults', 'fa-rotate-left');
+                    showToast('Settings & pricing rules reset to defaults', 'fa-rotate-left');
                 });
             }
         }
@@ -6070,13 +6171,14 @@
             const isGroupBuy = typeof isGroupBuyActive === 'function' ? isGroupBuyActive() : false;
             const batchNum = groupBuyBatchInput ? groupBuyBatchInput.value.trim() : '';
 
+            const commName = getCommunityName();
             let message = '';
             if (isGroupBuy) {
-                message += `Hi ${vendor.repName},\n\nI am a member of the Peptide Underground community and would like to place an order under our group buy:\n\n`;
+                message += `Hi ${vendor.repName},\n\nI am a member of the ${commName} community and would like to place an order under our group buy:\n\n`;
                 message += `🏷️ GROUP BUY BATCH: ${batchNum || 'GB-ACTIVE'}\n`;
                 message += `------------------------------------\n`;
             } else {
-                message += `Hi ${vendor.repName},\n\nI am a member of the Peptide Underground community and would like to place an order for the following:\n\n`;
+                message += `Hi ${vendor.repName},\n\nI am a member of the ${commName} community and would like to place an order for the following:\n\n`;
             }
             
             const currentCart = (optionalCart && Array.isArray(optionalCart))
@@ -6775,7 +6877,7 @@
                                     : `🚚 ${inc.vendorName} Free Shipping: ${formatPrice(inc.subtotal)} / ${formatPrice(inc.threshold)} (${formatPrice(inc.remaining)} away from free shipping)`;
                             } else {
                                 titleText = inc.isQualified 
-                                    ? `🎉 QUALIFIED: ${inc.discountPercent}% ${inc.vendorKey === 'tong' ? 'Peptide Underground' : inc.vendorName} Discount Applied (-${formatPrice(inc.discount)} saved!)` 
+                                    ? `🎉 QUALIFIED: ${inc.discountPercent}% ${inc.vendorKey === 'tong' ? getCommunityName() : inc.vendorName} Discount Applied (-${formatPrice(inc.discount)} saved!)` 
                                     : `🏷️ ${inc.vendorName} ${inc.discountPercent}% ${inc.requiresGroupBuy ? 'Group' : 'Volume'} Discount: ${formatPrice(inc.subtotal)} / ${formatPrice(inc.threshold)} (${formatPrice(inc.remaining)} away from ${inc.discountPercent}% OFF)`;
                             }
 
@@ -6994,12 +7096,14 @@
             const isGroupBuy = groupBuyToggle ? groupBuyToggle.checked : false;
             let batchNum = groupBuyBatchInput ? groupBuyBatchInput.value.trim() : '';
 
-            let summaryText = `PEPTIDE UNDERGROUND PRICE TOOL - ORDER SELECTION LIST:\n`;
+            const commName = getCommunityName();
+            let summaryText = `${commName.toUpperCase()} PRICE TOOL - ORDER SELECTION LIST:\n`;
             if (isGroupBuy) {
-                summaryText += `I am a member of the Peptide Underground community and would like to place an order under our group buy:\n\n`;
+                summaryText += `I am a member of the ${commName} community and would like to place an order under our group buy:\n\n`;
                 summaryText += `🏷️ GROUP BUY BATCH: ${batchNum || 'GB-ACTIVE'}\n`;
+                summaryText += `------------------------------------\n`;
             } else {
-                summaryText += `I am a member of the Peptide Underground community and would like to place an order for the following:\n`;
+                summaryText += `I am a member of the ${commName} community and would like to place an order for the following:\n`;
             }
             summaryText += `------------------------------------\n`;
             cart.forEach(item => {
@@ -7136,6 +7240,9 @@
             if (urlKey) {
                 await verifyAndSaveCommunityKey(urlKey, true);
             }
+
+            // Initialize Community Name & Branding
+            updateCommunityBrandingUi();
 
             // Update Community Member Access Gate state
             updateCommunityGateUi();

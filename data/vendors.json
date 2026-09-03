@@ -1,0 +1,53 @@
+[
+  {
+    "id": "tina",
+    "name": "Tina Tianjin Bio",
+    "repName": "Tina",
+    "phone": "8613512884424",
+    "badgeColor": "emerald",
+    "defaultShipping": 50,
+    "rules": {
+      "freeShippingThreshold": 700,
+      "freeShippingRequiresGB": false,
+      "freeShippingEnabled": true,
+      "discountPercent": 0,
+      "discountThreshold": 0,
+      "discountRequiresGB": false,
+      "discountEnabled": false
+    }
+  },
+  {
+    "id": "tong",
+    "name": "Tong Shi Po",
+    "repName": "Tong",
+    "phone": "8613027198018",
+    "badgeColor": "amber",
+    "defaultShipping": 50,
+    "rules": {
+      "freeShippingThreshold": 0,
+      "freeShippingRequiresGB": false,
+      "freeShippingEnabled": false,
+      "discountPercent": 10,
+      "discountThreshold": 700,
+      "discountRequiresGB": true,
+      "discountEnabled": true
+    }
+  },
+  {
+    "id": "marvel",
+    "name": "Marvel Chloe",
+    "repName": "Chloe",
+    "phone": "85365265146",
+    "badgeColor": "indigo",
+    "defaultShipping": 50,
+    "rules": {
+      "freeShippingThreshold": 0,
+      "freeShippingRequiresGB": false,
+      "freeShippingEnabled": false,
+      "discountPercent": 0,
+      "discountThreshold": 0,
+      "discountRequiresGB": false,
+      "discountEnabled": false
+    }
+  }
+]

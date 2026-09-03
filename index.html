@@ -110,7 +110,7 @@
                         </h1>
                         <span id="rate-badge" class="hidden xs:inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-indigo-950 text-indigo-300 border border-indigo-800/40">Official Rates</span>
                     </div>
-                    <p class="text-[11px] sm:text-xs text-slate-400 truncate">Marvel Chloe • Tong Shi Po • Tina Bio</p>
+                    <p id="header-vendors-subtitle" class="text-[11px] sm:text-xs text-slate-400 truncate">Tina Bio • Tong Shi Po • Marvel Chloe</p>
                 </div>
             </div>
             
@@ -257,8 +257,8 @@
                 </div>
             </div>
 
-            <!-- Vendor Price Cards Grid (Stacks to 1 col on mobile, 3 cols on tablet/desktop) -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-5">
+            <!-- Vendor Price Cards Grid (Stacks to 1 col on mobile, dynamic cols on tablet/desktop) -->
+            <div id="spotlight-cards-grid" class="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-5">
                 <!-- Marvel Chloe Card -->
                 <div id="card-marvel" data-umami-event="vendor-click" data-umami-event-vendor="marvel" class="bg-slate-900/80 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700">
                     <div>
@@ -455,7 +455,7 @@
 
                     <div class="overflow-x-auto rounded-xl border border-slate-800 touch-scroll pb-1">
                         <table class="w-full text-left text-xs sm:text-sm min-w-[620px]">
-                            <thead class="bg-slate-900/90 text-[11px] sm:text-xs text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                            <thead id="cart-thead" class="bg-slate-900/90 text-[11px] sm:text-xs text-slate-400 uppercase tracking-wider border-b border-slate-800">
                                 <tr>
                                     <th class="py-3 px-3.5 sm:py-3.5 sm:px-4 font-semibold">Peptide / Spec</th>
                                     <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-center">Kits (Qty)</th>
@@ -490,8 +490,8 @@
                             <span class="text-[11px] text-slate-400">Pre-fills quantities & Cat. Numbers for instant quote</span>
                         </div>
                         
-                        <!-- Vendor WhatsApp Buttons (Stacks vertically full-width on mobile, 3 cols on tablet+) -->
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
+                        <!-- Vendor WhatsApp Buttons (Stacks vertically full-width on mobile, dynamic cols on tablet+) -->
+                        <div id="whatsapp-buttons-container" class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
                             <button onclick="sendWhatsApp('marvel')" data-umami-event="vendor-click" data-umami-event-vendor="marvel" class="w-full bg-emerald-950/40 hover:bg-emerald-900/70 active:bg-emerald-900 border border-emerald-500/40 text-emerald-200 p-3.5 sm:p-4 rounded-xl flex items-center justify-between transition cursor-pointer group min-h-[52px]">
                                 <div class="text-left flex items-center gap-3">
                                     <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm shrink-0">
@@ -553,7 +553,7 @@
             <!-- Table Container with Smooth Touch Horizontal Scroll -->
             <div class="w-full overflow-x-auto touch-scroll pb-4 pr-6 sm:pr-8">
                 <table class="w-full min-w-[950px] table-auto text-left text-xs sm:text-sm">
-                    <thead class="bg-slate-900/80 text-[11px] sm:text-xs text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                    <thead id="catalog-thead" class="bg-slate-900/80 text-[11px] sm:text-xs text-slate-400 uppercase tracking-wider border-b border-slate-800">
                         <tr>
                             <th class="py-3.5 px-4 font-semibold w-auto min-w-[180px] pl-4">Peptide / Product</th>
                             <th class="py-3.5 px-3 font-semibold min-w-[110px]">Specification</th>
@@ -904,161 +904,9 @@
                         <span>Vendor-Specific Rules & Incentives</span>
                     </h4>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                        
-                        <!-- Vendor Card: Tina Tianjin Bio -->
-                        <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-4 space-y-4 flex flex-col justify-between">
-                            <div>
-                                <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5 mb-3">
-                                    <div class="font-bold text-slate-200 text-sm flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                                        <span>Tina Tianjin Bio</span>
-                                    </div>
-                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-800/50">tina</span>
-                                </div>
-
-                                <!-- Tina Free Shipping Controls -->
-                                <div class="space-y-2 mb-4 bg-slate-900/50 border border-slate-800/70 p-3 rounded-lg">
-                                    <div class="flex items-center justify-between text-xs">
-                                        <label for="rules-tina-free-shipping-enable" class="font-semibold text-slate-300 flex items-center gap-1.5 cursor-pointer">
-                                            <i class="fa-solid fa-truck-ramp-box text-emerald-400"></i> Free Shipping
-                                        </label>
-                                        <input type="checkbox" id="rules-tina-free-shipping-enable" class="w-4 h-4 rounded text-emerald-600 bg-slate-950 border-slate-700 focus:ring-emerald-500 cursor-pointer">
-                                    </div>
-                                    <div class="flex items-center justify-between text-xs pt-1">
-                                        <span class="text-[11px] text-slate-400">Threshold ($):</span>
-                                        <input type="number" id="rules-tina-free-shipping-threshold" min="0" step="10" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition outline-none">
-                                    </div>
-                                </div>
-
-                                <!-- Tina Discount Controls -->
-                                <div class="space-y-2 bg-slate-900/50 border border-slate-800/70 p-3 rounded-lg">
-                                    <div class="flex items-center justify-between text-xs">
-                                        <label for="rules-tina-discount-enable" class="font-semibold text-slate-300 flex items-center gap-1.5 cursor-pointer">
-                                            <i class="fa-solid fa-tag text-indigo-400"></i> Percentage Discount
-                                        </label>
-                                        <input type="checkbox" id="rules-tina-discount-enable" class="w-4 h-4 rounded text-indigo-600 bg-slate-950 border-slate-700 focus:ring-indigo-500 cursor-pointer">
-                                    </div>
-                                    <div class="flex items-center justify-between text-xs pt-1">
-                                        <span class="text-[11px] text-slate-400">Discount (%):</span>
-                                        <input type="number" id="rules-tina-discount-percent" min="0" max="100" step="1" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition outline-none">
-                                    </div>
-                                    <div class="flex items-center justify-between text-xs">
-                                        <span class="text-[11px] text-slate-400">Threshold ($):</span>
-                                        <input type="number" id="rules-tina-discount-threshold" min="0" step="10" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition outline-none">
-                                    </div>
-                                    <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-800/80">
-                                        <label for="rules-tina-discount-req-groupbuy" class="text-[11px] text-slate-400 flex items-center gap-1.5 cursor-pointer">
-                                            <i class="fa-solid fa-users text-purple-400 text-[10px]"></i> Requires Group Buy
-                                        </label>
-                                        <input type="checkbox" id="rules-tina-discount-req-groupbuy" class="w-3.5 h-3.5 rounded text-purple-600 bg-slate-950 border-slate-700 focus:ring-purple-500 cursor-pointer">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Vendor Card: Tong Shi Po -->
-                        <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-4 space-y-4 flex flex-col justify-between">
-                            <div>
-                                <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5 mb-3">
-                                    <div class="font-bold text-slate-200 text-sm flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                                        <span>Tong Shi Po</span>
-                                    </div>
-                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950/80 text-amber-300 border border-amber-800/50">tong</span>
-                                </div>
-
-                                <!-- Tong Free Shipping Controls -->
-                                <div class="space-y-2 mb-4 bg-slate-900/50 border border-slate-800/70 p-3 rounded-lg">
-                                    <div class="flex items-center justify-between text-xs">
-                                        <label for="rules-tong-free-shipping-enable" class="font-semibold text-slate-300 flex items-center gap-1.5 cursor-pointer">
-                                            <i class="fa-solid fa-truck-ramp-box text-emerald-400"></i> Free Shipping
-                                        </label>
-                                        <input type="checkbox" id="rules-tong-free-shipping-enable" class="w-4 h-4 rounded text-emerald-600 bg-slate-950 border-slate-700 focus:ring-emerald-500 cursor-pointer">
-                                    </div>
-                                    <div class="flex items-center justify-between text-xs pt-1">
-                                        <span class="text-[11px] text-slate-400">Threshold ($):</span>
-                                        <input type="number" id="rules-tong-free-shipping-threshold" min="0" step="10" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition outline-none">
-                                    </div>
-                                </div>
-
-                                <!-- Tong Discount Controls -->
-                                <div class="space-y-2 bg-slate-900/50 border border-slate-800/70 p-3 rounded-lg">
-                                    <div class="flex items-center justify-between text-xs">
-                                        <label for="rules-tong-discount-enable" class="font-semibold text-slate-300 flex items-center gap-1.5 cursor-pointer">
-                                            <i class="fa-solid fa-tag text-amber-400"></i> Percentage Discount
-                                        </label>
-                                        <input type="checkbox" id="rules-tong-discount-enable" class="w-4 h-4 rounded text-amber-600 bg-slate-950 border-slate-700 focus:ring-amber-500 cursor-pointer">
-                                    </div>
-                                    <div class="flex items-center justify-between text-xs pt-1">
-                                        <span class="text-[11px] text-slate-400">Discount (%):</span>
-                                        <input type="number" id="rules-tong-discount-percent" min="0" max="100" step="1" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition outline-none">
-                                    </div>
-                                    <div class="flex items-center justify-between text-xs">
-                                        <span class="text-[11px] text-slate-400">Threshold ($):</span>
-                                        <input type="number" id="rules-tong-discount-threshold" min="0" step="10" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition outline-none">
-                                    </div>
-                                    <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-800/80">
-                                        <label for="rules-tong-discount-req-groupbuy" class="text-[11px] text-slate-400 flex items-center gap-1.5 cursor-pointer">
-                                            <i class="fa-solid fa-users text-purple-400 text-[10px]"></i> Requires Group Buy
-                                        </label>
-                                        <input type="checkbox" id="rules-tong-discount-req-groupbuy" class="w-3.5 h-3.5 rounded text-purple-600 bg-slate-950 border-slate-700 focus:ring-purple-500 cursor-pointer">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Vendor Card: Marvel Chloe -->
-                        <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-4 space-y-4 flex flex-col justify-between">
-                            <div>
-                                <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5 mb-3">
-                                    <div class="font-bold text-slate-200 text-sm flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-indigo-400"></span>
-                                        <span>Marvel Chloe</span>
-                                    </div>
-                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-800/50">marvel</span>
-                                </div>
-
-                                <!-- Marvel Free Shipping Controls -->
-                                <div class="space-y-2 mb-4 bg-slate-900/50 border border-slate-800/70 p-3 rounded-lg">
-                                    <div class="flex items-center justify-between text-xs">
-                                        <label for="rules-marvel-free-shipping-enable" class="font-semibold text-slate-300 flex items-center gap-1.5 cursor-pointer">
-                                            <i class="fa-solid fa-truck-ramp-box text-emerald-400"></i> Free Shipping
-                                        </label>
-                                        <input type="checkbox" id="rules-marvel-free-shipping-enable" class="w-4 h-4 rounded text-emerald-600 bg-slate-950 border-slate-700 focus:ring-emerald-500 cursor-pointer">
-                                    </div>
-                                    <div class="flex items-center justify-between text-xs pt-1">
-                                        <span class="text-[11px] text-slate-400">Threshold ($):</span>
-                                        <input type="number" id="rules-marvel-free-shipping-threshold" min="0" step="10" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition outline-none">
-                                    </div>
-                                </div>
-
-                                <!-- Marvel Discount Controls -->
-                                <div class="space-y-2 bg-slate-900/50 border border-slate-800/70 p-3 rounded-lg">
-                                    <div class="flex items-center justify-between text-xs">
-                                        <label for="rules-marvel-discount-enable" class="font-semibold text-slate-300 flex items-center gap-1.5 cursor-pointer">
-                                            <i class="fa-solid fa-tag text-indigo-400"></i> Percentage Discount
-                                        </label>
-                                        <input type="checkbox" id="rules-marvel-discount-enable" class="w-4 h-4 rounded text-indigo-600 bg-slate-950 border-slate-700 focus:ring-indigo-500 cursor-pointer">
-                                    </div>
-                                    <div class="flex items-center justify-between text-xs pt-1">
-                                        <span class="text-[11px] text-slate-400">Discount (%):</span>
-                                        <input type="number" id="rules-marvel-discount-percent" min="0" max="100" step="1" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition outline-none">
-                                    </div>
-                                    <div class="flex items-center justify-between text-xs">
-                                        <span class="text-[11px] text-slate-400">Threshold ($):</span>
-                                        <input type="number" id="rules-marvel-discount-threshold" min="0" step="10" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition outline-none">
-                                    </div>
-                                    <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-800/80">
-                                        <label for="rules-marvel-discount-req-groupbuy" class="text-[11px] text-slate-400 flex items-center gap-1.5 cursor-pointer">
-                                            <i class="fa-solid fa-users text-purple-400 text-[10px]"></i> Requires Group Buy
-                                        </label>
-                                        <input type="checkbox" id="rules-marvel-discount-req-groupbuy" class="w-3.5 h-3.5 rounded text-purple-600 bg-slate-950 border-slate-700 focus:ring-purple-500 cursor-pointer">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                    <!-- Vendor Rules Control Cards Container (Populated Dynamically via VENDORS_CONFIG) -->
+                    <div id="vendor-rules-cards-container" class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <!-- Dynamic vendor rule cards generated via renderVendorRulesControls() -->
                     </div>
                 </div>
 
@@ -1088,6 +936,64 @@
     </div>
 
     <script>
+        // Centralized Vendor Configuration Registry (guarantees zero-network availability & file:// compatibility)
+        const INLINE_DEFAULT_VENDORS = [
+            {
+                id: "tina",
+                name: "Tina Tianjin Bio",
+                repName: "Tina",
+                phone: "8613512884424",
+                badgeColor: "emerald",
+                defaultShipping: 50,
+                rules: {
+                    freeShippingThreshold: 700,
+                    freeShippingRequiresGB: false,
+                    freeShippingEnabled: true,
+                    discountPercent: 0,
+                    discountThreshold: 0,
+                    discountRequiresGB: false,
+                    discountEnabled: false
+                }
+            },
+            {
+                id: "tong",
+                name: "Tong Shi Po",
+                repName: "Tong",
+                phone: "8613027198018",
+                badgeColor: "amber",
+                defaultShipping: 50,
+                rules: {
+                    freeShippingThreshold: 0,
+                    freeShippingRequiresGB: false,
+                    freeShippingEnabled: false,
+                    discountPercent: 10,
+                    discountThreshold: 700,
+                    discountRequiresGB: true,
+                    discountEnabled: true
+                }
+            },
+            {
+                id: "marvel",
+                name: "Marvel Chloe",
+                repName: "Chloe",
+                phone: "85365265146",
+                badgeColor: "indigo",
+                defaultShipping: 50,
+                rules: {
+                    freeShippingThreshold: 0,
+                    freeShippingRequiresGB: false,
+                    freeShippingEnabled: false,
+                    discountPercent: 0,
+                    discountThreshold: 0,
+                    discountRequiresGB: false,
+                    discountEnabled: false
+                }
+            }
+        ];
+
+        let VENDORS_CONFIG = JSON.parse(JSON.stringify(INLINE_DEFAULT_VENDORS));
+        window.VENDORS_CONFIG = VENDORS_CONFIG;
+
         // Inline fallback catalog dataset (guarantees zero-network availability & file:// compatibility)
         const INLINE_DEFAULT_PEPTIDES = [
         {
@@ -3418,59 +3324,134 @@
 
         const RULES_STORAGE_KEY = 'pep_pricing_rules';
 
-        const DEFAULT_PRICING_RULES = {
-            shipping: {
-                defaultCost: 50
-            },
-            vendors: {
-                tina: {
-                    name: "Tina Tianjin Bio",
-                    freeShippingEnabled: true,
-                    freeShippingThreshold: 700,
-                    discountEnabled: false,
-                    discountPercent: 0,
-                    discountThreshold: 0,
-                    discountRequiresGroupBuy: false
+        function getVendorTheme(vendor) {
+            const color = (typeof vendor === 'string' ? vendor : (vendor && vendor.badgeColor)) || 'indigo';
+            const themes = {
+                emerald: {
+                    dot: 'bg-emerald-400',
+                    border: 'border-emerald-500/40',
+                    bgLight: 'bg-emerald-950/40',
+                    badge: 'bg-emerald-950/80 text-emerald-300 border-emerald-800/50',
+                    text: 'text-emerald-400',
+                    textLight: 'text-emerald-300',
+                    pill: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
+                    gradient: 'from-emerald-500 via-teal-400 to-emerald-300'
                 },
-                tong: {
-                    name: "Tong Shi Po",
-                    freeShippingEnabled: false,
-                    freeShippingThreshold: 0,
-                    discountEnabled: true,
-                    discountPercent: 10,
-                    discountThreshold: 700,
-                    discountRequiresGroupBuy: true
+                amber: {
+                    dot: 'bg-amber-400',
+                    border: 'border-amber-500/40',
+                    bgLight: 'bg-amber-950/40',
+                    badge: 'bg-amber-950/80 text-amber-300 border-amber-800/50',
+                    text: 'text-amber-400',
+                    textLight: 'text-amber-300',
+                    pill: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+                    gradient: 'from-amber-500 via-yellow-400 to-amber-300'
                 },
-                marvel: {
-                    name: "Marvel Chloe",
-                    freeShippingEnabled: false,
-                    freeShippingThreshold: 0,
-                    discountEnabled: false,
-                    discountPercent: 0,
-                    discountThreshold: 0,
-                    discountRequiresGroupBuy: false
+                indigo: {
+                    dot: 'bg-indigo-400',
+                    border: 'border-indigo-500/40',
+                    bgLight: 'bg-indigo-950/40',
+                    badge: 'bg-indigo-950/80 text-indigo-300 border-indigo-800/50',
+                    text: 'text-indigo-400',
+                    textLight: 'text-indigo-300',
+                    pill: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/30',
+                    gradient: 'from-indigo-500 via-purple-500 to-indigo-400'
+                },
+                purple: {
+                    dot: 'bg-purple-400',
+                    border: 'border-purple-500/40',
+                    bgLight: 'bg-purple-950/40',
+                    badge: 'bg-purple-950/80 text-purple-300 border-purple-800/50',
+                    text: 'text-purple-400',
+                    textLight: 'text-purple-300',
+                    pill: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
+                    gradient: 'from-purple-500 via-indigo-500 to-purple-400'
+                },
+                blue: {
+                    dot: 'bg-blue-400',
+                    border: 'border-blue-500/40',
+                    bgLight: 'bg-blue-950/40',
+                    badge: 'bg-blue-950/80 text-blue-300 border-blue-800/50',
+                    text: 'text-blue-400',
+                    textLight: 'text-blue-300',
+                    pill: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
+                    gradient: 'from-blue-500 via-cyan-400 to-blue-300'
+                },
+                rose: {
+                    dot: 'bg-rose-400',
+                    border: 'border-rose-500/40',
+                    bgLight: 'bg-rose-950/40',
+                    badge: 'bg-rose-950/80 text-rose-300 border-rose-800/50',
+                    text: 'text-rose-400',
+                    textLight: 'text-rose-300',
+                    pill: 'bg-rose-500/20 text-rose-300 border-rose-500/30',
+                    gradient: 'from-rose-500 via-pink-400 to-rose-300'
                 }
-            }
-        };
+            };
+            return themes[color] || themes.indigo;
+        }
+
+        function buildDefaultPricingRules(vendorsConfig = VENDORS_CONFIG) {
+            const vendorRules = {};
+            vendorsConfig.forEach(v => {
+                const r = v.rules || {};
+                vendorRules[v.id] = {
+                    name: v.name,
+                    freeShippingEnabled: r.freeShippingEnabled ?? ((r.freeShippingThreshold || 0) > 0),
+                    freeShippingThreshold: r.freeShippingThreshold || 0,
+                    freeShippingRequiresGroupBuy: r.freeShippingRequiresGB || false,
+                    freeShippingRequiresGB: r.freeShippingRequiresGB || false,
+                    discountEnabled: r.discountEnabled ?? ((r.discountPercent || 0) > 0),
+                    discountPercent: r.discountPercent || 0,
+                    discountThreshold: r.discountThreshold || 0,
+                    discountRequiresGroupBuy: r.discountRequiresGB || false,
+                    discountRequiresGB: r.discountRequiresGB || false
+                };
+            });
+            return {
+                shipping: {
+                    defaultCost: (vendorsConfig[0] && typeof vendorsConfig[0].defaultShipping === 'number') 
+                        ? vendorsConfig[0].defaultShipping 
+                        : 50
+                },
+                vendors: vendorRules
+            };
+        }
+
+        let DEFAULT_PRICING_RULES = buildDefaultPricingRules(VENDORS_CONFIG);
 
         let pricingRules = loadPricingRules();
 
         function loadPricingRules() {
+            DEFAULT_PRICING_RULES = buildDefaultPricingRules(VENDORS_CONFIG);
             try {
                 const saved = localStorage.getItem(RULES_STORAGE_KEY);
                 if (saved) {
                     const parsed = JSON.parse(saved);
+                    const mergedVendors = {};
+                    VENDORS_CONFIG.forEach(v => {
+                        const def = DEFAULT_PRICING_RULES.vendors[v.id] || {
+                            name: v.name,
+                            freeShippingEnabled: false,
+                            freeShippingThreshold: 0,
+                            freeShippingRequiresGroupBuy: false,
+                            freeShippingRequiresGB: false,
+                            discountEnabled: false,
+                            discountPercent: 0,
+                            discountThreshold: 0,
+                            discountRequiresGroupBuy: false,
+                            discountRequiresGB: false
+                        };
+                        const savedV = (parsed.vendors && parsed.vendors[v.id]) || {};
+                        mergedVendors[v.id] = Object.assign({}, def, savedV);
+                    });
                     return {
                         shipping: {
                             defaultCost: (parsed.shipping && typeof parsed.shipping.defaultCost === 'number') 
                                 ? parsed.shipping.defaultCost 
                                 : DEFAULT_PRICING_RULES.shipping.defaultCost
                         },
-                        vendors: {
-                            tina: Object.assign({}, DEFAULT_PRICING_RULES.vendors.tina, (parsed.vendors && parsed.vendors.tina) || {}),
-                            tong: Object.assign({}, DEFAULT_PRICING_RULES.vendors.tong, (parsed.vendors && parsed.vendors.tong) || {}),
-                            marvel: Object.assign({}, DEFAULT_PRICING_RULES.vendors.marvel, (parsed.vendors && parsed.vendors.marvel) || {})
-                        }
+                        vendors: mergedVendors
                     };
                 }
             } catch (e) {
@@ -3488,15 +3469,19 @@
             }
             if (typeof updateShippingFeeConvertedDisplay === 'function') updateShippingFeeConvertedDisplay();
             renderCart();
+            if (selectedItem) updateSpotlight(selectedItem);
         }
 
         function resetPricingRules() {
+            DEFAULT_PRICING_RULES = buildDefaultPricingRules(VENDORS_CONFIG);
             pricingRules = JSON.parse(JSON.stringify(DEFAULT_PRICING_RULES));
             localStorage.setItem(RULES_STORAGE_KEY, JSON.stringify(pricingRules));
             localStorage.setItem(SHIPPING_FEE_KEY, DEFAULT_PRICING_RULES.shipping.defaultCost.toString());
             if (shippingFeeInput) shippingFeeInput.value = DEFAULT_PRICING_RULES.shipping.defaultCost;
             if (typeof updateShippingFeeConvertedDisplay === 'function') updateShippingFeeConvertedDisplay();
+            if (typeof renderVendorRulesControls === 'function') renderVendorRulesControls();
             renderCart();
+            if (selectedItem) updateSpotlight(selectedItem);
         }
 
         window.loadPricingRules = loadPricingRules;
@@ -3504,6 +3489,7 @@
         window.resetPricingRules = resetPricingRules;
         window.getPricingRules = () => pricingRules;
         window.DEFAULT_PRICING_RULES = DEFAULT_PRICING_RULES;
+        window.buildDefaultPricingRules = buildDefaultPricingRules;
 
         const SHIPPING_FEE_KEY = 'pep_shipping_fee_per_vendor';
         const DEFAULT_SHIPPING_FEE = 50;
@@ -4194,16 +4180,29 @@
 
         // Normalizes individual peptide records ensuring accessor properties and consistent typing
         function normalizePeptideItem(raw) {
-            const name = raw.name || 'Unknown Compound';
-            const spec = raw.spec || '';
+            const name = (raw.name || raw.peptide || raw.key || 'Unknown Compound').trim();
+            const spec = (raw.spec || raw.specification || raw.dosage || '').trim();
             const key = raw.key || (spec ? `${name} (${spec})` : name);
             const id = raw.id || key.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
 
-            const prices = raw.prices || {
-                marvel: raw.marvel !== undefined ? raw.marvel : null,
-                tong: raw.tong !== undefined ? raw.tong : null,
-                tina: raw.tina !== undefined ? raw.tina : null
-            };
+            const prices = {};
+            VENDORS_CONFIG.forEach(v => {
+                let p = null;
+                if (raw.prices && raw.prices[v.id] !== undefined && raw.prices[v.id] !== null && raw.prices[v.id] !== '') {
+                    p = Number(raw.prices[v.id]);
+                } else if (raw[v.id] !== undefined && raw[v.id] !== null && raw[v.id] !== '') {
+                    p = Number(raw[v.id]);
+                }
+                prices[v.id] = (p !== null && !isNaN(p)) ? p : null;
+            });
+            if (raw.prices && typeof raw.prices === 'object') {
+                Object.entries(raw.prices).forEach(([vk, val]) => {
+                    if (prices[vk] === undefined) {
+                        const num = (val !== null && val !== undefined && val !== '') ? Number(val) : null;
+                        prices[vk] = (num !== null && !isNaN(num)) ? num : null;
+                    }
+                });
+            }
 
             const item = {
                 id: id,
@@ -4212,22 +4211,33 @@
                 spec: spec,
                 category: raw.category || 'Research Peptides',
                 catNo: raw.catNo || getCatalogNumberFallback(name, spec),
-                prices: {
-                    marvel: prices.marvel !== undefined && prices.marvel !== null && prices.marvel !== '' ? Number(prices.marvel) : null,
-                    tong: prices.tong !== undefined && prices.tong !== null && prices.tong !== '' ? Number(prices.tong) : null,
-                    tina: prices.tina !== undefined && prices.tina !== null && prices.tina !== '' ? Number(prices.tina) : null
-                },
+                prices: prices,
                 lastUpdated: raw.lastUpdated || new Date().toISOString(),
                 isCustom: !!raw.isCustom
             };
 
             // Define property getters for backwards-compatibility
-            Object.defineProperty(item, 'marvel', { get() { return this.prices.marvel; }, enumerable: true });
-            Object.defineProperty(item, 'tong', { get() { return this.prices.tong; }, enumerable: true });
-            Object.defineProperty(item, 'tina', { get() { return this.prices.tina; }, enumerable: true });
+            VENDORS_CONFIG.forEach(v => {
+                if (!(v.id in item)) {
+                    Object.defineProperty(item, v.id, {
+                        get() { return this.prices ? this.prices[v.id] : null; },
+                        enumerable: true,
+                        configurable: true
+                    });
+                }
+                const camelProp = 'price' + v.id.charAt(0).toUpperCase() + v.id.slice(1);
+                if (!(camelProp in item)) {
+                    Object.defineProperty(item, camelProp, {
+                        get() { return this.prices ? this.prices[v.id] : null; },
+                        enumerable: true,
+                        configurable: true
+                    });
+                }
+            });
 
             return item;
         }
+        window.normalizePeptideItem = normalizePeptideItem;
 
         function getCatalogNumberFallback(name, spec) {
             if (!name || !spec) return '';
@@ -4290,24 +4300,30 @@
                         if (customItem.prices) {
                             existing.prices = { ...existing.prices, ...customItem.prices };
                         } else {
-                            if (customItem.marvel !== undefined) existing.prices.marvel = customItem.marvel;
-                            if (customItem.tong !== undefined) existing.prices.tong = customItem.tong;
-                            if (customItem.tina !== undefined) existing.prices.tina = customItem.tina;
+                            VENDORS_CONFIG.forEach(v => {
+                                if (customItem[v.id] !== undefined) existing.prices[v.id] = customItem[v.id];
+                            });
                         }
                         if (customItem.lastUpdated) existing.lastUpdated = customItem.lastUpdated;
                         existing.isCustom = true;
                     } else if (customItem.name) {
+                        const itemPrices = {};
+                        VENDORS_CONFIG.forEach(v => {
+                            if (customItem.prices && customItem.prices[v.id] !== undefined) {
+                                itemPrices[v.id] = customItem.prices[v.id];
+                            } else if (customItem[v.id] !== undefined) {
+                                itemPrices[v.id] = customItem[v.id];
+                            } else {
+                                itemPrices[v.id] = null;
+                            }
+                        });
                         const newItem = {
                             id: customItem.id || (customItem.name + '_' + (customItem.spec || '')).toLowerCase().replace(/[^a-z0-9]+/g, '_'),
                             name: customItem.name,
                             spec: customItem.spec || '',
                             category: customItem.category || 'Custom & User Imported',
                             catNo: customItem.catNo || '',
-                            prices: customItem.prices || {
-                                marvel: customItem.marvel !== undefined ? customItem.marvel : null,
-                                tong: customItem.tong !== undefined ? customItem.tong : null,
-                                tina: customItem.tina !== undefined ? customItem.tina : null
-                            },
+                            prices: customItem.prices ? { ...customItem.prices } : itemPrices,
                             lastUpdated: customItem.lastUpdated || new Date().toISOString(),
                             isCustom: true
                         };
@@ -4322,9 +4338,9 @@
                         if (customVal.prices) {
                             existing.prices = { ...existing.prices, ...customVal.prices };
                         } else {
-                            if (customVal.marvel !== undefined) existing.prices.marvel = customVal.marvel;
-                            if (customVal.tong !== undefined) existing.prices.tong = customVal.tong;
-                            if (customVal.tina !== undefined) existing.prices.tina = customVal.tina;
+                            VENDORS_CONFIG.forEach(v => {
+                                if (customVal[v.id] !== undefined) existing.prices[v.id] = customVal[v.id];
+                            });
                         }
                         if (customVal.category) existing.category = customVal.category;
                         if (customVal.catNo) existing.catNo = customVal.catNo;
@@ -4336,8 +4352,62 @@
             return result;
         }
 
+        // Dynamically loads vendor configuration from ./data/vendors.json if available
+        async function loadVendorsConfig() {
+            if (window.location.protocol !== 'file:') {
+                try {
+                    const res = await fetch('./data/vendors.json', { cache: 'no-cache' });
+                    if (res.ok) {
+                        const json = await res.json();
+                        if (Array.isArray(json) && json.length > 0) {
+                            VENDORS_CONFIG = json;
+                            window.VENDORS_CONFIG = VENDORS_CONFIG;
+                            DEFAULT_PRICING_RULES = buildDefaultPricingRules(VENDORS_CONFIG);
+                            pricingRules = loadPricingRules();
+                        }
+                    }
+                } catch (fetchErr) {
+                    console.warn('vendors.json fetch failed; using inline defaults:', fetchErr);
+                }
+            }
+            return VENDORS_CONFIG;
+        }
+        window.loadVendorsConfig = loadVendorsConfig;
+
+        // Allows runtime dynamic update of vendors
+        function applyVendorsConfig(newVendors) {
+            if (!Array.isArray(newVendors) || newVendors.length === 0) return;
+            VENDORS_CONFIG = newVendors;
+            window.VENDORS_CONFIG = VENDORS_CONFIG;
+            DEFAULT_PRICING_RULES = buildDefaultPricingRules(VENDORS_CONFIG);
+            pricingRules = loadPricingRules();
+
+            if (peptideData && peptideData.length > 0) {
+                peptideData = peptideData.map(normalizePeptideItem);
+                window.peptideData = peptideData;
+            }
+
+            if (typeof updateHeaderSubtitle === 'function') updateHeaderSubtitle();
+            if (typeof renderSpotlightCards === 'function') renderSpotlightCards();
+            if (typeof renderCatalogHeaders === 'function') renderCatalogHeaders();
+            if (typeof renderCartHeaders === 'function') renderCartHeaders();
+            if (typeof renderWhatsAppButtons === 'function') renderWhatsAppButtons();
+            if (typeof renderImportVendorOptions === 'function') renderImportVendorOptions();
+            if (typeof renderVendorRulesControls === 'function') renderVendorRulesControls();
+
+            if (selectedItem) {
+                const match = peptideData.find(i => i.key === selectedItem.key || i.id === selectedItem.id);
+                selectedItem = match || peptideData[0];
+                if (typeof updateSpotlight === 'function') updateSpotlight(selectedItem);
+            }
+            if (typeof renderCatalog === 'function') renderCatalog(searchInput ? searchInput.value : '');
+            if (typeof renderCart === 'function') renderCart();
+        }
+        window.applyVendorsConfig = applyVendorsConfig;
+
         // Dynamically loads peptide dataset on startup
         async function loadPeptideData(forceDefault = false) {
+            await loadVendorsConfig();
             let baseCatalog = null;
             let loadedFromNetwork = false;
 
@@ -4415,19 +4485,21 @@
                 return;
             }
 
-            const exportPayload = peptideData.map(item => ({
-                id: item.id,
-                name: item.name,
-                spec: item.spec,
-                category: item.category || 'Research Peptides',
-                catNo: item.catNo || '',
-                prices: {
-                    marvel: item.prices.marvel !== undefined ? item.prices.marvel : null,
-                    tong: item.prices.tong !== undefined ? item.prices.tong : null,
-                    tina: item.prices.tina !== undefined ? item.prices.tina : null
-                },
-                lastUpdated: item.lastUpdated || new Date().toISOString()
-            }));
+            const exportPayload = peptideData.map(item => {
+                const prices = {};
+                VENDORS_CONFIG.forEach(v => {
+                    prices[v.id] = (item.prices && item.prices[v.id] !== undefined) ? item.prices[v.id] : null;
+                });
+                return {
+                    id: item.id,
+                    name: item.name,
+                    spec: item.spec,
+                    category: item.category || 'Research Peptides',
+                    catNo: item.catNo || '',
+                    prices: prices,
+                    lastUpdated: item.lastUpdated || new Date().toISOString()
+                };
+            });
 
             const jsonStr = JSON.stringify(exportPayload, null, 2);
             const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8;' });
@@ -4628,9 +4700,13 @@
             let catNoIdx = findColIndex(/\b(cat_no|catno|cat_num|code|sku)\b|^cat(\.|\s|_)?no/i);
             let categoryIdx = findColIndex(/\b(category|class|type)\b/i);
 
-            let marvelIdx = findColIndex(/\b(marvel|chloe)\b/i);
-            let tongIdx = findColIndex(/\b(tong|shipo)\b/i);
-            let tinaIdx = findColIndex(/\b(tina|tianjin|bio)\b/i);
+            const vendorColIndices = {};
+            VENDORS_CONFIG.forEach(v => {
+                const slug = v.id;
+                const words = v.name.toLowerCase().split(/\s+/).filter(w => w.length > 2);
+                const pattern = new RegExp(`\\b(${slug}|${words.join('|')})\\b`, 'i');
+                vendorColIndices[slug] = findColIndex(pattern);
+            });
             let genericPriceIdx = findColIndex(/\b(price|cost|usd|rate)\b/i);
 
             if (nameIdx === -1) nameIdx = 0;
@@ -4641,14 +4717,12 @@
                 }
             }
 
-            if (marvelIdx === -1 && tongIdx === -1 && tinaIdx === -1) {
-                if (headers.length >= 5) {
-                    marvelIdx = 2;
-                    tongIdx = 3;
-                    tinaIdx = 4;
-                } else if (headers.length === 4) {
-                    marvelIdx = 2;
-                    tongIdx = 3;
+            const anyVendorMatched = Object.values(vendorColIndices).some(idx => idx !== -1);
+            if (!anyVendorMatched) {
+                if (headers.length >= 2 + VENDORS_CONFIG.length) {
+                    VENDORS_CONFIG.forEach((v, i) => {
+                        vendorColIndices[v.id] = 2 + i;
+                    });
                 } else if (headers.length === 3) {
                     genericPriceIdx = 2;
                 }
@@ -4667,29 +4741,24 @@
                 const rawSpec = specIdx !== -1 && row[specIdx] ? String(row[specIdx]).trim() : '';
                 const matchResult = findBestCatalogMatch(rawName, rawSpec, catalogItems);
 
-                let marvelPrice = null;
-                let tongPrice = null;
-                let tinaPrice = null;
-
+                const rowPrices = {};
                 if (targetVendor === 'all') {
-                    if (marvelIdx !== -1) marvelPrice = parsePriceValue(row[marvelIdx]);
-                    if (tongIdx !== -1) tongPrice = parsePriceValue(row[tongIdx]);
-                    if (tinaIdx !== -1) tinaPrice = parsePriceValue(row[tinaIdx]);
-                    if (marvelIdx === -1 && tongIdx === -1 && tinaIdx === -1 && genericPriceIdx !== -1) {
-                        const p = parsePriceValue(row[genericPriceIdx]);
-                        marvelPrice = p;
-                        tongPrice = p;
-                        tinaPrice = p;
-                    }
-                } else if (targetVendor === 'marvel') {
-                    const p = parsePriceValue(marvelIdx !== -1 ? row[marvelIdx] : (genericPriceIdx !== -1 ? row[genericPriceIdx] : row[1]));
-                    marvelPrice = p;
-                } else if (targetVendor === 'tong') {
-                    const p = parsePriceValue(tongIdx !== -1 ? row[tongIdx] : (genericPriceIdx !== -1 ? row[genericPriceIdx] : row[1]));
-                    tongPrice = p;
-                } else if (targetVendor === 'tina') {
-                    const p = parsePriceValue(tinaIdx !== -1 ? row[tinaIdx] : (genericPriceIdx !== -1 ? row[genericPriceIdx] : row[1]));
-                    tinaPrice = p;
+                    VENDORS_CONFIG.forEach(v => {
+                        const cIdx = vendorColIndices[v.id];
+                        if (cIdx !== undefined && cIdx !== -1) {
+                            rowPrices[v.id] = parsePriceValue(row[cIdx]);
+                        } else if (!anyVendorMatched && genericPriceIdx !== -1) {
+                            rowPrices[v.id] = parsePriceValue(row[genericPriceIdx]);
+                        } else {
+                            rowPrices[v.id] = null;
+                        }
+                    });
+                } else {
+                    const cIdx = vendorColIndices[targetVendor];
+                    const p = parsePriceValue(cIdx !== undefined && cIdx !== -1 ? row[cIdx] : (genericPriceIdx !== -1 ? row[genericPriceIdx] : row[1]));
+                    VENDORS_CONFIG.forEach(v => {
+                        rowPrices[v.id] = (v.id === targetVendor) ? p : null;
+                    });
                 }
 
                 const catNo = catNoIdx !== -1 && row[catNoIdx] ? String(row[catNoIdx]).trim() : '';
@@ -4697,20 +4766,23 @@
 
                 if (matchResult.isMatch && matchResult.item) {
                     const currentItem = matchResult.item;
-                    const hasPriceChange = (marvelPrice !== null && marvelPrice !== currentItem.prices.marvel) ||
-                                          (tongPrice !== null && tongPrice !== currentItem.prices.tong) ||
-                                          (tinaPrice !== null && tinaPrice !== currentItem.prices.tina);
+                    let hasPriceChange = false;
+                    VENDORS_CONFIG.forEach(v => {
+                        const newP = rowPrices[v.id];
+                        const oldP = currentItem.prices ? currentItem.prices[v.id] : null;
+                        if (newP !== null && newP !== oldP) {
+                            hasPriceChange = true;
+                            if (oldP !== null) {
+                                if (newP < oldP) priceDrops++;
+                                else priceIncreases++;
+                            }
+                        }
+                    });
 
-                    // Track price directional changes
-                    const checks = [
-                        { n: marvelPrice, o: currentItem.prices.marvel },
-                        { n: tongPrice, o: currentItem.prices.tong },
-                        { n: tinaPrice, o: currentItem.prices.tina }
-                    ];
-                    checks.forEach(c => {
-                        if (c.n !== null && c.o !== null && c.n !== c.o) {
-                            if (c.n < c.o) priceDrops++;
-                            else priceIncreases++;
+                    const mergedPrices = { ...(currentItem.prices || {}) };
+                    VENDORS_CONFIG.forEach(v => {
+                        if (rowPrices[v.id] !== null && rowPrices[v.id] !== undefined) {
+                            mergedPrices[v.id] = rowPrices[v.id];
                         }
                     });
 
@@ -4724,23 +4796,22 @@
                         catNo: catNo || matchResult.item.catNo,
                         category: category || matchResult.item.category,
                         targetVendor: targetVendor,
-                        prices: {
-                            marvel: marvelPrice !== null ? marvelPrice : currentItem.prices.marvel,
-                            tong: tongPrice !== null ? tongPrice : currentItem.prices.tong,
-                            tina: tinaPrice !== null ? tinaPrice : currentItem.prices.tina
-                        },
-                        importedVendorPrices: {
-                            marvel: marvelPrice,
-                            tong: tongPrice,
-                            tina: tinaPrice
-                        },
-                        oldPrices: { ...currentItem.prices },
+                        prices: mergedPrices,
+                        importedVendorPrices: { ...rowPrices },
+                        oldPrices: { ...(currentItem.prices || {}) },
                         confidence: matchResult.confidence,
                         selected: true
                     });
                     if (hasPriceChange) updateCount++;
                 } else {
                     const spec = rawSpec || matchResult.suggestedSpec || '10mg*10';
+                    const newPrices = {};
+                    const oldPrices = {};
+                    VENDORS_CONFIG.forEach(v => {
+                        newPrices[v.id] = rowPrices[v.id];
+                        oldPrices[v.id] = null;
+                    });
+
                     results.push({
                         index: idx,
                         action: 'new',
@@ -4751,17 +4822,9 @@
                         catNo: catNo || '',
                         category: category || 'Custom & User Imported',
                         targetVendor: targetVendor,
-                        prices: {
-                            marvel: marvelPrice,
-                            tong: tongPrice,
-                            tina: tinaPrice
-                        },
-                        importedVendorPrices: {
-                            marvel: marvelPrice,
-                            tong: tongPrice,
-                            tina: tinaPrice
-                        },
-                        oldPrices: { marvel: null, tong: null, tina: null },
+                        prices: newPrices,
+                        importedVendorPrices: { ...rowPrices },
+                        oldPrices: oldPrices,
                         confidence: 0,
                         selected: true
                     });
@@ -4848,22 +4911,11 @@
                 let priceDiffDisplay = '';
                 let pctChangeDisplay = '';
 
-                if (targetVendor === 'tina') {
-                    vendorScopeDisplay = 'Tina Bio';
-                    const o = row.oldPrices.tina;
-                    const n = row.prices.tina;
-                    priceDiffDisplay = formatSingleDiff(o, n);
-                    pctChangeDisplay = formatPercentChangeBadge(o, n);
-                } else if (targetVendor === 'marvel') {
-                    vendorScopeDisplay = 'Marvel Chloe';
-                    const o = row.oldPrices.marvel;
-                    const n = row.prices.marvel;
-                    priceDiffDisplay = formatSingleDiff(o, n);
-                    pctChangeDisplay = formatPercentChangeBadge(o, n);
-                } else if (targetVendor === 'tong') {
-                    vendorScopeDisplay = 'Tong Shi Po';
-                    const o = row.oldPrices.tong;
-                    const n = row.prices.tong;
+                if (targetVendor !== 'all') {
+                    const vObj = VENDORS_CONFIG.find(v => v.id === targetVendor);
+                    vendorScopeDisplay = vObj ? vObj.name : targetVendor;
+                    const o = row.oldPrices ? row.oldPrices[targetVendor] : null;
+                    const n = row.prices ? row.prices[targetVendor] : null;
                     priceDiffDisplay = formatSingleDiff(o, n);
                     pctChangeDisplay = formatPercentChangeBadge(o, n);
                 } else {
@@ -4872,24 +4924,22 @@
                     const diffLines = [];
                     const pcts = [];
 
-                    const vList = [
-                        { name: 'Marvel', o: row.oldPrices.marvel, n: row.importedVendorPrices.marvel !== null ? row.importedVendorPrices.marvel : row.prices.marvel, imported: row.importedVendorPrices.marvel !== null },
-                        { name: 'Tong', o: row.oldPrices.tong, n: row.importedVendorPrices.tong !== null ? row.importedVendorPrices.tong : row.prices.tong, imported: row.importedVendorPrices.tong !== null },
-                        { name: 'Tina', o: row.oldPrices.tina, n: row.importedVendorPrices.tina !== null ? row.importedVendorPrices.tina : row.prices.tina, imported: row.importedVendorPrices.tina !== null }
-                    ];
+                    VENDORS_CONFIG.forEach(v => {
+                        const o = row.oldPrices ? row.oldPrices[v.id] : null;
+                        const n = (row.importedVendorPrices && row.importedVendorPrices[v.id] !== null) ? row.importedVendorPrices[v.id] : (row.prices ? row.prices[v.id] : null);
+                        const isImported = row.importedVendorPrices && row.importedVendorPrices[v.id] !== null;
 
-                    vList.forEach(v => {
-                        if (row.action === 'new' && v.n !== null) {
-                            diffLines.push(`<div>${v.name}: <strong class="text-emerald-400">${formatPrice(v.n)}</strong></div>`);
-                        } else if (v.imported && v.n !== null) {
-                            if (v.o !== null && v.o !== v.n) {
-                                diffLines.push(`<div>${v.name}: <span class="text-slate-500 line-through mr-1">${formatPrice(v.o)}</span><strong class="text-emerald-400">${formatPrice(v.n)}</strong></div>`);
-                                pcts.push(formatPercentChangeBadge(v.o, v.n));
-                            } else if (v.o === null) {
-                                diffLines.push(`<div>${v.name}: <strong class="text-emerald-400">${formatPrice(v.n)}</strong></div>`);
-                                pcts.push(formatPercentChangeBadge(null, v.n));
+                        if (row.action === 'new' && n !== null) {
+                            diffLines.push(`<div>${v.name}: <strong class="text-emerald-400">${formatPrice(n)}</strong></div>`);
+                        } else if (isImported && n !== null) {
+                            if (o !== null && o !== n) {
+                                diffLines.push(`<div>${v.name}: <span class="text-slate-500 line-through mr-1">${formatPrice(o)}</span><strong class="text-emerald-400">${formatPrice(n)}</strong></div>`);
+                                pcts.push(formatPercentChangeBadge(o, n));
+                            } else if (o === null) {
+                                diffLines.push(`<div>${v.name}: <strong class="text-emerald-400">${formatPrice(n)}</strong></div>`);
+                                pcts.push(formatPercentChangeBadge(null, n));
                             } else {
-                                diffLines.push(`<div>${v.name}: <span class="text-slate-400">${formatPrice(v.n)}</span></div>`);
+                                diffLines.push(`<div>${v.name}: <span class="text-slate-400">${formatPrice(n)}</span></div>`);
                             }
                         }
                     });
@@ -4961,6 +5011,87 @@
         // ==========================================
         // VENDOR RULES MANAGER MODAL CONTROLLER
         // ==========================================
+        function renderVendorRulesControls() {
+            const container = document.getElementById('vendor-rules-cards-container');
+            if (!container) return;
+            const r = pricingRules || loadPricingRules();
+            const cols = Math.min(Math.max(VENDORS_CONFIG.length, 1), 3);
+            container.className = `grid grid-cols-1 lg:grid-cols-${cols} gap-4`;
+
+            container.innerHTML = VENDORS_CONFIG.map(v => {
+                const vRule = (r.vendors && r.vendors[v.id]) || v.rules || {};
+                const theme = getVendorTheme(v);
+
+                const freeEnabled = vRule.freeShippingEnabled ?? ((vRule.freeShippingThreshold || 0) > 0);
+                const freeThreshold = vRule.freeShippingThreshold || 0;
+                const freeRequiresGB = vRule.freeShippingRequiresGroupBuy || vRule.freeShippingRequiresGB || false;
+
+                const discEnabled = vRule.discountEnabled ?? ((vRule.discountPercent || 0) > 0);
+                const discPct = vRule.discountPercent || 0;
+                const discThreshold = vRule.discountThreshold || 0;
+                const discRequiresGB = vRule.discountRequiresGroupBuy || vRule.discountRequiresGB || false;
+
+                return `
+                    <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-4 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between border-b border-slate-800/80 pb-2.5 mb-3">
+                                <div class="font-bold text-slate-200 text-sm flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full ${theme.dot}"></span>
+                                    <span>${v.name}</span>
+                                </div>
+                                <span class="text-[10px] font-mono px-2 py-0.5 rounded border ${theme.badge}">${v.id}</span>
+                            </div>
+
+                            <!-- Free Shipping Controls -->
+                            <div class="space-y-2 mb-4 bg-slate-900/50 border border-slate-800/70 p-3 rounded-lg">
+                                <div class="flex items-center justify-between text-xs">
+                                    <label for="rules-${v.id}-free-shipping-enable" class="font-semibold text-slate-300 flex items-center gap-1.5 cursor-pointer">
+                                        <i class="fa-solid fa-truck-ramp-box text-emerald-400"></i> Free Shipping
+                                    </label>
+                                    <input type="checkbox" id="rules-${v.id}-free-shipping-enable" class="w-4 h-4 rounded text-emerald-600 bg-slate-950 border-slate-700 focus:ring-emerald-500 cursor-pointer" ${freeEnabled ? 'checked' : ''}>
+                                </div>
+                                <div class="flex items-center justify-between text-xs pt-1">
+                                    <span class="text-[11px] text-slate-400">Threshold ($):</span>
+                                    <input type="number" id="rules-${v.id}-free-shipping-threshold" min="0" step="10" value="${freeThreshold}" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition outline-none">
+                                </div>
+                                <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-800/80">
+                                    <label for="rules-${v.id}-free-shipping-req-groupbuy" class="text-[11px] text-slate-400 flex items-center gap-1.5 cursor-pointer">
+                                        <i class="fa-solid fa-users text-purple-400 text-[10px]"></i> Requires Group Buy
+                                    </label>
+                                    <input type="checkbox" id="rules-${v.id}-free-shipping-req-groupbuy" class="w-3.5 h-3.5 rounded text-purple-600 bg-slate-950 border-slate-700 focus:ring-purple-500 cursor-pointer" ${freeRequiresGB ? 'checked' : ''}>
+                                </div>
+                            </div>
+
+                            <!-- Discount Controls -->
+                            <div class="space-y-2 bg-slate-900/50 border border-slate-800/70 p-3 rounded-lg">
+                                <div class="flex items-center justify-between text-xs">
+                                    <label for="rules-${v.id}-discount-enable" class="font-semibold text-slate-300 flex items-center gap-1.5 cursor-pointer">
+                                        <i class="fa-solid fa-tag text-indigo-400"></i> Percentage Discount
+                                    </label>
+                                    <input type="checkbox" id="rules-${v.id}-discount-enable" class="w-4 h-4 rounded text-indigo-600 bg-slate-950 border-slate-700 focus:ring-indigo-500 cursor-pointer" ${discEnabled ? 'checked' : ''}>
+                                </div>
+                                <div class="flex items-center justify-between text-xs pt-1">
+                                    <span class="text-[11px] text-slate-400">Discount (%):</span>
+                                    <input type="number" id="rules-${v.id}-discount-percent" min="0" max="100" step="1" value="${discPct}" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition outline-none">
+                                </div>
+                                <div class="flex items-center justify-between text-xs">
+                                    <span class="text-[11px] text-slate-400">Threshold ($):</span>
+                                    <input type="number" id="rules-${v.id}-discount-threshold" min="0" step="10" value="${discThreshold}" class="w-20 sm:w-24 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono text-white text-center focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition outline-none">
+                                </div>
+                                <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-800/80">
+                                    <label for="rules-${v.id}-discount-req-groupbuy" class="text-[11px] text-slate-400 flex items-center gap-1.5 cursor-pointer">
+                                        <i class="fa-solid fa-users text-purple-400 text-[10px]"></i> Requires Group Buy
+                                    </label>
+                                    <input type="checkbox" id="rules-${v.id}-discount-req-groupbuy" class="w-3.5 h-3.5 rounded text-purple-600 bg-slate-950 border-slate-700 focus:ring-purple-500 cursor-pointer" ${discRequiresGB ? 'checked' : ''}>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        window.renderVendorRulesControls = renderVendorRulesControls;
+
         function openRulesModal() {
             if (!isAdminAuthenticated()) {
                 showToast('Admin authentication required', 'fa-lock');
@@ -4973,22 +5104,7 @@
             const defaultShippingInput = document.getElementById('rules-default-shipping-cost');
             if (defaultShippingInput) defaultShippingInput.value = r.shipping.defaultCost;
 
-            ['tina', 'tong', 'marvel'].forEach(vKey => {
-                const v = r.vendors[vKey] || {};
-                const freeEnable = document.getElementById('rules-' + vKey + '-free-shipping-enable');
-                const freeThreshold = document.getElementById('rules-' + vKey + '-free-shipping-threshold');
-                const discEnable = document.getElementById('rules-' + vKey + '-discount-enable');
-                const discPct = document.getElementById('rules-' + vKey + '-discount-percent');
-                const discThreshold = document.getElementById('rules-' + vKey + '-discount-threshold');
-                const discReqGroupBuy = document.getElementById('rules-' + vKey + '-discount-req-groupbuy');
-
-                if (freeEnable) freeEnable.checked = v.freeShippingEnabled === true;
-                if (freeThreshold) freeThreshold.value = v.freeShippingThreshold || 0;
-                if (discEnable) discEnable.checked = v.discountEnabled === true;
-                if (discPct) discPct.value = v.discountPercent || 0;
-                if (discThreshold) discThreshold.value = v.discountThreshold || 0;
-                if (discReqGroupBuy) discReqGroupBuy.checked = v.discountRequiresGroupBuy === true;
-            });
+            renderVendorRulesControls();
 
             rulesModal.classList.remove('hidden');
             rulesModal.classList.add('flex');
@@ -5020,39 +5136,35 @@
             if (saveRulesBtn) {
                 saveRulesBtn.addEventListener('click', () => {
                     const shippingCost = parseFloat(document.getElementById('rules-default-shipping-cost').value) || 50;
+                    const vendorRules = {};
+                    VENDORS_CONFIG.forEach(v => {
+                        const freeEnable = document.getElementById(`rules-${v.id}-free-shipping-enable`);
+                        const freeThreshold = document.getElementById(`rules-${v.id}-free-shipping-threshold`);
+                        const freeReqGB = document.getElementById(`rules-${v.id}-free-shipping-req-groupbuy`);
+                        const discEnable = document.getElementById(`rules-${v.id}-discount-enable`);
+                        const discPct = document.getElementById(`rules-${v.id}-discount-percent`);
+                        const discThreshold = document.getElementById(`rules-${v.id}-discount-threshold`);
+                        const discReqGB = document.getElementById(`rules-${v.id}-discount-req-groupbuy`);
+
+                        vendorRules[v.id] = {
+                            name: v.name,
+                            freeShippingEnabled: freeEnable ? freeEnable.checked : false,
+                            freeShippingThreshold: freeThreshold ? (parseFloat(freeThreshold.value) || 0) : 0,
+                            freeShippingRequiresGroupBuy: freeReqGB ? freeReqGB.checked : false,
+                            freeShippingRequiresGB: freeReqGB ? freeReqGB.checked : false,
+                            discountEnabled: discEnable ? discEnable.checked : false,
+                            discountPercent: discPct ? (parseFloat(discPct.value) || 0) : 0,
+                            discountThreshold: discThreshold ? (parseFloat(discThreshold.value) || 0) : 0,
+                            discountRequiresGroupBuy: discReqGB ? discReqGB.checked : false,
+                            discountRequiresGB: discReqGB ? discReqGB.checked : false
+                        };
+                    });
+
                     const updated = {
                         shipping: {
                             defaultCost: shippingCost
                         },
-                        vendors: {
-                            tina: {
-                                name: "Tina Tianjin Bio",
-                                freeShippingEnabled: document.getElementById('rules-tina-free-shipping-enable').checked,
-                                freeShippingThreshold: parseFloat(document.getElementById('rules-tina-free-shipping-threshold').value) || 0,
-                                discountEnabled: document.getElementById('rules-tina-discount-enable').checked,
-                                discountPercent: parseFloat(document.getElementById('rules-tina-discount-percent').value) || 0,
-                                discountThreshold: parseFloat(document.getElementById('rules-tina-discount-threshold').value) || 0,
-                                discountRequiresGroupBuy: document.getElementById('rules-tina-discount-req-groupbuy').checked
-                            },
-                            tong: {
-                                name: "Tong Shi Po",
-                                freeShippingEnabled: document.getElementById('rules-tong-free-shipping-enable').checked,
-                                freeShippingThreshold: parseFloat(document.getElementById('rules-tong-free-shipping-threshold').value) || 0,
-                                discountEnabled: document.getElementById('rules-tong-discount-enable').checked,
-                                discountPercent: parseFloat(document.getElementById('rules-tong-discount-percent').value) || 0,
-                                discountThreshold: parseFloat(document.getElementById('rules-tong-discount-threshold').value) || 0,
-                                discountRequiresGroupBuy: document.getElementById('rules-tong-discount-req-groupbuy').checked
-                            },
-                            marvel: {
-                                name: "Marvel Chloe",
-                                freeShippingEnabled: document.getElementById('rules-marvel-free-shipping-enable').checked,
-                                freeShippingThreshold: parseFloat(document.getElementById('rules-marvel-free-shipping-threshold').value) || 0,
-                                discountEnabled: document.getElementById('rules-marvel-discount-enable').checked,
-                                discountPercent: parseFloat(document.getElementById('rules-marvel-discount-percent').value) || 0,
-                                discountThreshold: parseFloat(document.getElementById('rules-marvel-discount-threshold').value) || 0,
-                                discountRequiresGroupBuy: document.getElementById('rules-marvel-discount-req-groupbuy').checked
-                            }
-                        }
+                        vendors: vendorRules
                     };
                     savePricingRules(updated);
                     closeRulesModal();
@@ -5273,17 +5385,19 @@
                         existing.isCustom = true;
                         updatedCount++;
                     } else if (row.matchedItem) {
+                        const prices = { ...(row.matchedItem.prices || {}) };
+                        VENDORS_CONFIG.forEach(v => {
+                            if (row.prices && row.prices[v.id] !== null && row.prices[v.id] !== undefined) {
+                                prices[v.id] = row.prices[v.id];
+                            }
+                        });
                         const customItem = {
                             id: row.matchedItem.id,
                             name: row.matchedItem.name,
                             spec: row.matchedItem.spec,
                             category: row.matchedItem.category,
                             catNo: row.matchedItem.catNo,
-                            prices: {
-                                marvel: row.prices.marvel !== null ? row.prices.marvel : row.matchedItem.prices.marvel,
-                                tong: row.prices.tong !== null ? row.prices.tong : row.matchedItem.prices.tong,
-                                tina: row.prices.tina !== null ? row.prices.tina : row.matchedItem.prices.tina
-                            },
+                            prices: prices,
                             lastUpdated: new Date().toISOString(),
                             isCustom: true
                         };
@@ -5297,11 +5411,7 @@
                             spec: row.importedSpec || '10mg*10',
                             category: row.category || 'Custom & User Imported',
                             catNo: row.catNo || '',
-                            prices: {
-                                marvel: row.prices.marvel,
-                                tong: row.prices.tong,
-                                tina: row.prices.tina
-                            },
+                            prices: { ...(row.prices || {}) },
                             lastUpdated: new Date().toISOString(),
                             isCustom: true
                         };
@@ -5358,13 +5468,133 @@
             });
         }
 
+        function updateHeaderSubtitle() {
+            const sub = document.getElementById('header-vendors-subtitle');
+            if (sub && Array.isArray(VENDORS_CONFIG)) {
+                sub.textContent = VENDORS_CONFIG.map(v => v.name).join(' • ');
+            }
+        }
+        window.updateHeaderSubtitle = updateHeaderSubtitle;
+
+        function renderSpotlightCards() {
+            const grid = document.getElementById('spotlight-cards-grid');
+            if (!grid) return;
+            const cols = Math.min(Math.max(VENDORS_CONFIG.length, 1), 3);
+            grid.className = `grid grid-cols-1 md:grid-cols-${cols} gap-3.5 sm:gap-5`;
+
+            grid.innerHTML = VENDORS_CONFIG.map(v => `
+                <div id="card-${v.id}" data-umami-event="vendor-click" data-umami-event-vendor="${v.id}" class="bg-slate-900/80 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700">
+                    <div>
+                        <div class="flex justify-between items-start mb-2 sm:mb-3">
+                            <div>
+                                <h3 class="font-bold text-slate-200 text-base">${v.name}</h3>
+                                <p class="text-[11px] sm:text-xs text-slate-500">${v.repName ? v.repName + ' Rep • Verified' : 'Verified Vendor'}</p>
+                            </div>
+                            <span id="badge-${v.id}" class="hidden text-[11px] sm:text-xs font-bold px-2.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 shrink-0">
+                                🏆 LOWEST
+                            </span>
+                        </div>
+                        <div class="my-3 sm:my-4">
+                            <span id="price-${v.id}" class="text-2xl sm:text-3xl font-extrabold text-white">—</span>
+                            <span id="diff-${v.id}" class="block text-xs font-medium text-slate-400 mt-1">Best Deal</span>
+                        </div>
+                    </div>
+                    <div class="pt-3 border-t border-slate-800/60 text-[11px] sm:text-xs text-slate-400 space-y-1">
+                        <div>• MOQ: 1 Kit (10 vials)</div>
+                        <div id="spotlight-${v.id}-shipping-note" class="hidden">• Direct Express Courier</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        window.renderSpotlightCards = renderSpotlightCards;
+
+        function renderCatalogHeaders() {
+            const thead = document.getElementById('catalog-thead');
+            if (!thead) return;
+            const vendorCols = VENDORS_CONFIG.map(v => 
+                `<th class="py-3.5 px-3 font-semibold text-center min-w-[95px]">${v.name}</th>`
+            ).join('');
+            thead.innerHTML = `
+                <tr>
+                    <th class="py-3.5 px-4 font-semibold w-auto min-w-[180px] pl-4">Peptide / Product</th>
+                    <th class="py-3.5 px-3 font-semibold min-w-[110px]">Specification</th>
+                    ${vendorCols}
+                    <th class="py-3.5 px-3 font-semibold text-center min-w-[95px]">Lowest Price</th>
+                    <th class="py-3.5 px-3 font-semibold text-center min-w-[95px]">Best Vendor</th>
+                    <th class="py-3.5 px-3 font-semibold text-center w-28 min-w-[100px] pr-6 shrink-0">ADD</th>
+                </tr>
+            `;
+        }
+        window.renderCatalogHeaders = renderCatalogHeaders;
+
+        function renderCartHeaders() {
+            const thead = document.getElementById('cart-thead');
+            if (!thead) return;
+            const vendorCols = VENDORS_CONFIG.map(v => 
+                `<th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-right">${v.name}</th>`
+            ).join('');
+            thead.innerHTML = `
+                <tr>
+                    <th class="py-3 px-3.5 sm:py-3.5 sm:px-4 font-semibold">Peptide / Spec</th>
+                    <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-center">Kits (Qty)</th>
+                    ${vendorCols}
+                    <th class="py-3 px-3 sm:py-3.5 sm:px-4 font-semibold text-center">Action</th>
+                </tr>
+            `;
+        }
+        window.renderCartHeaders = renderCartHeaders;
+
+        function renderWhatsAppButtons() {
+            const container = document.getElementById('whatsapp-buttons-container');
+            if (!container) return;
+            const cols = Math.min(Math.max(VENDORS_CONFIG.length, 1), 3);
+            container.className = `grid grid-cols-1 sm:grid-cols-${cols} gap-2.5 sm:gap-3`;
+
+            container.innerHTML = VENDORS_CONFIG.map(v => `
+                <div class="w-full bg-emerald-950/40 border border-emerald-500/40 text-emerald-200 p-3 sm:p-4 rounded-xl flex items-center justify-between transition hover:border-emerald-400/60 group min-h-[52px]">
+                    <div onclick="sendWhatsApp('${v.id}')" data-umami-event="vendor-click" data-umami-event-vendor="${v.id}" class="text-left flex items-center gap-3 cursor-pointer flex-1 min-w-0" title="Open WhatsApp chat with ${v.repName}">
+                        <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm shrink-0">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </div>
+                        <div class="min-w-0">
+                            <div class="text-xs font-bold text-emerald-300 truncate">${v.repName}</div>
+                            <div class="text-[11px] text-slate-400 truncate">${v.name} Rep</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 shrink-0 ml-2">
+                        <button onclick="copyVendorOrderText('${v.id}')" class="px-2.5 py-1.5 bg-emerald-900/60 hover:bg-emerald-800 text-emerald-200 rounded-lg transition text-xs font-medium cursor-pointer flex items-center gap-1 border border-emerald-500/30" title="Copy ${v.name} order text">
+                            <i class="fa-solid fa-copy text-[11px]"></i>
+                            <span class="hidden md:inline text-[11px]">Copy</span>
+                        </button>
+                        <button onclick="sendWhatsApp('${v.id}')" class="p-2 text-emerald-400 hover:text-white hover:bg-emerald-800/50 rounded-lg transition text-xs font-medium cursor-pointer border border-emerald-500/30" title="Send WhatsApp">
+                            <i class="fa-solid fa-paper-plane group-hover:translate-x-0.5 transition-transform"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        window.renderWhatsAppButtons = renderWhatsAppButtons;
+
+        function renderImportVendorOptions() {
+            const select = document.getElementById('import-vendor-target');
+            if (!select) return;
+            const allLabel = `All Vendors (Multi-column: ${VENDORS_CONFIG.map(v => v.name).join(', ')})`;
+            const options = [
+                `<option value="all">${allLabel}</option>`,
+                ...VENDORS_CONFIG.map(v => `<option value="${v.id}">${v.name}</option>`)
+            ];
+            select.innerHTML = options.join('');
+        }
+        window.renderImportVendorOptions = renderImportVendorOptions;
+
         // Price comparison helpers
         function getLowestInfo(item) {
-            const prices = [
-                { vendor: "Marvel Chloe", id: "marvel", price: item.prices.marvel },
-                { vendor: "Tong Shi Po", id: "tong", price: item.prices.tong },
-                { vendor: "Tina Tianjin Bio", id: "tina", price: item.prices.tina }
-            ].filter(p => p.price !== null && p.price !== undefined && !isNaN(p.price) && p.price > 0);
+            if (!item || !item.prices) return { min: null, winners: [], winnerIds: [] };
+            const prices = VENDORS_CONFIG.map(v => ({
+                vendor: v.name,
+                id: v.id,
+                price: item.prices[v.id]
+            })).filter(p => p.price !== null && p.price !== undefined && !isNaN(p.price) && p.price > 0);
 
             if (prices.length === 0) return { min: null, winners: [], winnerIds: [] };
             
@@ -5375,6 +5605,7 @@
 
             return { min: minPrice, winners, winnerIds };
         }
+        window.getLowestInfo = getLowestInfo;
 
         function updateSpotlight(item) {
             if (!item) return;
@@ -5384,7 +5615,7 @@
             const spotlightCategory = document.getElementById('spotlight-category-badge');
             const spotlightCatNo = document.getElementById('spotlight-catno-badge');
 
-            selectedTitle.textContent = item.key;
+            if (selectedTitle) selectedTitle.textContent = item.key;
             
             if (spotlightCategory) {
                 spotlightCategory.textContent = item.category || 'General Peptides';
@@ -5401,30 +5632,27 @@
             const info = getLowestInfo(item);
             const min = info.min;
 
-            const vendors = [
-                { id: 'marvel', price: item.prices.marvel, name: "Marvel Chloe" },
-                { id: 'tong', price: item.prices.tong, name: "Tong Shi Po" },
-                { id: 'tina', price: item.prices.tina, name: "Tina Tianjin Bio" }
-            ];
-
-            vendors.forEach(v => {
+            VENDORS_CONFIG.forEach(v => {
                 const priceEl = document.getElementById(`price-${v.id}`);
                 const diffEl = document.getElementById(`diff-${v.id}`);
                 const badgeEl = document.getElementById(`badge-${v.id}`);
                 const cardEl = document.getElementById(`card-${v.id}`);
+                const vPrice = item.prices ? item.prices[v.id] : null;
 
-                if (v.price !== null && v.price !== undefined) {
-                    priceEl.textContent = formatPrice(v.price);
+                if (!priceEl || !diffEl || !badgeEl || !cardEl) return;
+
+                if (vPrice !== null && vPrice !== undefined && !isNaN(vPrice)) {
+                    priceEl.textContent = formatPrice(vPrice);
                     priceEl.classList.remove('text-slate-600');
                     
-                    if (v.price === min) {
+                    if (vPrice === min) {
                         badgeEl.classList.remove('hidden');
                         diffEl.textContent = "🏆 Best Unit Price";
                         diffEl.className = "block text-xs font-semibold text-emerald-400 mt-1";
                         cardEl.className = "bg-slate-900/95 border-2 border-emerald-500/60 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-lg shadow-emerald-500/5";
                     } else {
                         badgeEl.classList.add('hidden');
-                        const diff = v.price - min;
+                        const diff = vPrice - min;
                         diffEl.textContent = `+${formatPrice(diff)} vs lowest`;
                         diffEl.className = "block text-xs font-medium text-slate-400 mt-1";
                         cardEl.className = "bg-slate-900/80 border border-slate-800 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col justify-between transition-all duration-300 hover:border-slate-700";
@@ -5437,29 +5665,35 @@
                     badgeEl.classList.add('hidden');
                     cardEl.className = "bg-slate-900/40 border border-slate-800/50 opacity-60 rounded-xl sm:rounded-2xl p-4 sm:p-5 flex flex-col justify-between";
                 }
+
+                const shippingNote = document.getElementById(`spotlight-${v.id}-shipping-note`);
+                if (shippingNote) {
+                    const activeRules = typeof pricingRules !== 'undefined' ? pricingRules : loadPricingRules();
+                    const vRule = (activeRules.vendors && activeRules.vendors[v.id]) || v.rules || {};
+                    if (vRule.freeShippingEnabled && vRule.freeShippingThreshold > 0) {
+                        shippingNote.textContent = `• Free Shipping on orders ≥ ${formatPrice(vRule.freeShippingThreshold)}`;
+                        shippingNote.classList.remove('hidden');
+                    } else if (vRule.discountEnabled && vRule.discountPercent > 0) {
+                        shippingNote.textContent = `• ${vRule.discountPercent}% off orders ≥ ${formatPrice(vRule.discountThreshold)}`;
+                        shippingNote.classList.remove('hidden');
+                    } else {
+                        shippingNote.classList.add('hidden');
+                    }
+                }
             });
 
             const recBanner = document.getElementById('recommended-banner');
             const recName = document.getElementById('rec-vendor-name');
-            if (info.winners.length > 0) {
-                recBanner.classList.remove('hidden');
-                recName.textContent = `${info.winners.join(' / ')} (${formatPrice(min)})`;
-            } else {
-                recBanner.classList.add('hidden');
-            }
-
-            const spotlightTinaShippingNote = document.getElementById('spotlight-tina-shipping-note');
-            if (spotlightTinaShippingNote) {
-                const activeRules = typeof pricingRules !== 'undefined' ? pricingRules : loadPricingRules();
-                const tinaRule = (activeRules.vendors && activeRules.vendors.tina) || {};
-                if (tinaRule.freeShippingEnabled && tinaRule.freeShippingThreshold > 0) {
-                    spotlightTinaShippingNote.textContent = `• Free Shipping on orders ≥ ${formatPrice(tinaRule.freeShippingThreshold)}`;
-                    spotlightTinaShippingNote.classList.remove('hidden');
+            if (recBanner && recName) {
+                if (info.winners.length > 0) {
+                    recBanner.classList.remove('hidden');
+                    recName.textContent = `${info.winners.join(' / ')} (${formatPrice(min)})`;
                 } else {
-                    spotlightTinaShippingNote.classList.add('hidden');
+                    recBanner.classList.add('hidden');
                 }
             }
         }
+        window.updateSpotlight = updateSpotlight;
 
         // ==========================================
         // CATEGORY PILL FILTER BAR MODULE
@@ -5630,13 +5864,20 @@
             catalogTbody.innerHTML = filtered.map(item => {
                 const info = getLowestInfo(item);
                 const isSelected = selectedItem && (selectedItem.key === item.key || selectedItem.id === item.id);
-                const marvelPrice = item.prices.marvel;
-                const tongPrice = item.prices.tong;
-                const tinaPrice = item.prices.tina;
-
-                const isMarvelLowest = info.min !== null && marvelPrice !== null && marvelPrice === info.min;
-                const isTongLowest = info.min !== null && tongPrice !== null && tongPrice === info.min;
-                const isTinaLowest = info.min !== null && tinaPrice !== null && tinaPrice === info.min;
+                const vendorCells = VENDORS_CONFIG.map(v => {
+                    const price = item.prices ? item.prices[v.id] : null;
+                    const isLowest = info.min !== null && price !== null && price === info.min;
+                    return `
+                        <td class="py-3.5 px-3 text-center whitespace-nowrap min-w-[95px] ${isLowest ? 'bg-emerald-950/20' : ''}">
+                            ${(price !== null && price !== undefined && !isNaN(price)) ? `
+                                <span class="inline-flex items-center justify-center gap-1.5 font-mono ${isLowest ? 'text-emerald-400 font-bold' : 'text-slate-300'}">
+                                    <span>${formatPrice(price)}</span>
+                                    ${isLowest ? '<span class="text-[9px] px-1 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-sans uppercase font-bold tracking-tight border border-emerald-500/30">Best</span>' : ''}
+                                </span>
+                            ` : '<span class="text-slate-600 font-mono">—</span>'}
+                        </td>
+                    `;
+                }).join('');
 
                 return `
                     <tr class="catalog-row border-b border-slate-800/50 hover:bg-slate-800/40 active:bg-slate-800/60 cursor-pointer transition ${isSelected ? 'bg-indigo-950/30' : ''}" data-key="${item.key}">
@@ -5647,30 +5888,7 @@
                             </div>
                         </td>
                         <td class="py-3.5 px-3 text-slate-400 font-mono text-xs whitespace-nowrap min-w-[110px]">${item.spec}</td>
-                        <td class="py-3.5 px-3 text-center whitespace-nowrap min-w-[95px] ${isMarvelLowest ? 'bg-emerald-950/20' : ''}">
-                            ${marvelPrice !== null ? `
-                                <span class="inline-flex items-center justify-center gap-1.5 font-mono ${isMarvelLowest ? 'text-emerald-400 font-bold' : 'text-slate-300'}">
-                                    <span>${formatPrice(marvelPrice)}</span>
-                                    ${isMarvelLowest ? '<span class="text-[9px] px-1 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-sans uppercase font-bold tracking-tight border border-emerald-500/30">Best</span>' : ''}
-                                </span>
-                            ` : '<span class="text-slate-600 font-mono">—</span>'}
-                        </td>
-                        <td class="py-3.5 px-3 text-center whitespace-nowrap min-w-[95px] ${isTongLowest ? 'bg-emerald-950/20' : ''}">
-                            ${tongPrice !== null ? `
-                                <span class="inline-flex items-center justify-center gap-1.5 font-mono ${isTongLowest ? 'text-emerald-400 font-bold' : 'text-slate-300'}">
-                                    <span>${formatPrice(tongPrice)}</span>
-                                    ${isTongLowest ? '<span class="text-[9px] px-1 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-sans uppercase font-bold tracking-tight border border-emerald-500/30">Best</span>' : ''}
-                                </span>
-                            ` : '<span class="text-slate-600 font-mono">—</span>'}
-                        </td>
-                        <td class="py-3.5 px-3 text-center whitespace-nowrap min-w-[95px] ${isTinaLowest ? 'bg-emerald-950/20' : ''}">
-                            ${tinaPrice !== null ? `
-                                <span class="inline-flex items-center justify-center gap-1.5 font-mono ${isTinaLowest ? 'text-emerald-400 font-bold' : 'text-slate-300'}">
-                                    <span>${formatPrice(tinaPrice)}</span>
-                                    ${isTinaLowest ? '<span class="text-[9px] px-1 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-sans uppercase font-bold tracking-tight border border-emerald-500/30">Best</span>' : ''}
-                                </span>
-                            ` : '<span class="text-slate-600 font-mono">—</span>'}
-                        </td>
+                        ${vendorCells}
                         <td class="py-3.5 px-3 text-center font-semibold text-emerald-400 whitespace-nowrap min-w-[95px]">
                             <span class="font-mono font-bold">${info.min !== null ? formatPrice(info.min) : '—'}</span>
                         </td>
@@ -5744,22 +5962,13 @@
         window.updateCartQty = updateCartQty;
         window.removeFromCart = removeFromCart;
         window.renderCart = renderCart;
+        window.renderCatalog = renderCatalog;
 
-        window.sendWhatsApp = function(vendorId) {
-            if (!cart || cart.length === 0) {
-                showToast('Your order list is empty!', 'fa-triangle-exclamation');
-                return;
-            }
+        function generateVendorOrderText(vendorId, optionalCart, optionalCatalog) {
+            const vendor = VENDORS_CONFIG.find(v => v.id === vendorId);
+            if (!vendor) return '';
 
-            const vendors = {
-                'marvel': { name: 'Marvel Chloe', repName: 'Chloe', phone: '85365265146' },
-                'tong': { name: 'Tong Shi Po', repName: 'Tong', phone: '8613027198018' },
-                'tina': { name: 'Tina Tianjin Bio', repName: 'Tina', phone: '8613512884424' }
-            };
-            const vendor = vendors[vendorId];
-            if (!vendor) return;
-
-            const isGroupBuy = groupBuyToggle ? groupBuyToggle.checked : false;
+            const isGroupBuy = typeof isGroupBuyActive === 'function' ? isGroupBuyActive() : false;
             const batchNum = groupBuyBatchInput ? groupBuyBatchInput.value.trim() : '';
 
             let message = '';
@@ -5771,17 +5980,24 @@
                 message += `Hi ${vendor.repName},\n\nI am a member of the Peptide Underground community and would like to place an order for the following:\n\n`;
             }
             
-            cart.forEach(item => {
-                const itemData = peptideData.find(i => i.key === item.key || i.id === item.key);
+            const currentCart = (optionalCart && Array.isArray(optionalCart))
+                ? optionalCart
+                : ((typeof cart !== 'undefined' && Array.isArray(cart)) ? cart : []);
+            const dataCatalog = (optionalCatalog && Array.isArray(optionalCatalog))
+                ? optionalCatalog
+                : ((typeof peptideData !== 'undefined' && Array.isArray(peptideData)) ? peptideData : []);
+
+            currentCart.forEach(item => {
+                const itemData = dataCatalog.find(i => i.key === item.key || i.id === item.key);
                 const name = itemData ? itemData.name : item.key;
                 const catNo = itemData ? itemData.catNo : '';
                 const catStr = catNo ? `[${catNo}] ` : '';
                 message += `• ${item.qty}x ${catStr}${item.key}\n`;
             });
 
-            const analysis = calculateOptimizerAnalysis(cart, peptideData);
+            const analysis = calculateOptimizerAnalysis(currentCart, dataCatalog);
             const vData = analysis.singleVendors[vendorId];
-            const isNonUsd = currentCurrency !== 'USD';
+            const isNonUsd = typeof currentCurrency !== 'undefined' && currentCurrency !== 'USD';
 
             if (vData && vData.subtotal > 0) {
                 message += `\n------------------------------------\n`;
@@ -5791,29 +6007,79 @@
                         message += `🏷️ ${vData.discountPercent}% Community Discount (≥$${vData.discountThreshold} USD / ${formatPrice(vData.discountThreshold)}): -$${vData.discount.toFixed(2)} USD (-${formatPrice(vData.discount)})\n`;
                         message += `Adjusted Subtotal: $${vData.adjustedSubtotal.toFixed(2)} USD (${formatPrice(vData.adjustedSubtotal)})\n`;
                     }
+                    if (vData.isFreeShipping) {
+                        message += `🎉 Free Shipping Qualified (≥$${vData.freeThreshold} USD / ${formatPrice(vData.freeThreshold)})\n`;
+                    }
                 } else {
                     message += `Items Subtotal: $${vData.subtotal.toFixed(2)} USD\n`;
                     if (vData.isDiscounted) {
                         message += `🏷️ ${vData.discountPercent}% Community Discount (≥$${vData.discountThreshold}): -$${vData.discount.toFixed(2)} USD\n`;
                         message += `Adjusted Subtotal: $${vData.adjustedSubtotal.toFixed(2)} USD\n`;
                     }
+                    if (vData.isFreeShipping) {
+                        message += `🎉 Free Shipping Qualified (≥$${vData.freeThreshold})\n`;
+                    }
                 }
             }
 
             message += `\nPlease let me know the total cost including shipping to my address.\n\nThank you!`;
+            return message;
+        }
+        window.generateVendorOrderText = generateVendorOrderText;
 
+        function copyVendorOrderText(vendorId) {
+            if (!cart || cart.length === 0) {
+                showToast('Your order list is empty!', 'fa-triangle-exclamation');
+                return;
+            }
+            const vendor = VENDORS_CONFIG.find(v => v.id === vendorId);
+            if (!vendor) return;
+
+            const text = generateVendorOrderText(vendorId);
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast(`Copied order message for ${vendor.name} to clipboard!`, 'fa-copy');
+                }).catch(() => {
+                    fallbackCopyText(text, vendor.name);
+                });
+            } else {
+                fallbackCopyText(text, vendor.name);
+            }
+        }
+        window.copyVendorOrderText = copyVendorOrderText;
+
+        function fallbackCopyText(text, vendorName) {
             try {
                 const tempTextArea = document.createElement('textarea');
-                tempTextArea.value = message;
+                tempTextArea.value = text;
                 tempTextArea.style.position = 'fixed';
                 tempTextArea.style.left = '-9999px';
                 document.body.appendChild(tempTextArea);
                 tempTextArea.select();
                 document.execCommand('copy');
                 document.body.removeChild(tempTextArea);
-            } catch (err) {
-                console.warn('Clipboard fallback error:', err);
+                showToast(`Copied order message for ${vendorName} to clipboard!`, 'fa-copy');
+            } catch (e) {
+                showToast('Failed to copy order text', 'fa-triangle-exclamation');
             }
+        }
+
+        function sendWhatsApp(vendorId) {
+            if (!cart || cart.length === 0) {
+                showToast('Your order list is empty!', 'fa-triangle-exclamation');
+                return;
+            }
+
+            const vendor = VENDORS_CONFIG.find(v => v.id === vendorId);
+            if (!vendor) return;
+
+            const message = generateVendorOrderText(vendorId);
+
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(message).catch(() => {});
+                }
+            } catch (err) {}
 
             const encodedMessage = encodeURIComponent(message);
             const waUrl = `https://wa.me/${vendor.phone}?text=${encodedMessage}`;
@@ -5827,7 +6093,8 @@
             document.body.removeChild(link);
 
             showToast(`Opening WhatsApp for ${vendor.repName}...`, 'fa-brands fa-whatsapp');
-        };
+        }
+        window.sendWhatsApp = sendWhatsApp;
 
         // =========================================================================
         // ORDER OPTIMIZER & SHIPPING CALCULATION ENGINE
@@ -5865,6 +6132,7 @@
         window.setOptimizerMode = setOptimizerMode;
 
         // Core Optimizer Analysis Function
+        // Core Optimizer Analysis Function
         function calculateOptimizerAnalysis(cartItems, catalog, customShippingFee, customIsGroupBuy, customRules) {
             const items = (cartItems && Array.isArray(cartItems)) 
                 ? cartItems 
@@ -5882,41 +6150,75 @@
                 ? customIsGroupBuy 
                 : isGroupBuyActive();
 
-            // 1. Single Vendor Calculations
-            const singleVendors = {
-                marvel: { key: 'marvel', name: (activeRules.vendors.marvel && activeRules.vendors.marvel.name) || 'Marvel Chloe', subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, missing: false, unstocked: [], freeThreshold: null, isDiscounted: false, discountPercent: 0, discountThreshold: 0, discountRequiresGroupBuy: false },
-                tong: { key: 'tong', name: (activeRules.vendors.tong && activeRules.vendors.tong.name) || 'Tong Shi Po', subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, missing: false, unstocked: [], freeThreshold: null, isDiscounted: false, discountPercent: 0, discountThreshold: 0, discountRequiresGroupBuy: false },
-                tina: { key: 'tina', name: (activeRules.vendors.tina && activeRules.vendors.tina.name) || 'Tina Tianjin Bio', subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, missing: false, unstocked: [], freeThreshold: null, isDiscounted: false, discountPercent: 0, discountThreshold: 0, discountRequiresGroupBuy: false }
-            };
+            // 1. Single Vendor Calculations dynamically built from VENDORS_CONFIG
+            const singleVendors = {};
+            VENDORS_CONFIG.forEach(v => {
+                const vRule = (activeRules.vendors && activeRules.vendors[v.id]) || v.rules || {};
+                singleVendors[v.id] = {
+                    key: v.id,
+                    id: v.id,
+                    name: (vRule && vRule.name) || v.name,
+                    subtotal: 0,
+                    rawSubtotal: 0,
+                    discount: 0,
+                    adjustedSubtotal: 0,
+                    missing: false,
+                    unstocked: [],
+                    freeThreshold: null,
+                    isDiscounted: false,
+                    discountPercent: 0,
+                    discountThreshold: 0,
+                    discountRequiresGroupBuy: false,
+                    discountRequiresGB: false
+                };
+            });
 
-            // 2. Split Order Calculations
+            // 2. Split Order Calculations dynamically built from VENDORS_CONFIG
             let splitRawSubtotal = 0;
-            const splitAllocation = {
-                marvel: { count: 0, subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, items: [], freeThreshold: null, isDiscounted: false, discountPercent: 0, discountThreshold: 0, discountRequiresGroupBuy: false },
-                tong: { count: 0, subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, items: [], freeThreshold: null, isDiscounted: false, discountPercent: 0, discountThreshold: 0, discountRequiresGroupBuy: false },
-                tina: { count: 0, subtotal: 0, rawSubtotal: 0, discount: 0, adjustedSubtotal: 0, items: [], freeThreshold: null, isDiscounted: false, discountPercent: 0, discountThreshold: 0, discountRequiresGroupBuy: false }
-            };
+            const splitAllocation = {};
+            VENDORS_CONFIG.forEach(v => {
+                splitAllocation[v.id] = {
+                    key: v.id,
+                    id: v.id,
+                    name: v.name,
+                    count: 0,
+                    subtotal: 0,
+                    rawSubtotal: 0,
+                    discount: 0,
+                    adjustedSubtotal: 0,
+                    items: [],
+                    freeThreshold: null,
+                    isDiscounted: false,
+                    discountPercent: 0,
+                    discountThreshold: 0,
+                    discountRequiresGroupBuy: false,
+                    discountRequiresGB: false
+                };
+            });
 
             items.forEach(cartItem => {
                 const itemData = dataCatalog.find(i => i.key === cartItem.key || i.id === cartItem.key);
                 if (!itemData) return;
 
-                ['marvel', 'tong', 'tina'].forEach(vKey => {
-                    const price = itemData.prices[vKey];
-                    if (price !== null && price !== undefined) {
-                        singleVendors[vKey].subtotal += price * cartItem.qty;
-                        singleVendors[vKey].rawSubtotal += price * cartItem.qty;
+                VENDORS_CONFIG.forEach(v => {
+                    const price = itemData.prices ? itemData.prices[v.id] : null;
+                    if (price !== null && price !== undefined && !isNaN(price)) {
+                        singleVendors[v.id].subtotal += price * cartItem.qty;
+                        singleVendors[v.id].rawSubtotal += price * cartItem.qty;
                     } else {
-                        singleVendors[vKey].missing = true;
-                        singleVendors[vKey].unstocked.push(itemData.name);
+                        singleVendors[v.id].missing = true;
+                        singleVendors[v.id].unstocked.push(itemData.name);
                     }
                 });
 
                 // Determine lowest price vendor for split-order
                 const available = [];
-                if (itemData.prices.marvel !== null) available.push({ vendor: 'marvel', name: singleVendors.marvel.name, price: itemData.prices.marvel });
-                if (itemData.prices.tong !== null) available.push({ vendor: 'tong', name: singleVendors.tong.name, price: itemData.prices.tong });
-                if (itemData.prices.tina !== null) available.push({ vendor: 'tina', name: singleVendors.tina.name, price: itemData.prices.tina });
+                VENDORS_CONFIG.forEach(v => {
+                    const price = itemData.prices ? itemData.prices[v.id] : null;
+                    if (price !== null && price !== undefined && !isNaN(price)) {
+                        available.push({ vendor: v.id, name: singleVendors[v.id].name, price: price });
+                    }
+                });
 
                 if (available.length > 0) {
                     available.sort((a, b) => a.price - b.price);
@@ -5938,22 +6240,25 @@
 
             // Evaluate discounts & free shipping on single vendors
             const validSingleVendors = [];
-            ['marvel', 'tong', 'tina'].forEach(vKey => {
+            VENDORS_CONFIG.forEach(vConf => {
+                const vKey = vConf.id;
                 const v = singleVendors[vKey];
-                const vRule = (activeRules.vendors && activeRules.vendors[vKey]) || {};
+                const vRule = (activeRules.vendors && activeRules.vendors[vKey]) || vConf.rules || {};
 
                 // Free shipping evaluation
                 const freeEnabled = vRule.freeShippingEnabled === true;
                 const freeThreshold = typeof vRule.freeShippingThreshold === 'number' ? vRule.freeShippingThreshold : 0;
-                const isFreeShipping = freeEnabled && freeThreshold > 0 && v.subtotal >= freeThreshold;
+                const freeReqGB = vRule.freeShippingRequiresGroupBuy === true || vRule.freeShippingRequiresGB === true;
+                const isFreeShipping = freeEnabled && freeThreshold > 0 && (!freeReqGB || isGroupBuy) && v.subtotal >= freeThreshold;
                 v.freeThreshold = freeEnabled ? freeThreshold : null;
                 v.isFreeShipping = isFreeShipping;
+                v.freeShippingRequiresGB = freeReqGB;
 
                 // Discount evaluation
                 const discEnabled = vRule.discountEnabled === true;
                 const discPct = typeof vRule.discountPercent === 'number' ? vRule.discountPercent : 0;
                 const discThreshold = typeof vRule.discountThreshold === 'number' ? vRule.discountThreshold : 0;
-                const reqGroupBuy = vRule.discountRequiresGroupBuy === true;
+                const reqGroupBuy = vRule.discountRequiresGroupBuy === true || vRule.discountRequiresGB === true;
                 const isGroupBuyEligible = !reqGroupBuy || isGroupBuy;
                 const isDiscounted = discEnabled && discPct > 0 && isGroupBuyEligible && v.subtotal >= discThreshold;
 
@@ -5967,11 +6272,13 @@
                 v.discountPercent = discPct;
                 v.discountThreshold = discThreshold;
                 v.discountRequiresGroupBuy = reqGroupBuy;
+                v.discountRequiresGB = reqGroupBuy;
                 v.adjustedSubtotal = Math.round((v.subtotal - discount) * 100) / 100;
 
+                const vShippingCost = (typeof vConf.defaultShipping === 'number') ? vConf.defaultShipping : baseShippingFee;
                 let shippingFee = 0;
                 if (v.subtotal > 0) {
-                    shippingFee = isFreeShipping ? 0 : baseShippingFee;
+                    shippingFee = isFreeShipping ? 0 : vShippingCost;
                 }
                 v.shipping = shippingFee;
                 v.grandTotal = Math.round((v.adjustedSubtotal + shippingFee) * 100) / 100;
@@ -5979,7 +6286,7 @@
                 let noteParts = [];
                 if (isDiscounted) noteParts.push(`🎉 ${discPct}% Community Discount (-${formatPrice(discount)})`);
                 if (isFreeShipping) noteParts.push(`🎉 Free Shipping (≥${formatPrice(freeThreshold)})`);
-                else if (v.subtotal > 0) noteParts.push(`+${formatPrice(baseShippingFee)} standard ship`);
+                else if (v.subtotal > 0) noteParts.push(`+${formatPrice(vShippingCost)} standard ship`);
                 v.note = noteParts.join(' | ');
 
                 if (!v.missing && v.subtotal > 0) {
@@ -5992,14 +6299,16 @@
 
             // Calculate Shipping & Grand Total for Split Order
             let splitTotalDiscount = 0;
-            ['marvel', 'tong', 'tina'].forEach(vKey => {
+            VENDORS_CONFIG.forEach(vConf => {
+                const vKey = vConf.id;
                 const alloc = splitAllocation[vKey];
-                const vRule = (activeRules.vendors && activeRules.vendors[vKey]) || {};
+                const vRule = (activeRules.vendors && activeRules.vendors[vKey]) || vConf.rules || {};
 
                 // Free Shipping evaluation for split basket
                 const freeEnabled = vRule.freeShippingEnabled === true;
                 const freeThreshold = typeof vRule.freeShippingThreshold === 'number' ? vRule.freeShippingThreshold : 0;
-                const isFreeShipping = freeEnabled && freeThreshold > 0 && alloc.subtotal >= freeThreshold;
+                const freeReqGB = vRule.freeShippingRequiresGroupBuy === true || vRule.freeShippingRequiresGB === true;
+                const isFreeShipping = freeEnabled && freeThreshold > 0 && (!freeReqGB || isGroupBuy) && alloc.subtotal >= freeThreshold;
                 alloc.freeThreshold = freeEnabled ? freeThreshold : null;
                 alloc.isFreeShipping = isFreeShipping;
 
@@ -6007,7 +6316,7 @@
                 const discEnabled = vRule.discountEnabled === true;
                 const discPct = typeof vRule.discountPercent === 'number' ? vRule.discountPercent : 0;
                 const discThreshold = typeof vRule.discountThreshold === 'number' ? vRule.discountThreshold : 0;
-                const reqGroupBuy = vRule.discountRequiresGroupBuy === true;
+                const reqGroupBuy = vRule.discountRequiresGroupBuy === true || vRule.discountRequiresGB === true;
                 const isGroupBuyEligible = !reqGroupBuy || isGroupBuy;
                 const isDiscounted = discEnabled && discPct > 0 && isGroupBuyEligible && alloc.subtotal >= discThreshold;
 
@@ -6021,6 +6330,7 @@
                 alloc.discountPercent = discPct;
                 alloc.discountThreshold = discThreshold;
                 alloc.discountRequiresGroupBuy = reqGroupBuy;
+                alloc.discountRequiresGB = reqGroupBuy;
                 alloc.adjustedSubtotal = Math.round((alloc.subtotal - disc) * 100) / 100;
                 splitTotalDiscount += disc;
             });
@@ -6033,14 +6343,16 @@
 
             Object.keys(splitAllocation).forEach(vKey => {
                 const alloc = splitAllocation[vKey];
+                const vConf = VENDORS_CONFIG.find(v => v.id === vKey) || {};
+                const vShipCost = (typeof vConf.defaultShipping === 'number') ? vConf.defaultShipping : baseShippingFee;
                 if (alloc.count > 0) {
                     activeVendorsCount++;
-                    let fee = alloc.isFreeShipping ? 0 : baseShippingFee;
+                    let fee = alloc.isFreeShipping ? 0 : vShipCost;
                     alloc.shipping = fee;
                     splitShippingTotal += fee;
                     splitShippingBreakdown.push({
                         vendorKey: vKey,
-                        name: singleVendors[vKey].name,
+                        name: singleVendors[vKey] ? singleVendors[vKey].name : (vConf.name || vKey),
                         count: alloc.count,
                         subtotal: alloc.subtotal,
                         discount: alloc.discount || 0,
@@ -6069,18 +6381,21 @@
                 bestOverallStrategy = 'split';
             }
 
-            // Vendor Incentive Trackers
+            // Vendor Incentive Trackers dynamically mapped over VENDORS_CONFIG
             const vendorIncentives = [];
-            ['tina', 'tong', 'marvel'].forEach(vKey => {
+            VENDORS_CONFIG.forEach(vConf => {
+                const vKey = vConf.id;
                 const v = singleVendors[vKey];
-                const vRule = (activeRules.vendors && activeRules.vendors[vKey]) || {};
+                const vRule = (activeRules.vendors && activeRules.vendors[vKey]) || vConf.rules || {};
 
                 if (vRule.freeShippingEnabled && vRule.freeShippingThreshold > 0) {
                     const threshold = vRule.freeShippingThreshold;
                     const subtotal = v.subtotal;
+                    const reqGroupBuy = vRule.freeShippingRequiresGroupBuy === true || vRule.freeShippingRequiresGB === true;
+                    const isEligible = !reqGroupBuy || isGroupBuy;
                     const pct = Math.min(100, Math.round((subtotal / threshold) * 100));
                     const remaining = Math.max(0, threshold - subtotal);
-                    const isQualified = subtotal >= threshold;
+                    const isQualified = isEligible && subtotal >= threshold;
                     vendorIncentives.push({
                         id: vKey + '-free-shipping',
                         type: 'freeShipping',
@@ -6091,7 +6406,7 @@
                         percentage: pct,
                         remaining,
                         isQualified,
-                        requiresGroupBuy: false,
+                        requiresGroupBuy: reqGroupBuy,
                         isActive: true
                     });
                 }
@@ -6099,7 +6414,7 @@
                 if (vRule.discountEnabled && vRule.discountPercent > 0 && vRule.discountThreshold > 0) {
                     const threshold = vRule.discountThreshold;
                     const subtotal = v.subtotal;
-                    const reqGroupBuy = vRule.discountRequiresGroupBuy === true;
+                    const reqGroupBuy = vRule.discountRequiresGroupBuy === true || vRule.discountRequiresGB === true;
                     const isEligible = !reqGroupBuy || isGroupBuy;
                     const pct = isEligible ? Math.min(100, Math.round((subtotal / threshold) * 100)) : 0;
                     const remaining = isEligible ? Math.max(0, threshold - subtotal) : threshold;
@@ -6123,20 +6438,22 @@
             });
 
             // Backward compatibility progress fields
+            const tinaSingle = singleVendors.tina || { subtotal: 0, isFreeShipping: false };
             const tinaRule = (activeRules.vendors && activeRules.vendors.tina) || {};
-            const tinaSubtotal = singleVendors.tina.subtotal;
+            const tinaSubtotal = tinaSingle.subtotal;
             const tinaThreshold = tinaRule.freeShippingThreshold || 700;
             const tinaProgressPct = tinaRule.freeShippingEnabled ? Math.min(100, Math.round((tinaSubtotal / tinaThreshold) * 100)) : 0;
             const tinaRemaining = tinaRule.freeShippingEnabled ? Math.max(0, tinaThreshold - tinaSubtotal) : tinaThreshold;
-            const isTinaQualified = singleVendors.tina.isFreeShipping;
+            const isTinaQualified = tinaSingle.isFreeShipping;
 
+            const tongSingle = singleVendors.tong || { subtotal: 0, isDiscounted: false, discount: 0, adjustedSubtotal: 0 };
             const tongRule = (activeRules.vendors && activeRules.vendors.tong) || {};
-            const tongSubtotal = singleVendors.tong.subtotal;
+            const tongSubtotal = tongSingle.subtotal;
             const tongThreshold = tongRule.discountThreshold || 700;
             const isTongEligible = !tongRule.discountRequiresGroupBuy || isGroupBuy;
             const tongProgressPct = (tongRule.discountEnabled && isTongEligible) ? Math.min(100, Math.round((tongSubtotal / tongThreshold) * 100)) : 0;
             const tongRemaining = (tongRule.discountEnabled && isTongEligible) ? Math.max(0, tongThreshold - tongSubtotal) : tongThreshold;
-            const isTongQualified = singleVendors.tong.isDiscounted;
+            const isTongQualified = tongSingle.isDiscounted;
 
             return {
                 totalItemsCount,
@@ -6170,8 +6487,8 @@
                     percentage: tongProgressPct,
                     remaining: tongRemaining,
                     isQualified: isTongQualified,
-                    discount: singleVendors.tong.discount,
-                    adjustedSubtotal: singleVendors.tong.adjustedSubtotal,
+                    discount: tongSingle.discount,
+                    adjustedSubtotal: tongSingle.adjustedSubtotal,
                     isGroupBuy: isGroupBuy
                 }
             };
@@ -6200,13 +6517,15 @@
                 const itemData = peptideData.find(i => i.key === cartItem.key || i.id === cartItem.key);
                 if (!itemData) return '';
 
-                const marvelPrice = itemData.prices.marvel;
-                const tongPrice = itemData.prices.tong;
-                const tinaPrice = itemData.prices.tina;
-
-                const marvelSub = marvelPrice !== null ? marvelPrice * cartItem.qty : null;
-                const tongSub = tongPrice !== null ? tongPrice * cartItem.qty : null;
-                const tinaSub = tinaPrice !== null ? tinaPrice * cartItem.qty : null;
+                const vendorSubCells = VENDORS_CONFIG.map(v => {
+                    const price = itemData.prices ? itemData.prices[v.id] : null;
+                    const sub = (price !== null && price !== undefined && !isNaN(price)) ? price * cartItem.qty : null;
+                    return `
+                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right font-medium whitespace-nowrap ${sub !== null ? 'text-slate-200' : 'text-slate-600'}">
+                            ${sub !== null ? formatPrice(sub) : 'N/A'}
+                        </td>
+                    `;
+                }).join('');
 
                 return `
                     <tr class="border-b border-slate-800/50 hover:bg-slate-900/50 transition">
@@ -6224,15 +6543,7 @@
                                 <button class="qty-btn text-slate-300 hover:text-white w-8 h-8 sm:w-7 sm:h-7 min-w-[32px] min-h-[32px] flex items-center justify-center rounded-md hover:bg-slate-800 active:bg-slate-700 font-bold text-sm cursor-pointer transition" onclick="updateCartQty('${cartItem.key}', 1)">+</button>
                             </div>
                         </td>
-                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right font-medium whitespace-nowrap ${marvelSub !== null ? 'text-slate-200' : 'text-slate-600'}">
-                            ${marvelSub !== null ? formatPrice(marvelSub) : 'N/A'}
-                        </td>
-                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right font-medium whitespace-nowrap ${tongSub !== null ? 'text-slate-200' : 'text-slate-600'}">
-                            ${tongSub !== null ? formatPrice(tongSub) : 'N/A'}
-                        </td>
-                        <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-right font-medium whitespace-nowrap ${tinaSub !== null ? 'text-slate-200' : 'text-slate-600'}">
-                            ${tinaSub !== null ? formatPrice(tinaSub) : 'N/A'}
-                        </td>
+                        ${vendorSubCells}
                         <td class="py-3 px-3 sm:py-3.5 sm:px-4 text-center whitespace-nowrap">
                             <button class="w-9 h-9 min-w-[36px] min-h-[36px] inline-flex items-center justify-center rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-950/40 active:bg-rose-900/50 transition cursor-pointer" onclick="removeFromCart('${cartItem.key}')" aria-label="Delete item">
                                 <i class="fa-solid fa-trash-can text-sm"></i>
@@ -6322,20 +6633,17 @@
                         <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 sm:p-4 w-full lg:w-auto min-w-full lg:min-w-[280px] space-y-2 shrink-0">
                             <div class="text-[11px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 border-b border-slate-800 pb-1.5">Vendor Total Comparison</div>
                             
-                            <div class="flex justify-between items-center text-xs sm:text-sm">
-                                <span class="${!single.marvel.missing && bestSingle && bestSingle.name === single.marvel.name ? 'text-emerald-400 font-bold' : 'text-slate-300'}">${single.marvel.name}:</span>
-                                <span class="font-bold ${!single.marvel.missing ? 'text-white' : 'text-slate-600'}">${!single.marvel.missing ? (single.marvel.isDiscounted ? formatPrice(single.marvel.adjustedSubtotal) + ' <span class="text-[10px] text-amber-400 font-normal">(-' + single.marvel.discountPercent + '%)</span>' : formatPrice(single.marvel.subtotal)) : 'Incomplete'}</span>
-                            </div>
-
-                            <div class="flex justify-between items-center text-xs sm:text-sm">
-                                <span class="${!single.tong.missing && bestSingle && bestSingle.name === single.tong.name ? 'text-emerald-400 font-bold' : 'text-slate-300'}">${single.tong.name}:</span>
-                                <span class="font-bold ${!single.tong.missing ? 'text-white' : 'text-slate-600'}">${!single.tong.missing ? (single.tong.isDiscounted ? formatPrice(single.tong.adjustedSubtotal) + ' <span class="text-[10px] text-amber-400 font-normal">(-' + single.tong.discountPercent + '%)</span>' : formatPrice(single.tong.subtotal)) : 'Incomplete'}</span>
-                            </div>
-
-                            <div class="flex justify-between items-center text-xs sm:text-sm">
-                                <span class="${!single.tina.missing && bestSingle && bestSingle.name === single.tina.name ? 'text-emerald-400 font-bold' : 'text-slate-300'}">${single.tina.name}:</span>
-                                <span class="font-bold ${!single.tina.missing ? 'text-white' : 'text-slate-600'}">${!single.tina.missing ? (single.tina.isDiscounted ? formatPrice(single.tina.adjustedSubtotal) + ' <span class="text-[10px] text-amber-400 font-normal">(-' + single.tina.discountPercent + '%)</span>' : formatPrice(single.tina.subtotal)) : 'Incomplete'}</span>
-                            </div>
+                            ${VENDORS_CONFIG.map(v => {
+                                const s = single[v.id];
+                                if (!s) return '';
+                                const isBest = !s.missing && bestSingle && bestSingle.name === s.name;
+                                return `
+                                    <div class="flex justify-between items-center text-xs sm:text-sm">
+                                        <span class="${isBest ? 'text-emerald-400 font-bold' : 'text-slate-300'}">${s.name}:</span>
+                                        <span class="font-bold ${!s.missing ? 'text-white' : 'text-slate-600'}">${!s.missing ? (s.isDiscounted ? formatPrice(s.adjustedSubtotal) + ' <span class="text-[10px] text-amber-400 font-normal">(-' + s.discountPercent + '%)</span>' : formatPrice(s.subtotal)) : 'Incomplete'}</span>
+                                    </div>
+                                `;
+                            }).join('')}
                         </div>
                     </div>
 
@@ -6404,35 +6712,21 @@
                             </div>
 
                             <div class="space-y-2 text-xs">
-                                <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-blue-400"></span>
-                                        <span class="text-slate-300 font-medium">${single.marvel.name}:</span>
-                                    </div>
-                                    <span class="font-mono ${split.marvel.count > 0 ? 'text-white font-bold' : 'text-slate-500'}">
-                                        ${split.marvel.count} kits (${formatPrice(split.marvel.adjustedSubtotal)}${split.marvel.isDiscounted ? ' [-' + split.marvel.discountPercent + '%]' : ''})
-                                    </span>
-                                </div>
-
-                                <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                                        <span class="text-slate-300 font-medium">${single.tong.name}:</span>
-                                    </div>
-                                    <span class="font-mono ${split.tong.count > 0 ? 'text-white font-bold' : 'text-slate-500'}">
-                                        ${split.tong.count} kits (${formatPrice(split.tong.adjustedSubtotal)}${split.tong.isDiscounted ? ' [-' + split.tong.discountPercent + '%]' : ''})
-                                    </span>
-                                </div>
-
-                                <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                                        <span class="text-slate-300 font-medium">${single.tina.name}:</span>
-                                    </div>
-                                    <span class="font-mono ${split.tina.count > 0 ? 'text-white font-bold' : 'text-slate-500'}">
-                                        ${split.tina.count} kits (${formatPrice(split.tina.adjustedSubtotal)}${split.tina.isDiscounted ? ' [-' + split.tina.discountPercent + '%]' : ''})
-                                    </span>
-                                </div>
+                                ${VENDORS_CONFIG.map(v => {
+                                    const alloc = split[v.id] || { count: 0, adjustedSubtotal: 0, isDiscounted: false, discountPercent: 0 };
+                                    const theme = getVendorTheme(v);
+                                    return `
+                                        <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-2 h-2 rounded-full ${theme.dot}"></span>
+                                                <span class="text-slate-300 font-medium">${v.name}:</span>
+                                            </div>
+                                            <span class="font-mono ${alloc.count > 0 ? 'text-white font-bold' : 'text-slate-500'}">
+                                                ${alloc.count} kits (${formatPrice(alloc.adjustedSubtotal)}${alloc.isDiscounted ? ' [-' + alloc.discountPercent + '%]' : ''})
+                                            </span>
+                                        </div>
+                                    `;
+                                }).join('')}
                             </div>
 
                             <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-400 flex justify-between items-center">
@@ -6456,47 +6750,25 @@
                             </div>
 
                             <div class="space-y-2 text-xs">
-                                <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
-                                    <div>
-                                        <span class="text-slate-300 font-medium">${single.marvel.name}</span>
-                                        <span class="text-[10px] ${single.marvel.isDiscounted ? 'text-amber-400 font-semibold' : 'text-slate-500'} block">
-                                            ${single.marvel.isDiscounted ? '🎉 ' + single.marvel.discountPercent + '% Discount (-' + formatPrice(single.marvel.discount) + ') | ' : ''}${single.marvel.isFreeShipping ? '🎉 Free Shipping (≥' + formatPrice(single.marvel.freeThreshold) + ')' : '+' + formatPrice(single.marvel.shipping) + ' standard ship'}
-                                        </span>
-                                    </div>
-                                    <div class="text-right">
-                                        <span class="font-mono ${!single.marvel.missing ? 'text-white font-bold' : 'text-slate-600'}">
-                                            ${!single.marvel.missing ? formatPrice(single.marvel.grandTotal) : 'Incomplete'}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
-                                    <div>
-                                        <span class="text-slate-300 font-medium">${single.tong.name}</span>
-                                        <span class="text-[10px] ${single.tong.isDiscounted ? 'text-amber-400 font-semibold' : 'text-slate-500'} block">
-                                            ${single.tong.isDiscounted ? '🎉 ' + single.tong.discountPercent + '% Discount (-' + formatPrice(single.tong.discount) + ') | ' : ''}${single.tong.isFreeShipping ? '🎉 Free Shipping (≥' + formatPrice(single.tong.freeThreshold) + ')' : '+' + formatPrice(single.tong.shipping) + ' standard ship'}
-                                        </span>
-                                    </div>
-                                    <div class="text-right">
-                                        <span class="font-mono ${!single.tong.missing ? 'text-white font-bold' : 'text-slate-600'}">
-                                            ${!single.tong.missing ? formatPrice(single.tong.grandTotal) : 'Incomplete'}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
-                                    <div>
-                                        <span class="text-slate-300 font-medium">${single.tina.name}</span>
-                                        <span class="text-[10px] ${single.tina.isDiscounted ? 'text-amber-400 font-semibold' : (single.tina.isFreeShipping ? 'text-emerald-400 font-semibold' : 'text-slate-500')} block">
-                                            ${single.tina.isDiscounted ? '🎉 ' + single.tina.discountPercent + '% Discount (-' + formatPrice(single.tina.discount) + ') | ' : ''}${single.tina.isFreeShipping ? '🎉 Free Shipping (≥' + formatPrice(single.tina.freeThreshold) + ')' : '+' + formatPrice(single.tina.shipping) + ' standard ship'}
-                                        </span>
-                                    </div>
-                                    <div class="text-right">
-                                        <span class="font-mono ${!single.tina.missing ? 'text-white font-bold' : 'text-slate-600'}">
-                                            ${!single.tina.missing ? formatPrice(single.tina.grandTotal) : 'Incomplete'}
-                                        </span>
-                                    </div>
-                                </div>
+                                ${VENDORS_CONFIG.map(v => {
+                                    const s = single[v.id];
+                                    if (!s) return '';
+                                    return `
+                                        <div class="flex justify-between items-center p-2 rounded-lg bg-slate-900/60 border border-slate-800">
+                                            <div>
+                                                <span class="text-slate-300 font-medium">${s.name}</span>
+                                                <span class="text-[10px] ${s.isDiscounted ? 'text-amber-400 font-semibold' : (s.isFreeShipping ? 'text-emerald-400 font-semibold' : 'text-slate-500')} block">
+                                                    ${s.isDiscounted ? '🎉 ' + s.discountPercent + '% Discount (-' + formatPrice(s.discount) + ') | ' : ''}${s.isFreeShipping ? '🎉 Free Shipping (≥' + formatPrice(s.freeThreshold) + ')' : '+' + formatPrice(s.shipping) + ' standard ship'}
+                                                </span>
+                                            </div>
+                                            <div class="text-right">
+                                                <span class="font-mono ${!s.missing ? 'text-white font-bold' : 'text-slate-600'}">
+                                                    ${!s.missing ? formatPrice(s.grandTotal) : 'Incomplete'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
                             </div>
 
                             <div class="pt-2 border-t border-slate-800 text-[11px] text-slate-400 flex justify-between items-center">
@@ -6785,6 +7057,13 @@
             }
 
             await loadPeptideData();
+            updateHeaderSubtitle();
+            renderSpotlightCards();
+            renderCatalogHeaders();
+            renderCartHeaders();
+            renderWhatsAppButtons();
+            renderImportVendorOptions();
+            renderVendorRulesControls();
             initCurrencySelector();
             fetchLiveFxRates();
             selectedItem = peptideData.find(i => i.key === "Semaglutide (10mg*10)" || i.id === "semaglutide_10mg") || peptideData[0];
